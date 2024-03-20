@@ -7,15 +7,43 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		127851723A68E91EED2E05F9 /* Pods_Chatbot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB43EAF638778BE7A6AA5789 /* Pods_Chatbot.framework */; };
 		FB1B33372BA823020061259F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1B33362BA823020061259F /* AppDelegate.swift */; };
 		FB1B33392BA823020061259F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1B33382BA823020061259F /* SceneDelegate.swift */; };
 		FB1B333B2BA823020061259F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1B333A2BA823020061259F /* ViewController.swift */; };
 		FB1B333E2BA823020061259F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = FB1B333D2BA823020061259F /* Base */; };
 		FB1B33402BA823030061259F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB1B333F2BA823030061259F /* Assets.xcassets */; };
 		FB1B33432BA823030061259F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = FB1B33422BA823030061259F /* Base */; };
+		FB50BC912BA859A600E863AC /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC902BA859A600E863AC /* GoogleSignIn */; };
+		FB50BC932BA859A600E863AC /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC922BA859A600E863AC /* GoogleSignInSwift */; };
+		FB50BC962BA85ACE00E863AC /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC952BA85ACE00E863AC /* FirebaseAnalytics */; };
+		FB50BC982BA85ACE00E863AC /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC972BA85ACE00E863AC /* FirebaseAnalyticsOnDeviceConversion */; };
+		FB50BC9A2BA85ACE00E863AC /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC992BA85ACE00E863AC /* FirebaseAnalyticsSwift */; };
+		FB50BC9C2BA85ACE00E863AC /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC9B2BA85ACE00E863AC /* FirebaseAnalyticsWithoutAdIdSupport */; };
+		FB50BC9E2BA85ACE00E863AC /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC9D2BA85ACE00E863AC /* FirebaseAppCheck */; };
+		FB71F0052BA9855100A79BE7 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FB71F0042BA9855100A79BE7 /* FirebaseAuth */; };
+		FB71F00B2BA9A04B00A79BE7 /* ListChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB71F00A2BA9A04B00A79BE7 /* ListChatViewController.xib */; };
+		FB71F00C2BA9A04B00A79BE7 /* ListChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB71F0092BA9A04B00A79BE7 /* ListChatViewController.swift */; };
+		FB71F00F2BA9A43100A79BE7 /* ListChatTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB71F00E2BA9A43100A79BE7 /* ListChatTableViewCell.xib */; };
+		FB71F0102BA9A43100A79BE7 /* ListChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB71F00D2BA9A43100A79BE7 /* ListChatTableViewCell.swift */; };
+		FB73D4862BAAF40E001B314F /* LoginPrefrencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB73D4842BAAF40E001B314F /* LoginPrefrencesViewController.swift */; };
+		FB73D4872BAAF40E001B314F /* LoginPrefrencesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB73D4852BAAF40E001B314F /* LoginPrefrencesViewController.xib */; };
+		FB73D4932BAAF604001B314F /* EmailSignUPViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB73D4912BAAF604001B314F /* EmailSignUPViewController.swift */; };
+		FB73D4942BAAF604001B314F /* EmailSignUPViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB73D4922BAAF604001B314F /* EmailSignUPViewController.xib */; };
+		FB73D4972BAAF738001B314F /* EmailSignINViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB73D4952BAAF738001B314F /* EmailSignINViewController.swift */; };
+		FB73D4982BAAF738001B314F /* EmailSignINViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB73D4962BAAF738001B314F /* EmailSignINViewController.xib */; };
+		FB73D49A2BAAF8C3001B314F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FB73D4992BAAF8C3001B314F /* GoogleService-Info.plist */; };
+		FB73D49D2BAAFF89001B314F /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB73D49B2BAAFF89001B314F /* ChatController.swift */; };
+		FB73D49E2BAAFF89001B314F /* ChatControllerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB73D49C2BAAFF89001B314F /* ChatControllerViewController.xib */; };
+		FB822AAC2BA85E48003805BE /* AlerUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB822AAB2BA85E48003805BE /* AlerUser.swift */; };
+		FB822AAE2BA85F35003805BE /* GoogleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB822AAD2BA85F35003805BE /* GoogleAuth.swift */; };
+		FB8D7FE32BA9783D00FF1C21 /* UIColorHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8D7FE22BA9783D00FF1C21 /* UIColorHex.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		08166E130B4FFC752DDB7EBE /* Pods-Chatbot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chatbot.debug.xcconfig"; path = "Target Support Files/Pods-Chatbot/Pods-Chatbot.debug.xcconfig"; sourceTree = "<group>"; };
+		9797A2CC0E510E7FD851914C /* Pods-Chatbot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chatbot.release.xcconfig"; path = "Target Support Files/Pods-Chatbot/Pods-Chatbot.release.xcconfig"; sourceTree = "<group>"; };
+		DB43EAF638778BE7A6AA5789 /* Pods_Chatbot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Chatbot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB1B33332BA823020061259F /* Chatbot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chatbot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB1B33362BA823020061259F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB1B33382BA823020061259F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -24,6 +52,22 @@
 		FB1B333F2BA823030061259F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB1B33422BA823030061259F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FB1B33442BA823030061259F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FB71F0092BA9A04B00A79BE7 /* ListChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListChatViewController.swift; sourceTree = "<group>"; };
+		FB71F00A2BA9A04B00A79BE7 /* ListChatViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListChatViewController.xib; sourceTree = "<group>"; };
+		FB71F00D2BA9A43100A79BE7 /* ListChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListChatTableViewCell.swift; sourceTree = "<group>"; };
+		FB71F00E2BA9A43100A79BE7 /* ListChatTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListChatTableViewCell.xib; sourceTree = "<group>"; };
+		FB73D4842BAAF40E001B314F /* LoginPrefrencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPrefrencesViewController.swift; sourceTree = "<group>"; };
+		FB73D4852BAAF40E001B314F /* LoginPrefrencesViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginPrefrencesViewController.xib; sourceTree = "<group>"; };
+		FB73D4912BAAF604001B314F /* EmailSignUPViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailSignUPViewController.swift; sourceTree = "<group>"; };
+		FB73D4922BAAF604001B314F /* EmailSignUPViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmailSignUPViewController.xib; sourceTree = "<group>"; };
+		FB73D4952BAAF738001B314F /* EmailSignINViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailSignINViewController.swift; sourceTree = "<group>"; };
+		FB73D4962BAAF738001B314F /* EmailSignINViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmailSignINViewController.xib; sourceTree = "<group>"; };
+		FB73D4992BAAF8C3001B314F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FB73D49B2BAAFF89001B314F /* ChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
+		FB73D49C2BAAFF89001B314F /* ChatControllerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatControllerViewController.xib; sourceTree = "<group>"; };
+		FB822AAB2BA85E48003805BE /* AlerUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlerUser.swift; sourceTree = "<group>"; };
+		FB822AAD2BA85F35003805BE /* GoogleAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleAuth.swift; sourceTree = "<group>"; };
+		FB8D7FE22BA9783D00FF1C21 /* UIColorHex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorHex.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,17 +75,46 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB50BC9E2BA85ACE00E863AC /* FirebaseAppCheck in Frameworks */,
+				FB50BC9A2BA85ACE00E863AC /* FirebaseAnalyticsSwift in Frameworks */,
+				FB50BC932BA859A600E863AC /* GoogleSignInSwift in Frameworks */,
+				127851723A68E91EED2E05F9 /* Pods_Chatbot.framework in Frameworks */,
+				FB71F0052BA9855100A79BE7 /* FirebaseAuth in Frameworks */,
+				FB50BC982BA85ACE00E863AC /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
+				FB50BC9C2BA85ACE00E863AC /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
+				FB50BC962BA85ACE00E863AC /* FirebaseAnalytics in Frameworks */,
+				FB50BC912BA859A600E863AC /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C16E2FD536680260821AC382 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				08166E130B4FFC752DDB7EBE /* Pods-Chatbot.debug.xcconfig */,
+				9797A2CC0E510E7FD851914C /* Pods-Chatbot.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		C35EF4B4685758A873862734 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DB43EAF638778BE7A6AA5789 /* Pods_Chatbot.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		FB1B332A2BA823020061259F = {
 			isa = PBXGroup;
 			children = (
 				FB1B33352BA823020061259F /* Chatbot */,
+				FB73D4992BAAF8C3001B314F /* GoogleService-Info.plist */,
 				FB1B33342BA823020061259F /* Products */,
+				C16E2FD536680260821AC382 /* Pods */,
+				C35EF4B4685758A873862734 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,15 +129,230 @@
 		FB1B33352BA823020061259F /* Chatbot */ = {
 			isa = PBXGroup;
 			children = (
-				FB1B33362BA823020061259F /* AppDelegate.swift */,
-				FB1B33382BA823020061259F /* SceneDelegate.swift */,
-				FB1B333A2BA823020061259F /* ViewController.swift */,
-				FB1B333C2BA823020061259F /* Main.storyboard */,
+				FB73D47A2BAAF241001B314F /* UserLogin */,
+				FB8D7FED2BA9793500FF1C21 /* AppDelegates */,
+				FB8D7FEA2BA9791300FF1C21 /* Home */,
+				FB73D47B2BAAF275001B314F /* LoginPrefrences */,
+				FB71F0062BA9A00500A79BE7 /* Chat */,
+				FB8D7FE72BA978BA00FF1C21 /* Resources */,
+				FB8D7FE42BA9788E00FF1C21 /* Utils */,
+			);
+			path = Chatbot;
+			sourceTree = "<group>";
+		};
+		FB4881052BAB134200C97A3C /* SignIN */ = {
+			isa = PBXGroup;
+			children = (
+				FB4881072BAB134E00C97A3C /* View */,
+				FB4881062BAB134800C97A3C /* Controller */,
+			);
+			path = SignIN;
+			sourceTree = "<group>";
+		};
+		FB4881062BAB134800C97A3C /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				FB73D4952BAAF738001B314F /* EmailSignINViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		FB4881072BAB134E00C97A3C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				FB73D4962BAAF738001B314F /* EmailSignINViewController.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		FB71F0062BA9A00500A79BE7 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				FB71F0082BA9A02D00A79BE7 /* View */,
+				FB71F0072BA9A02200A79BE7 /* Controller */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		FB71F0072BA9A02200A79BE7 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				FB71F0092BA9A04B00A79BE7 /* ListChatViewController.swift */,
+				FB73D49B2BAAFF89001B314F /* ChatController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		FB71F0082BA9A02D00A79BE7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				FB71F00A2BA9A04B00A79BE7 /* ListChatViewController.xib */,
+				FB71F00D2BA9A43100A79BE7 /* ListChatTableViewCell.swift */,
+				FB71F00E2BA9A43100A79BE7 /* ListChatTableViewCell.xib */,
+				FB73D49C2BAAFF89001B314F /* ChatControllerViewController.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		FB73D47A2BAAF241001B314F /* UserLogin */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = UserLogin;
+			sourceTree = "<group>";
+		};
+		FB73D47B2BAAF275001B314F /* LoginPrefrences */ = {
+			isa = PBXGroup;
+			children = (
+				FB73D48C2BAAF485001B314F /* LoginView */,
+				FB73D48D2BAAF5AE001B314F /* Email */,
+				FB8D7FE82BA978E400FF1C21 /* Google */,
+			);
+			path = LoginPrefrences;
+			sourceTree = "<group>";
+		};
+		FB73D47C2BAAF283001B314F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				FB73D4842BAAF40E001B314F /* LoginPrefrencesViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		FB73D47D2BAAF288001B314F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				FB73D4852BAAF40E001B314F /* LoginPrefrencesViewController.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		FB73D48C2BAAF485001B314F /* LoginView */ = {
+			isa = PBXGroup;
+			children = (
+				FB73D47D2BAAF288001B314F /* View */,
+				FB73D47C2BAAF283001B314F /* Controller */,
+			);
+			path = LoginView;
+			sourceTree = "<group>";
+		};
+		FB73D48D2BAAF5AE001B314F /* Email */ = {
+			isa = PBXGroup;
+			children = (
+				FB4881052BAB134200C97A3C /* SignIN */,
+				FB73D48E2BAAF5E5001B314F /* SignUP */,
+			);
+			path = Email;
+			sourceTree = "<group>";
+		};
+		FB73D48E2BAAF5E5001B314F /* SignUP */ = {
+			isa = PBXGroup;
+			children = (
+				FB73D4902BAAF5F1001B314F /* View */,
+				FB73D48F2BAAF5EC001B314F /* Controller */,
+			);
+			path = SignUP;
+			sourceTree = "<group>";
+		};
+		FB73D48F2BAAF5EC001B314F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				FB73D4912BAAF604001B314F /* EmailSignUPViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		FB73D4902BAAF5F1001B314F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				FB73D4922BAAF604001B314F /* EmailSignUPViewController.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		FB8D7FE42BA9788E00FF1C21 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				FB8D7FE62BA978AC00FF1C21 /* UIColorHex */,
+				FB8D7FE52BA978A300FF1C21 /* AlertUser */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		FB8D7FE52BA978A300FF1C21 /* AlertUser */ = {
+			isa = PBXGroup;
+			children = (
+				FB822AAB2BA85E48003805BE /* AlerUser.swift */,
+			);
+			path = AlertUser;
+			sourceTree = "<group>";
+		};
+		FB8D7FE62BA978AC00FF1C21 /* UIColorHex */ = {
+			isa = PBXGroup;
+			children = (
+				FB8D7FE22BA9783D00FF1C21 /* UIColorHex.swift */,
+			);
+			path = UIColorHex;
+			sourceTree = "<group>";
+		};
+		FB8D7FE72BA978BA00FF1C21 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
 				FB1B333F2BA823030061259F /* Assets.xcassets */,
 				FB1B33412BA823030061259F /* LaunchScreen.storyboard */,
 				FB1B33442BA823030061259F /* Info.plist */,
 			);
-			path = Chatbot;
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		FB8D7FE82BA978E400FF1C21 /* Google */ = {
+			isa = PBXGroup;
+			children = (
+				FB8D7FE92BA978F500FF1C21 /* Model */,
+			);
+			path = Google;
+			sourceTree = "<group>";
+		};
+		FB8D7FE92BA978F500FF1C21 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FB822AAD2BA85F35003805BE /* GoogleAuth.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		FB8D7FEA2BA9791300FF1C21 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				FB8D7FEC2BA9792800FF1C21 /* View */,
+				FB8D7FEB2BA9791A00FF1C21 /* Controller */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		FB8D7FEB2BA9791A00FF1C21 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				FB1B333A2BA823020061259F /* ViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		FB8D7FEC2BA9792800FF1C21 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				FB1B333C2BA823020061259F /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		FB8D7FED2BA9793500FF1C21 /* AppDelegates */ = {
+			isa = PBXGroup;
+			children = (
+				FB1B33362BA823020061259F /* AppDelegate.swift */,
+				FB1B33382BA823020061259F /* SceneDelegate.swift */,
+			);
+			path = AppDelegates;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,15 +362,27 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FB1B33472BA823030061259F /* Build configuration list for PBXNativeTarget "Chatbot" */;
 			buildPhases = (
+				69E8CD00A6CB07B5ECA5B5AA /* [CP] Check Pods Manifest.lock */,
 				FB1B332F2BA823020061259F /* Sources */,
 				FB1B33302BA823020061259F /* Frameworks */,
 				FB1B33312BA823020061259F /* Resources */,
+				E4B52CEC87320FB73A130ED6 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Chatbot;
+			packageProductDependencies = (
+				FB50BC902BA859A600E863AC /* GoogleSignIn */,
+				FB50BC922BA859A600E863AC /* GoogleSignInSwift */,
+				FB50BC952BA85ACE00E863AC /* FirebaseAnalytics */,
+				FB50BC972BA85ACE00E863AC /* FirebaseAnalyticsOnDeviceConversion */,
+				FB50BC992BA85ACE00E863AC /* FirebaseAnalyticsSwift */,
+				FB50BC9B2BA85ACE00E863AC /* FirebaseAnalyticsWithoutAdIdSupport */,
+				FB50BC9D2BA85ACE00E863AC /* FirebaseAppCheck */,
+				FB71F0042BA9855100A79BE7 /* FirebaseAuth */,
+			);
 			productName = Chatbot;
 			productReference = FB1B33332BA823020061259F /* Chatbot.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +411,10 @@
 				Base,
 			);
 			mainGroup = FB1B332A2BA823020061259F;
+			packageReferences = (
+				FB50BC8F2BA859A600E863AC /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				FB50BC942BA85A7300E863AC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = FB1B33342BA823020061259F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -125,22 +429,80 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB71F00B2BA9A04B00A79BE7 /* ListChatViewController.xib in Resources */,
+				FB73D4982BAAF738001B314F /* EmailSignINViewController.xib in Resources */,
 				FB1B33402BA823030061259F /* Assets.xcassets in Resources */,
+				FB73D4942BAAF604001B314F /* EmailSignUPViewController.xib in Resources */,
+				FB71F00F2BA9A43100A79BE7 /* ListChatTableViewCell.xib in Resources */,
 				FB1B33432BA823030061259F /* Base in Resources */,
+				FB73D49A2BAAF8C3001B314F /* GoogleService-Info.plist in Resources */,
+				FB73D4872BAAF40E001B314F /* LoginPrefrencesViewController.xib in Resources */,
+				FB73D49E2BAAFF89001B314F /* ChatControllerViewController.xib in Resources */,
 				FB1B333E2BA823020061259F /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		69E8CD00A6CB07B5ECA5B5AA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Chatbot-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E4B52CEC87320FB73A130ED6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Chatbot/Pods-Chatbot-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Chatbot/Pods-Chatbot-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Chatbot/Pods-Chatbot-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		FB1B332F2BA823020061259F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB73D4932BAAF604001B314F /* EmailSignUPViewController.swift in Sources */,
+				FB73D4972BAAF738001B314F /* EmailSignINViewController.swift in Sources */,
+				FB822AAE2BA85F35003805BE /* GoogleAuth.swift in Sources */,
+				FB822AAC2BA85E48003805BE /* AlerUser.swift in Sources */,
 				FB1B333B2BA823020061259F /* ViewController.swift in Sources */,
+				FB8D7FE32BA9783D00FF1C21 /* UIColorHex.swift in Sources */,
 				FB1B33372BA823020061259F /* AppDelegate.swift in Sources */,
+				FB71F0102BA9A43100A79BE7 /* ListChatTableViewCell.swift in Sources */,
+				FB73D49D2BAAFF89001B314F /* ChatController.swift in Sources */,
 				FB1B33392BA823020061259F /* SceneDelegate.swift in Sources */,
+				FB71F00C2BA9A04B00A79BE7 /* ListChatViewController.swift in Sources */,
+				FB73D4862BAAF40E001B314F /* LoginPrefrencesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,7 +565,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -266,7 +628,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -287,13 +649,14 @@
 		};
 		FB1B33482BA823030061259F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 08166E130B4FFC752DDB7EBE /* Pods-Chatbot.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Chatbot/Info.plist;
+				INFOPLIST_FILE = Chatbot/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -304,7 +667,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = stackgeeks.Chatbot;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stackgeeks.chat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -314,13 +677,14 @@
 		};
 		FB1B33492BA823030061259F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9797A2CC0E510E7FD851914C /* Pods-Chatbot.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Chatbot/Info.plist;
+				INFOPLIST_FILE = Chatbot/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -331,7 +695,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = stackgeeks.Chatbot;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stackgeeks.chat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -361,6 +725,68 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FB50BC8F2BA859A600E863AC /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
+		FB50BC942BA85A7300E863AC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.22.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FB50BC902BA859A600E863AC /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB50BC8F2BA859A600E863AC /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		FB50BC922BA859A600E863AC /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB50BC8F2BA859A600E863AC /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+		FB50BC952BA85ACE00E863AC /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB50BC942BA85A7300E863AC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		FB50BC972BA85ACE00E863AC /* FirebaseAnalyticsOnDeviceConversion */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB50BC942BA85A7300E863AC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsOnDeviceConversion;
+		};
+		FB50BC992BA85ACE00E863AC /* FirebaseAnalyticsSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB50BC942BA85A7300E863AC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsSwift;
+		};
+		FB50BC9B2BA85ACE00E863AC /* FirebaseAnalyticsWithoutAdIdSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB50BC942BA85A7300E863AC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsWithoutAdIdSupport;
+		};
+		FB50BC9D2BA85ACE00E863AC /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB50BC942BA85A7300E863AC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
+		};
+		FB71F0042BA9855100A79BE7 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB50BC942BA85A7300E863AC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FB1B332B2BA823020061259F /* Project object */;
 }
