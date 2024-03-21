@@ -26,6 +26,7 @@ class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     
+        setupUI()
         setupActivityIndicator()
         checkIfUserAvailable()
     }
@@ -34,9 +35,24 @@ class ViewController: UIViewController {
         navigationController?.isNavigationBarHidden = true
     }
     
+    func setupUI(){
+        let logoImage = UIImageView()
+        logoImage.frame = CGRect(x: 0, y: 0, width: 190, height: 190)
+        logoImage.image = UIImage(systemName: "text.bubble")
+        logoImage.center = CGPoint(x: view.center.x, y: view.center.y - 100)
+        view.addSubview(logoImage)
+        
+        let appName = UILabel()
+        appName.frame = CGRect(x: logoImage.frame.origin.x + 40, y: logoImage.frame.maxY + 10, width: view.frame.width - 50, height: 30)
+        appName.text = "ChatApp"
+        appName.font = UIFont(name: "Gill Sans", size: 30)
+        view.addSubview(appName)
+    }
+    
     func setupActivityIndicator(){
-        activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: view.frame.midX, y: view.frame.midY, width: 40, height: 40), type: .ballClipRotate, color: .blue, padding: nil)
+        activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 40, height: 40), type: .ballClipRotate, color: .blue, padding: nil)
         activityIndicatorView.center = view.center
+        activityIndicatorView.center.y = view.center.y + 80
         view.addSubview(activityIndicatorView)
         activityIndicatorView.isHidden = true
     }

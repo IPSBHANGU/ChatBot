@@ -10,11 +10,11 @@ import FirebaseAuth
 
 class EmailSignUPViewController: UIViewController {
 
-    var emailTextFieldView = UIView()
-    var emailTextField = UITextField()
-    var passwordTextFieldView = UIView()
-    var passwordTextField = UITextField()
-    var submitSignUPButton = UIButton(type: .system)
+    lazy var emailTextFieldView = UIView()
+    lazy var emailTextField = UITextField()
+    lazy var passwordTextFieldView = UIView()
+    lazy var passwordTextField = UITextField()
+    lazy var submitSignUPButton = UIButton(type: .system)
     
     override func viewDidLoad() {
         super.viewDidLoad()

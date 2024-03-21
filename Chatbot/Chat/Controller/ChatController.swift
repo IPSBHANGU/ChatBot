@@ -67,14 +67,14 @@ class ChatController: MessagesViewController {
         backButton.tintColor = .black
         headerView.addSubview(backButton)
         
-        let headerLabel = UILabel(frame: CGRect(x: 60, y: 20, width: view.frame.width - 120, height: 30)) // Adjusted the x position
+        let headerLabel = UILabel(frame: CGRect(x: 60, y: 20, width: view.frame.width - 120, height: 30))
         headerLabel.textAlignment = .center
         headerLabel.text = displayUserName ?? ""
         headerView.addSubview(headerLabel)
         
         view.addSubview(headerView)
         
-        let messagesCollectionViewY = headerView.frame.maxY // Start messagesCollectionView below headerView
+        let messagesCollectionViewY = headerView.frame.maxY
         messagesCollectionView.frame = CGRect(x: 0, y: messagesCollectionViewY, width: view.frame.width, height: view.frame.height - messagesCollectionViewY)
     }
 

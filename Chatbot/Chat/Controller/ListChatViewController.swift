@@ -18,17 +18,23 @@ class ListChatViewController: UIViewController {
     var authUser:User?
     
     // Start UIElements
-    let userAvatar = UIImageView()
-    let searchButton = UIButton(type: .system)
-    let editButton = UIButton(type: .system)
-    let chatType = MASegmentedControl()
-    let chatTable = UITableView()
+    lazy var userAvatar = UIImageView()
+    lazy var searchButton = UIButton(type: .system)
+    lazy var editButton = UIButton(type: .system)
+    lazy var chatType = MASegmentedControl()
+    lazy var chatTable = UITableView()
+    lazy var addButton = UIButton(type: .custom)
+    var isButtonPressed:Bool?
+    
+    // SearchBar
+    lazy var searchBar = UISearchBar()
     
     // ActivityIndicator
     var activityIndicatorView: NVActivityIndicatorView!
     
     // MARK: TO-DO Change with database CallBack
     let chatUserArray = ["Chat 1", "Chat 2", "Chat 3", "Chat 4", "Chat 5"]
+    var filteredChatUserArray: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,14 +60,14 @@ class ListChatViewController: UIViewController {
         searchButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         searchButton.alpha = 1
         searchButton.tintColor = .black
-        searchButton.frame = CGRect(x: view.frame.width - 70, y: 50, width: 40, height: 44)
+        searchButton.frame = CGRect(x: view.frame.width - 90, y: 50, width: 40, height: 44)
         searchButton.addTarget(self, action: #selector(searchAction), for: .touchUpInside)
         view.addSubview(searchButton)
         
         editButton.setImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
         editButton.alpha = 1
         editButton.tintColor = .black
-        editButton.frame = CGRect(x: view.frame.width - 30, y: 50, width: 40, height: 44)
+        editButton.frame = CGRect(x: view.frame.width - 50, y: 50, width: 40, height: 44)
         
         let logout = UIAction(title: "Logout", image: UIImage(systemName: "xmark")) { _ in
             self.signOutButton()
@@ -90,6 +96,32 @@ class ListChatViewController: UIViewController {
         
         // Add TableView to View
         view.addSubview(chatTable)
+        
+        // addButton
+        let buttonWidth: CGFloat = 50
+        let buttonHeight: CGFloat = 50
+        let buttonMargin: CGFloat = 50
+        addButton.frame = CGRect(x: buttonMargin, y: view.bounds.height - buttonHeight - buttonMargin, width: buttonWidth, height: buttonHeight)
+        addButton.setImage(UIImage(systemName: "plus"), for: .normal)
+        addButton.backgroundColor = .systemGray
+        addButton.tintColor = .black
+        addButton.addTarget(self, action: #selector(addButtonAction(_:)), for: .touchUpInside)
+        addButton.layer.cornerRadius = 25
+        view.addSubview(addButton)
+    }
+    
+    @objc func addButtonAction(_ sender: UIButton) {
+        if sender.isSelected {
+            sender.isSelected = false
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseInOut, animations: {
+                sender.transform = .identity
+            })
+        } else {
+            sender.isSelected = true
+            UIView.animate(withDuration: 0.3, animations: {
+                sender.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
+            })
+        }
     }
     
     func setupTableView(){
@@ -101,6 +133,7 @@ class ListChatViewController: UIViewController {
         activityIndicatorView.center = chatTable.center
         chatTable.addSubview(activityIndicatorView)
         activityIndicatorView.isHidden = true
+        filteredChatUserArray = chatUserArray
     }
     
     func showActivityIndicatorView() {
@@ -124,6 +157,16 @@ class ListChatViewController: UIViewController {
     }
     
     @objc func searchAction(){
+        chatType.alpha = 0
+        searchBar.alpha = 1
+        searchBar.frame = CGRect(x: 24, y: 120, width: view.frame.width - 44, height: 40)
+        searchBar.delegate = self
+        searchBar.backgroundColor = .systemGray6
+        searchBar.searchBarStyle = .minimal
+        searchBar.layer.cornerRadius = 10
+        searchBar.showsCancelButton = true
+        searchBar.searchTextField.clearButtonMode = .never
+        view.addSubview(searchBar)
         // MARK: TO-DO Change with database CallBack
     }
     
@@ -153,7 +196,7 @@ class ListChatViewController: UIViewController {
 
 extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return chatUserArray.count
+        return filteredChatUserArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -161,7 +204,7 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let user = chatUserArray[indexPath.row]
+        let user = filteredChatUserArray[indexPath.row]
         
         // timepass
         let dateFormatter = DateFormatter()
@@ -176,11 +219,32 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let chatController = ChatController()
         chatController.authUser = authUser
-        chatController.displayUserName = chatUserArray[indexPath.row]
+        chatController.displayUserName = filteredChatUserArray[indexPath.row]
         navigationController?.pushViewController(chatController, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
+    }
+}
+
+extension ListChatViewController:UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredChatUserArray = chatUserArray.filter { $0.lowercased().contains(searchText.lowercased()) }
+        chatTable.reloadData()
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        filteredChatUserArray = chatUserArray
+        searchBar.alpha = 0
+        chatType.alpha = 1
+        chatTable.reloadData()
+        searchBar.resignFirstResponder()
+        searchBar.removeFromSuperview()
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
 }
