@@ -10,6 +10,7 @@ import FirebaseAuth
 import MASegmentedControl
 import Kingfisher
 import NVActivityIndicatorView
+import SwiftyContextMenu
 
 class ListChatViewController: UIViewController {
     
@@ -32,9 +33,8 @@ class ListChatViewController: UIViewController {
     // ActivityIndicator
     var activityIndicatorView: NVActivityIndicatorView!
     
-    // MARK: TO-DO Change with database CallBack
-    let chatUserArray = ["Chat 1", "Chat 2", "Chat 3", "Chat 4", "Chat 5"]
-    var filteredChatUserArray: [String] = []
+    var chatUserArray:[[String:Any]]?
+    var filteredChatUserArray: [String:Any] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,7 +44,24 @@ class ListChatViewController: UIViewController {
         }
         setupUI()
         setupTableView()
+        fetchUsers()
         // Do any additional setup after loading the view.
+    }
+    
+    func fetchUsers(){
+        LoginModel().fetchConnectedUsersInDB(authUser: authUser) { users, error in
+            self.activityIndicatorView.startAnimating()
+            if let error = error {
+                AlerUser().alertUser(viewController: self, title: "Error", message: error)
+                return
+            }
+            
+            self.chatUserArray = users
+            DispatchQueue.main.async {
+                self.activityIndicatorView.stopAnimating()
+            }
+            self.chatTable.reloadData()
+        }
     }
     
     func setupUI(){
@@ -83,7 +100,7 @@ class ListChatViewController: UIViewController {
         chatType.itemsWithText = true
         chatType.fillEqually = true
         chatType.bottomLineThumbView = true
-        chatType.setSegmentedWith(items: ["Inbox", "Meassages"])
+        chatType.setSegmentedWith(items: ["Chats", "Groups"])
         chatType.padding = 2
         chatType.textColor = .gray
         chatType.selectedTextColor = .black
@@ -107,21 +124,15 @@ class ListChatViewController: UIViewController {
         addButton.tintColor = .black
         addButton.addTarget(self, action: #selector(addButtonAction(_:)), for: .touchUpInside)
         addButton.layer.cornerRadius = 25
+
         view.addSubview(addButton)
     }
     
     @objc func addButtonAction(_ sender: UIButton) {
-        if sender.isSelected {
-            sender.isSelected = false
-            UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseInOut, animations: {
-                sender.transform = .identity
-            })
-        } else {
-            sender.isSelected = true
-            UIView.animate(withDuration: 0.3, animations: {
-                sender.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 4)
-            })
-        }
+        let addUsersView = AddUsersViewController()
+        addUsersView.authUser = authUser
+        let navController = UINavigationController(rootViewController: addUsersView)
+        self.present(navController, animated: true, completion: nil)
     }
     
     func setupTableView(){
@@ -133,7 +144,7 @@ class ListChatViewController: UIViewController {
         activityIndicatorView.center = chatTable.center
         chatTable.addSubview(activityIndicatorView)
         activityIndicatorView.isHidden = true
-        filteredChatUserArray = chatUserArray
+//        filteredChatUserArray = (chatUserArray?.first)!
     }
     
     func showActivityIndicatorView() {
@@ -196,7 +207,7 @@ class ListChatViewController: UIViewController {
 
 extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredChatUserArray.count
+        return chatUserArray?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -204,39 +215,56 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let user = filteredChatUserArray[indexPath.row]
-        
         // timepass
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         let currentTime = dateFormatter.string(from: Date())
         
-        cell.setCellData(userImage: nil, username: user, userRecentMeassage: "Placeholder", meassageTime: currentTime)
+        
+        if let chatUserArray = chatUserArray, indexPath.row < chatUserArray.count {
+            let user = chatUserArray[indexPath.row]
+            
+            let username = user["displayName"] as? String ?? ""
+            let avtarURL = user["photoURL"] as? String ?? ""
+            
+            cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: "Placeholder", meassageTime: currentTime)
+        }
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let chatController = ChatController()
-        chatController.authUser = authUser
-        chatController.displayUserName = filteredChatUserArray[indexPath.row]
-        navigationController?.pushViewController(chatController, animated: true)
+        if let chatUserArray = chatUserArray, indexPath.row < chatUserArray.count {
+            let user = chatUserArray[indexPath.row]
+            
+            let username = user["displayName"] as? String ?? ""
+            let userphoto = user["photoURL"] as? String ?? ""
+            let senderUID = user["uid"] as? String ?? ""
+            let conversationID = MessageModel().generateConversationID(user1ID: authUser?.uid ?? "", user2ID: senderUID)
+            chatController.authUser = authUser
+            chatController.senderUserName = username
+            chatController.senderPhotoURL = userphoto
+            chatController.senderUID = senderUID
+            chatController.conversationID = conversationID
+            navigationController?.pushViewController(chatController, animated: true)
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return  UITableView.automaticDimension
     }
 }
 
 extension ListChatViewController:UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        filteredChatUserArray = chatUserArray.filter { $0.lowercased().contains(searchText.lowercased()) }
+//        filteredChatUserArray = chatUserArray!.filter { $0.lowercased().contains(searchText.lowercased()) }
         chatTable.reloadData()
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
-        filteredChatUserArray = chatUserArray
+//        filteredChatUserArray = chatUserArray!
         searchBar.alpha = 0
         chatType.alpha = 1
         chatTable.reloadData()

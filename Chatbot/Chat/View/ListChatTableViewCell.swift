@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ListChatTableViewCell: UITableViewCell {
 
@@ -54,9 +55,9 @@ class ListChatTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func setCellData(userImage:UIImage?, username:String?, userRecentMeassage:String?, meassageTime:String?){
+    func setCellData(userImage:String?, username:String?, userRecentMeassage:String?, meassageTime:String?){
         if let userImage = userImage {
-            userAvatar.image = userImage
+            userAvatar.kf.setImage(with: URL(string: userImage))
         } else {
             userAvatar.image = UIImage(systemName: "person")
             userAvatar.tintColor = .black

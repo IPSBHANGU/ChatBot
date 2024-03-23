@@ -11,19 +11,8 @@ import InputBarAccessoryView
 import IQKeyboardManager
 import FirebaseAuth
 import Kingfisher
+import FirebaseDatabaseInternal
 
-struct Message: MessageType {
-    var sender: SenderType
-    var messageId: String
-    var sentDate: Date
-    var kind: MessageKind
-}
-
-struct Sender: SenderType {
-    var photoURL: String
-    var senderId: String
-    var displayName: String
-}
 
 class ChatController: MessagesViewController {
     
@@ -34,7 +23,10 @@ class ChatController: MessagesViewController {
     var password: String?
     var email: String?
     
-    var displayUserName: String?
+    var conversationID: String?
+    var senderUserName: String?
+    var senderPhotoURL: String?
+    var senderUID: String?
     var authUser:User?
     
     var photoUrl:URL?
@@ -43,8 +35,7 @@ class ChatController: MessagesViewController {
         super.viewDidLoad()
         messageInputBar.delegate = self
         
-        photoUrl = authUser?.photoURL
-        self.selfSender = Sender(photoURL: photoUrl?.absoluteString ?? "", senderId: "1", displayName: displayUserName ?? "")
+        observeMessages()
         messagesSend()
         setupHeaderView()
     }
@@ -56,20 +47,20 @@ class ChatController: MessagesViewController {
     }
     
     func setupHeaderView() {
-        let headerHeight: CGFloat = 50
-        let headerView = UIView(frame: CGRect(x: 0, y: 40, width: view.frame.width, height: headerHeight))
-        headerView.backgroundColor = .clear
+        let headerHeight: CGFloat = 90
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: headerHeight))
+        headerView.backgroundColor = .white
         
         let backButton = UIButton(type: .custom)
-        backButton.frame = CGRect(x: 10, y: 20, width: 50, height: 30)
+        backButton.frame = CGRect(x: 10, y: 60, width: 50, height: 30)
         backButton.setImage(UIImage(systemName: "arrow.backward"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         backButton.tintColor = .black
         headerView.addSubview(backButton)
         
-        let headerLabel = UILabel(frame: CGRect(x: 60, y: 20, width: view.frame.width - 120, height: 30))
+        let headerLabel = UILabel(frame: CGRect(x: 60, y: 60, width: view.frame.width - 120, height: 30))
         headerLabel.textAlignment = .center
-        headerLabel.text = displayUserName ?? ""
+        headerLabel.text = senderUserName ?? ""
         headerView.addSubview(headerLabel)
         
         view.addSubview(headerView)
@@ -82,11 +73,30 @@ class ChatController: MessagesViewController {
     @objc func backButtonTapped() {
         self.navigationController?.popViewController(animated: true)
     }
+    
+    func observeMessages() {
+        MessageModel().observeMessages(conversationID: conversationID ?? "", currentUserID: self.authUser?.uid ?? "", otherUserID: self.senderUID ?? "") { message in
+            
+            // empty message array every time
+            self.messages.removeAll()
+            
+            // Append the new message to the messages array
+            self.messages.append(contentsOf: message)
+            
+            // Reload the messages collection view to display the new message
+            self.messagesCollectionView.reloadData()
+            
+            // Scroll to the last message
+            DispatchQueue.main.async {
+                self.messagesCollectionView.scrollToLastItem(animated: true)
+            }
+        }
+    }
 }
 
 extension ChatController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
     func currentSender() -> SenderType {
-        return selfSender ?? Sender(photoURL: photoUrl?.absoluteString ?? "", senderId: "1", displayName: displayUserName ?? "")
+        return selfSender ?? Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? "")
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
@@ -98,8 +108,13 @@ extension ChatController: MessagesDataSource, MessagesLayoutDelegate, MessagesDi
     }
     
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-        // MARK: TO-DO handle users
-        avatarView.kf.setImage(with: photoUrl)
+        if message.sender.senderId == self.authUser?.uid {
+            avatarView.kf.setImage(with: authUser?.photoURL)
+        } else if message.sender.displayName == self.senderUserName {
+            avatarView.kf.setImage(with: URL(string: self.senderPhotoURL ?? ""))
+        } else {
+            avatarView.image = UIImage(systemName: "person")
+        }
     }
     
     func headerViewSize(for section: Int, in messagesCollectionView: MessagesCollectionView) -> CGSize {
@@ -114,23 +129,50 @@ extension ChatController: InputBarAccessoryViewDelegate {
             return
         }
         
-        let newMessage = Message(sender: currentSender(),
-                                 messageId: UUID().uuidString,
-                                 sentDate: Date(),
-                                 kind: .text(text))
-        
-        // Append the new message to the messages array
-        messages.append(newMessage)
-        
-        // Reload the messages collection view to display the new message
-        messagesCollectionView.reloadData()
-        
-        // Scroll to the last message
-        DispatchQueue.main.async {
-            self.messagesCollectionView.scrollToLastItem(animated: true)
+        let newMessage = [
+            "senderId": authUser?.uid ?? "",
+            "displayName": authUser?.displayName ?? "",
+            "text": text,
+            "sentDate": Date().timeIntervalSince1970
+        ] as [String : Any]
+
+        MessageModel().sendMessage(conversationID: conversationID ?? "", senderID: authUser?.uid ?? "", senderDisplayName: authUser?.displayName ?? "", message: text) { error in
+            if let error = error {
+                AlerUser().alertUser(viewController: self, title: "Error", message: error)
+            }
         }
         
         // Clear the input text
         inputBar.inputTextView.text = ""
     }
 }
+
+//func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
+//    // Ensure there's text entered by the user
+//    guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+//        return
+//    }
+//    
+//    // Create a new message dictionary
+//    let newMessage = [
+//        "senderId": authUser?.uid ?? "",
+//        "displayName": authUser?.displayName ?? "",
+//        "text": text,
+//        "sentDate": Date().timeIntervalSince1970
+//    ] as [String : Any]
+//    
+//    // Reference to your Firebase Realtime Database
+//    let messagesRef = Database.database().reference().child("messages").childByAutoId()
+//    
+//    // Set the value of the new message to the database
+//    messagesRef.setValue(newMessage) { (error, _) in
+//        if let error = error {
+//            AlerUser().alertUser(viewController: self, title: "Error", message: error.localizedDescription)
+//        } else {
+//            print("Message sent successfully")
+//        }
+//    }
+//    
+//    // Clear the input text
+//    inputBar.inputTextView.text = ""
+//}

@@ -11,4 +11,5 @@ pod 'MASegmentedControl'
 pod 'Kingfisher', '~> 7.0'
 pod 'NVActivityIndicatorView'
 pod 'MessageKit'
+pod 'SwiftyContextMenu'
 end

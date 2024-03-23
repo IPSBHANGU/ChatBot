@@ -69,14 +69,20 @@ class EmailSignINViewController: UIViewController {
             if let error = error {
                 AlerUser().alertUser(viewController: strongSelf, title: "Error", message: error.localizedDescription)
             } else {
-                /*
-                 * At this point User is Authenticated
-                 * move to next View
-                 */
-                let listChatView = ListChatViewController()
-                // pass whole result
-                listChatView.result = result
-                strongSelf.navigationController?.pushViewController(listChatView, animated: true)
+                LoginModel().addUsersToDb(user: result?.user) { isSucceeded, error in
+                    if let error = error {
+                        AlerUser().alertUser(viewController: strongSelf, title: "Error", message: error)
+                    } else if isSucceeded {
+                        /*
+                         * At this point User is Authenticated
+                         * move to next View
+                         */
+                        let listChatView = ListChatViewController()
+                        // pass whole result
+                        listChatView.result = result
+                        strongSelf.navigationController?.pushViewController(listChatView, animated: true)
+                    }
+                }
             }
         }
     }

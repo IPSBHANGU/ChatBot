@@ -113,14 +113,20 @@ class LoginPrefrencesViewController: UIViewController {
                     if let error = error {
                         AlerUser().alertUser(viewController: self, title: "Error", message: error.localizedDescription)
                     } else {
-                        /*
-                         * At this point User is Authenticated
-                         * move to next View
-                         */
-                        let listChatView = ListChatViewController()
-                        // pass whole result
-                        listChatView.result = result
-                        self.navigationController?.pushViewController(listChatView, animated: true)
+                        LoginModel().addUsersToDb(user: result?.user) { isSucceeded, error in
+                            if let error = error {
+                                AlerUser().alertUser(viewController: self, title: "Error", message: error)
+                            } else if isSucceeded {
+                                /*
+                                 * At this point User is Authenticated
+                                 * move to next View
+                                 */
+                                let listChatView = ListChatViewController()
+                                // pass whole result
+                                listChatView.result = result
+                                self.navigationController?.pushViewController(listChatView, animated: true)
+                            }
+                        }
                     }
                 }
             }
