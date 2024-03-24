@@ -34,7 +34,7 @@ class ListChatViewController: UIViewController {
     var activityIndicatorView: NVActivityIndicatorView!
     
     var chatUserArray:[[String:Any]]?
-    var filteredChatUserArray: [String:Any] = [:]
+    var filteredChatUserArray: [[String:Any]]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +57,7 @@ class ListChatViewController: UIViewController {
             }
             
             self.chatUserArray = users
+            self.filteredChatUserArray = self.chatUserArray
             DispatchQueue.main.async {
                 self.activityIndicatorView.stopAnimating()
             }
@@ -144,7 +145,6 @@ class ListChatViewController: UIViewController {
         activityIndicatorView.center = chatTable.center
         chatTable.addSubview(activityIndicatorView)
         activityIndicatorView.isHidden = true
-//        filteredChatUserArray = (chatUserArray?.first)!
     }
     
     func showActivityIndicatorView() {
@@ -178,7 +178,6 @@ class ListChatViewController: UIViewController {
         searchBar.showsCancelButton = true
         searchBar.searchTextField.clearButtonMode = .never
         view.addSubview(searchBar)
-        // MARK: TO-DO Change with database CallBack
     }
     
     @objc func chatSelectorType(_ sender: UISegmentedControl) {
@@ -207,7 +206,7 @@ class ListChatViewController: UIViewController {
 
 extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return chatUserArray?.count ?? 0
+        return filteredChatUserArray?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -215,7 +214,7 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
             return UITableViewCell()
         }
         
-        if let chatUserArray = chatUserArray, indexPath.row < chatUserArray.count {
+        if let chatUserArray = filteredChatUserArray, indexPath.row < chatUserArray.count {
             let user = chatUserArray[indexPath.row]
             
             let username = user["displayName"] as? String ?? ""
@@ -248,7 +247,7 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let chatController = ChatController()
-        if let chatUserArray = chatUserArray, indexPath.row < chatUserArray.count {
+        if let chatUserArray = filteredChatUserArray, indexPath.row < chatUserArray.count {
             let user = chatUserArray[indexPath.row]
             
             let username = user["displayName"] as? String ?? ""
@@ -271,13 +270,20 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
 
 extension ListChatViewController:UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        filteredChatUserArray = chatUserArray!.filter { $0.lowercased().contains(searchText.lowercased()) }
+        if searchText.isEmpty {
+            filteredChatUserArray = chatUserArray
+        } else {
+            filteredChatUserArray = (chatUserArray ?? []).filter { user in
+                let username = user["displayName"] as? String ?? ""
+                return username.lowercased().contains(searchText.lowercased())
+            }
+        }
         chatTable.reloadData()
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
-//        filteredChatUserArray = chatUserArray!
+        filteredChatUserArray = chatUserArray
         searchBar.alpha = 0
         chatType.alpha = 1
         chatTable.reloadData()
@@ -288,4 +294,5 @@ extension ListChatViewController:UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
+
 }
