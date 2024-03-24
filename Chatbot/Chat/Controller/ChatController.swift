@@ -128,7 +128,7 @@ extension ChatController: MessagesDataSource, MessagesLayoutDelegate, MessagesDi
     
     func messageTimestampLabelAttributedText(for message: any MessageType, at indexPath: IndexPath) -> NSAttributedString? {
         let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
+        formatter.dateFormat = "h:mm a"
         let dateString = formatter.string(from: message.sentDate)
         return NSAttributedString(string: dateString, attributes: [
             .font: UIFont.systemFont(ofSize: 12),
