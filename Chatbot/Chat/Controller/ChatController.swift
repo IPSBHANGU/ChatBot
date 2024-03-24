@@ -38,6 +38,11 @@ class ChatController: MessagesViewController {
         observeMessages()
         messagesSend()
         setupHeaderView()
+        setupMessageViewFeatures()
+    }
+    
+    func setupMessageViewFeatures(){
+        self.showMessageTimestampOnSwipeLeft = true
     }
     
     func messagesSend() {
@@ -120,6 +125,16 @@ extension ChatController: MessagesDataSource, MessagesLayoutDelegate, MessagesDi
     func headerViewSize(for section: Int, in messagesCollectionView: MessagesCollectionView) -> CGSize {
         CGSize(width: 0, height: 30)
     }
+    
+    func messageTimestampLabelAttributedText(for message: any MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        let dateString = formatter.string(from: message.sentDate)
+        return NSAttributedString(string: dateString, attributes: [
+            .font: UIFont.systemFont(ofSize: 12),
+            .foregroundColor: UIColor.darkGray
+        ])
+    }
 }
 
 extension ChatController: InputBarAccessoryViewDelegate {
@@ -146,33 +161,3 @@ extension ChatController: InputBarAccessoryViewDelegate {
         inputBar.inputTextView.text = ""
     }
 }
-
-//func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-//    // Ensure there's text entered by the user
-//    guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-//        return
-//    }
-//    
-//    // Create a new message dictionary
-//    let newMessage = [
-//        "senderId": authUser?.uid ?? "",
-//        "displayName": authUser?.displayName ?? "",
-//        "text": text,
-//        "sentDate": Date().timeIntervalSince1970
-//    ] as [String : Any]
-//    
-//    // Reference to your Firebase Realtime Database
-//    let messagesRef = Database.database().reference().child("messages").childByAutoId()
-//    
-//    // Set the value of the new message to the database
-//    messagesRef.setValue(newMessage) { (error, _) in
-//        if let error = error {
-//            AlerUser().alertUser(viewController: self, title: "Error", message: error.localizedDescription)
-//        } else {
-//            print("Message sent successfully")
-//        }
-//    }
-//    
-//    // Clear the input text
-//    inputBar.inputTextView.text = ""
-//}
