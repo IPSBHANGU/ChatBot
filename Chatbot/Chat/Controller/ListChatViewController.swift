@@ -215,19 +215,32 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
             return UITableViewCell()
         }
         
-        // timepass
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
-        let currentTime = dateFormatter.string(from: Date())
-        
-        
         if let chatUserArray = chatUserArray, indexPath.row < chatUserArray.count {
             let user = chatUserArray[indexPath.row]
             
             let username = user["displayName"] as? String ?? ""
             let avtarURL = user["photoURL"] as? String ?? ""
+            let senderUID = user["uid"] as? String ?? ""
+            let conversationID = MessageModel().generateConversationID(user1ID: authUser?.uid ?? "", user2ID: senderUID)
             
-            cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: "Placeholder", meassageTime: currentTime)
+            // Get the last message text
+            MessageModel().observeMessages(conversationID: conversationID, currentUserID: self.authUser?.uid ?? "", otherUserID: senderUID) { messages in
+                if let lastMessage = messages.last {
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "h:mm a"
+                    let dateString = formatter.string(from: lastMessage.sentDate)
+                    
+                    let lastMessageText: String
+                    switch lastMessage.kind {
+                    case .text(let text):
+                        lastMessageText = text
+                    default:
+                        lastMessageText = "Unsupported message type"
+                    }
+                    
+                    cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: lastMessageText, meassageTime: dateString)
+                }
+            }
         }
         
         return cell
