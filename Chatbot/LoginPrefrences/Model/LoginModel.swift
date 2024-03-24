@@ -111,7 +111,6 @@ class LoginModel:NSObject {
             
             for id in ids {
                 if let reversedUID = MessageModel().getOtherUserID(conversationID: id, currentUserID: authUser?.uid ?? "") {
-                    print(reversedUID)
                     uidArray.append(reversedUID)
                 }
             }
