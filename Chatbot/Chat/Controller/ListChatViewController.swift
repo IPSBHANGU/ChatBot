@@ -36,6 +36,9 @@ class ListChatViewController: UIViewController {
     var chatUserArray:[[String:Any]]?
     var filteredChatUserArray: [[String:Any]]?
     
+    // Bool to switch to Group
+    var is_Group:Bool = false    // Keep false as default is Chats
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -44,11 +47,18 @@ class ListChatViewController: UIViewController {
         }
         setupUI()
         setupTableView()
-        fetchUsers()
         // Do any additional setup after loading the view.
     }
     
-    func fetchUsers(){
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if is_Group == false {
+            fetchChatUsers()
+        }
+    }
+    
+    func fetchChatUsers(){
         LoginModel().fetchConnectedUsersInDB(authUser: authUser) { users, error in
             self.activityIndicatorView.startAnimating()
             if let error = error {
@@ -57,6 +67,21 @@ class ListChatViewController: UIViewController {
             }
             
             self.chatUserArray = users
+            self.filteredChatUserArray = self.chatUserArray
+            DispatchQueue.main.async {
+                self.activityIndicatorView.stopAnimating()
+            }
+            self.chatTable.reloadData()
+        }
+    }
+    
+    func fetchGroups(){
+        GroupModel().fetchConnectedUsersInGroupChatInDB(userId: authUser?.uid ?? "") { group, error in
+            self.activityIndicatorView.startAnimating()
+            if let error = error {
+                AlerUser().alertUser(viewController: self, title: "Error", message: error.localizedDescription)
+            }
+            self.chatUserArray = group
             self.filteredChatUserArray = self.chatUserArray
             DispatchQueue.main.async {
                 self.activityIndicatorView.stopAnimating()
@@ -132,6 +157,7 @@ class ListChatViewController: UIViewController {
     @objc func addButtonAction(_ sender: UIButton) {
         let addUsersView = AddUsersViewController()
         addUsersView.authUser = authUser
+        addUsersView.is_Group = is_Group
         let navController = UINavigationController(rootViewController: addUsersView)
         self.present(navController, animated: true, completion: nil)
     }
@@ -184,18 +210,25 @@ class ListChatViewController: UIViewController {
         switch chatType.selectedSegmentIndex
         {
         case 0:
-            print("Inbox")
+            is_Group = false
+            chatUserArray?.removeAll()
+            filteredChatUserArray?.removeAll()
+            fetchChatUsers()
             showActivityIndicatorView()
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 self.hideActivityIndicatorView()
             }
             
         case 1:
-            print("meassages")
+            is_Group = true
             showActivityIndicatorView()
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 self.hideActivityIndicatorView()
             }
+            chatUserArray?.removeAll()
+            filteredChatUserArray?.removeAll()
+            fetchGroups()
+            chatTable.reloadData()
             
         default:
             break;
@@ -214,52 +247,73 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
             return UITableViewCell()
         }
         
-        if let chatUserArray = filteredChatUserArray, indexPath.row < chatUserArray.count {
-            let user = chatUserArray[indexPath.row]
-            
-            let username = user["displayName"] as? String ?? ""
-            let avtarURL = user["photoURL"] as? String ?? ""
-            let senderUID = user["uid"] as? String ?? ""
-            let conversationID = MessageModel().generateConversationID(user1ID: authUser?.uid ?? "", user2ID: senderUID)
-            
-            // Get the last message text
-            MessageModel().observeMessages(conversationID: conversationID, currentUserID: self.authUser?.uid ?? "", otherUserID: senderUID) { messages in
-                if let lastMessage = messages.last {
-                    let formatter = DateFormatter()
-                    formatter.dateFormat = "h:mm a"
-                    let dateString = formatter.string(from: lastMessage.sentDate)
-                    
-                    let lastMessageText: String
-                    switch lastMessage.kind {
-                    case .text(let text):
-                        lastMessageText = text
-                    default:
-                        lastMessageText = "Unsupported message type"
+        if is_Group == true {
+            if let chatUserArray = filteredChatUserArray, indexPath.row < chatUserArray.count {
+                let user = chatUserArray[indexPath.row]
+                let groupName = user["groupName"] as? String ?? ""
+                
+                cell.setCellData(userImage: nil, username: groupName, userRecentMeassage: nil, meassageTime: nil)
+            }
+        } else {
+            if let chatUserArray = filteredChatUserArray, indexPath.row < chatUserArray.count {
+                let user = chatUserArray[indexPath.row]
+                
+                let username = user["displayName"] as? String ?? ""
+                let avtarURL = user["photoURL"] as? String ?? ""
+                let senderUID = user["uid"] as? String ?? ""
+                let conversationID = ChatModel().generateConversationID(user1ID: authUser?.uid ?? "", user2ID: senderUID)
+                
+                // Get the last message text
+                ChatModel().observeMessages(conversationID: conversationID, currentUserID: self.authUser?.uid ?? "", otherUserID: senderUID) { messages in
+                    if let lastMessage = messages.last {
+                        let formatter = DateFormatter()
+                        formatter.dateFormat = "h:mm a"
+                        let dateString = formatter.string(from: lastMessage.sentDate)
+                        
+                        let lastMessageText: String
+                        switch lastMessage.kind {
+                        case .text(let text):
+                            lastMessageText = text
+                        default:
+                            lastMessageText = "Unsupported message type"
+                        }
+                        
+                        cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: lastMessageText, meassageTime: dateString)
                     }
-                    
-                    cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: lastMessageText, meassageTime: dateString)
                 }
             }
         }
-        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let chatController = ChatController()
-        if let chatUserArray = filteredChatUserArray, indexPath.row < chatUserArray.count {
-            let user = chatUserArray[indexPath.row]
-            
-            let username = user["displayName"] as? String ?? ""
-            let userphoto = user["photoURL"] as? String ?? ""
-            let senderUID = user["uid"] as? String ?? ""
-            let conversationID = MessageModel().generateConversationID(user1ID: authUser?.uid ?? "", user2ID: senderUID)
-            chatController.authUser = authUser
-            chatController.senderUserName = username
-            chatController.senderPhotoURL = userphoto
-            chatController.senderUID = senderUID
-            chatController.conversationID = conversationID
-            navigationController?.pushViewController(chatController, animated: true)
+        if is_Group == true {
+            let chatController = GroupChatController()
+            if let chatUserArray = filteredChatUserArray, indexPath.row < chatUserArray.count {
+                let group = chatUserArray[indexPath.row]
+                let groupName = group["groupName"] as? String ?? ""
+                let conversationID = group["conversationID"] as? String ?? ""
+                chatController.authUser = authUser
+                chatController.groupName = groupName
+                chatController.conversationID = conversationID
+                navigationController?.pushViewController(chatController, animated: true)
+            }
+        } else {
+            let chatController = ChatController()
+            if let chatUserArray = filteredChatUserArray, indexPath.row < chatUserArray.count {
+                let user = chatUserArray[indexPath.row]
+                
+                let username = user["displayName"] as? String ?? ""
+                let userphoto = user["photoURL"] as? String ?? ""
+                let senderUID = user["uid"] as? String ?? ""
+                let conversationID = ChatModel().generateConversationID(user1ID: authUser?.uid ?? "", user2ID: senderUID)
+                chatController.authUser = authUser
+                chatController.senderUserName = username
+                chatController.senderPhotoURL = userphoto
+                chatController.senderUID = senderUID
+                chatController.conversationID = conversationID
+                navigationController?.pushViewController(chatController, animated: true)
+            }
         }
     }
     

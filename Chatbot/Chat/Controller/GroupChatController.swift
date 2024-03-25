@@ -1,8 +1,8 @@
 //
-//  ChatController.swift
+//  GroupChatController.swift
 //  Chatbot
 //
-//  Created by Inderpreet Singh on 20/03/24.
+//  Created by Inderpreet Singh on 25/03/24.
 //
 
 import UIKit
@@ -13,19 +13,14 @@ import FirebaseAuth
 import Kingfisher
 import FirebaseDatabaseInternal
 
-
-class ChatController: MessagesViewController {
+class GroupChatController: MessagesViewController {
     
-    private var messages = [Message]()
+    private var messages = [GroupMessage]()
     
     var selfSender: SenderType?
-    var conversationID: String?
-    var senderUserName: String?
-    var senderPhotoURL: String?
-    var senderUID: String?
     var authUser:User?
-    
-    var photoUrl:URL?
+    var conversationID: String?
+    var groupName: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,7 +56,7 @@ class ChatController: MessagesViewController {
         
         let headerLabel = UILabel(frame: CGRect(x: 60, y: 60, width: view.frame.width - 120, height: 30))
         headerLabel.textAlignment = .center
-        headerLabel.text = senderUserName ?? ""
+        headerLabel.text = groupName ?? ""
         headerView.addSubview(headerLabel)
         
         view.addSubview(headerView)
@@ -76,7 +71,7 @@ class ChatController: MessagesViewController {
     }
     
     func observeMessages() {
-        ChatModel().observeMessages(conversationID: conversationID ?? "", currentUserID: self.authUser?.uid ?? "", otherUserID: self.senderUID ?? "") { message in
+        GroupModel().observeGroupMessages(conversationID: conversationID ?? "", currentUserID: self.authUser?.uid ?? "") { message in
             
             // empty message array every time
             self.messages.removeAll()
@@ -95,7 +90,7 @@ class ChatController: MessagesViewController {
     }
 }
 
-extension ChatController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
+extension GroupChatController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
     func currentSender() -> SenderType {
         return selfSender ?? Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? "")
     }
@@ -109,13 +104,9 @@ extension ChatController: MessagesDataSource, MessagesLayoutDelegate, MessagesDi
     }
     
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-        if message.sender.senderId == self.authUser?.uid {
-            avatarView.kf.setImage(with: authUser?.photoURL)
-        } else if message.sender.displayName == self.senderUserName {
-            avatarView.kf.setImage(with: URL(string: self.senderPhotoURL ?? ""))
-        } else {
-            avatarView.image = UIImage(systemName: "person")
-        }
+        let currentMessage = messages[indexPath.row]
+        let photoURL = currentMessage.senderAvtar
+        avatarView.kf.setImage(with: URL(string: photoURL))
     }
     
     func headerViewSize(for section: Int, in messagesCollectionView: MessagesCollectionView) -> CGSize {
@@ -133,14 +124,16 @@ extension ChatController: MessagesDataSource, MessagesLayoutDelegate, MessagesDi
     }
 }
 
-extension ChatController: InputBarAccessoryViewDelegate {
+extension GroupChatController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         // Ensure there's text entered by the user
         guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return
         }
-
-        ChatModel().sendMessage(conversationID: conversationID ?? "", senderID: authUser?.uid ?? "", senderDisplayName: authUser?.displayName ?? "", message: text) { error in
+        
+        print(authUser?.photoURL)
+        
+        GroupModel().sendGroupMessage(conversationID: conversationID ?? "", sender: authUser, message: text) { error in
             if let error = error {
                 AlerUser().alertUser(viewController: self, title: "Error", message: error)
             }

@@ -20,7 +20,7 @@ struct Sender: SenderType {
     var displayName: String
 }
 
-class MessageModel: NSObject {
+class ChatModel: NSObject {
     
     let messagesDatabase = Database.database().reference().child("conversation")
     
@@ -62,7 +62,7 @@ class MessageModel: NSObject {
     /**
      func sendMessage(conversationID: String, message: Message, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> Void)
      - Note: Used to Send Meassages based on unique conversationID
-     - parameter conversationID: Expected String, use MessageModel().generateConversationID
+     - parameter conversationID: Expected String, use ChatModel().generateConversationID
      - parameter message: Message format of type struct Message: MessageType {
                                               var sender: SenderType
                                               var messageId: String
@@ -94,7 +94,7 @@ class MessageModel: NSObject {
     /**
      func observeMessages(conversationID: String, currentUserID: String, otherUserID: String, completionHandler: @escaping ([Message]) -> Void)
      - Note: Used to Fetch Meassages based on unique conversationID
-     - parameter conversationID: Expected String, use MessageModel().generateConversationID
+     - parameter conversationID: Expected String, use ChatModel().generateConversationID
      - parameter currentUserID: Authenticated User UID
      - parameter otherUserID: Other User UID
      - returns: returns meassage in format of struct Message: MessageType {

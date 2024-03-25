@@ -110,7 +110,7 @@ class LoginModel:NSObject {
             var uidArray:[String] = []
             
             for id in ids {
-                if let reversedUID = MessageModel().getOtherUserID(conversationID: id, currentUserID: authUser?.uid ?? "") {
+                if let reversedUID = ChatModel().getOtherUserID(conversationID: id, currentUserID: authUser?.uid ?? "") {
                     uidArray.append(reversedUID)
                 }
             }

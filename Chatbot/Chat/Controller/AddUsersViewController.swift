@@ -12,9 +12,12 @@ import NVActivityIndicatorView
 class AddUsersViewController: UIViewController {
 
     lazy var usersTable = UITableView()
+    lazy var groupNameTextField = UITextField()
     
     var authUser:User?
     var chatUserArray:[[String:Any]]?
+    var is_Group = false
+    var selectedUsers: [String] = [] // to be used by group users
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,7 +63,27 @@ class AddUsersViewController: UIViewController {
         headerLabel.text = "Add Users"
         view.addSubview(headerLabel)
         
-        let usersTableY: CGFloat = headerLabel.frame.maxY + 20
+        // Add a "Done" button
+        let doneButtonWidth: CGFloat = 80
+        let doneButtonHeight: CGFloat = 40
+        let doneButtonX: CGFloat = view.bounds.width - doneButtonWidth - 15
+        let doneButtonY: CGFloat = headerLabel.frame.minY
+        let doneButton = UIButton(type: .system)
+        doneButton.frame = CGRect(x: doneButtonX, y: doneButtonY, width: doneButtonWidth, height: doneButtonHeight)
+        doneButton.setTitle("Done", for: .normal)
+        doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
+        view.addSubview(doneButton)
+        
+        // Add a text field for group name
+        let groupNameTextFieldY: CGFloat = headerLabel.frame.maxY + 20
+        let groupNameTextFieldHeight: CGFloat = 40
+        groupNameTextField = UITextField(frame: CGRect(x: 15, y: groupNameTextFieldY, width: view.bounds.width - 30, height: groupNameTextFieldHeight))
+        groupNameTextField.placeholder = "Enter Group Name"
+        groupNameTextField.borderStyle = .roundedRect
+        groupNameTextField.backgroundColor = .white
+        view.addSubview(groupNameTextField)
+        
+        let usersTableY: CGFloat = groupNameTextField.frame.maxY + 20
         let usersTableHeight: CGFloat = view.bounds.height - usersTableY
         usersTable = UITableView(frame: CGRect(x: 0, y: usersTableY, width: view.bounds.width, height: usersTableHeight))
         view.addSubview(usersTable)
@@ -78,6 +101,21 @@ class AddUsersViewController: UIViewController {
     @objc func backButtonTapped() {
         self.dismiss(animated: true, completion: nil)
     }
+    
+    @objc func doneButtonTapped() {
+        
+        let conversationID = GroupModel().generateGroupConversationID(userIDs: selectedUsers)
+        
+        // Call API to add users to the group
+        GroupModel().connectUsersInGroupChatInDB(conversationID: conversationID, groupName: groupNameTextField.text ?? "") { isSucceeded, error in
+            if let error = error {
+                AlerUser().alertUser(viewController: self, title: "Error", message: error)
+            }
+            if isSucceeded {
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
 }
 
 extension AddUsersViewController:UITableViewDelegate,UITableViewDataSource {
@@ -90,30 +128,46 @@ extension AddUsersViewController:UITableViewDelegate,UITableViewDataSource {
             return UITableViewCell()
         }
         
-        // timepass
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
-        let currentTime = dateFormatter.string(from: Date())
-        
-        
         if let chatUserArray = chatUserArray, indexPath.row < chatUserArray.count {
             let user = chatUserArray[indexPath.row]
             
             let username = user["displayName"] as? String ?? ""
             let avtarURL = user["photoURL"] as? String ?? ""
             
-            cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: "Placeholder", meassageTime: currentTime)
+            cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: nil, meassageTime: nil)
         }
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // MARK: Call API to add users UID
-        if let chatUserArray = chatUserArray, indexPath.row < chatUserArray.count {
-            let user = chatUserArray[indexPath.row]
-            let userUID = user["uid"] as? String ?? ""
-            let conversationID = MessageModel().generateConversationID(user1ID: authUser?.uid ?? "", user2ID: userUID)
+        guard let chatUserArray = chatUserArray, indexPath.row < chatUserArray.count else {
+            return
+        }
+        
+        let user = chatUserArray[indexPath.row]
+        let userUID = user["uid"] as? String ?? ""
+        
+        if is_Group {
+            // Group chat logic
+            if let cell = tableView.cellForRow(at: indexPath) {
+                if selectedUsers.contains(userUID) {
+                    // Deselect the user
+                    cell.accessoryType = .none
+                    if let index = selectedUsers.firstIndex(of: userUID) {
+                        selectedUsers.remove(at: index)
+                    }
+                } else {
+                    // Select the user
+                    cell.accessoryType = .checkmark
+                    selectedUsers.append(userUID)
+                }
+            }
+        } else {
+            // Single chat logic
+            let conversationID = ChatModel().generateConversationID(user1ID: authUser?.uid ?? "", user2ID: userUID)
+            
+            // Call API to connect users in DB
             LoginModel().connectUsersInDB(conversationID: conversationID) { isSucceeded, error in
                 if let error = error {
                     AlerUser().alertUser(viewController: self, title: "Error", message: error)
