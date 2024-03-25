@@ -104,7 +104,7 @@ extension GroupChatController: MessagesDataSource, MessagesLayoutDelegate, Messa
     }
     
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-        let currentMessage = messages[indexPath.row]
+        let currentMessage = messages[indexPath.section]
         let photoURL = currentMessage.senderAvtar
         avatarView.kf.setImage(with: URL(string: photoURL))
     }
@@ -130,8 +130,6 @@ extension GroupChatController: InputBarAccessoryViewDelegate {
         guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return
         }
-        
-        print(authUser?.photoURL)
         
         GroupModel().sendGroupMessage(conversationID: conversationID ?? "", sender: authUser, message: text) { error in
             if let error = error {
