@@ -29,6 +29,7 @@ class GroupModel: NSObject {
      - returns: Sorted unique ID in String
      - warning: Do-not modify unless you have a better implementation
      */
+    
     func generateGroupConversationID(userIDs: [String]) -> String {
         let sortedUserIDs = userIDs.sorted()
         let conversationID = sortedUserIDs.joined(separator: "_")
@@ -42,6 +43,7 @@ class GroupModel: NSObject {
      - parameter currentUserID: current Authenticated user UID
      - returns: array of other user UIDs
      */
+    
     func getOtherUserIDs(conversationID: String, currentUserID: String) -> [String]? {
         let userIDs = conversationID.components(separatedBy: "_")
         
@@ -97,6 +99,7 @@ class GroupModel: NSObject {
      - parameter groupName: expects String format and used for Naming Groups
      - returns: result if error returns a string and false else nil string and true
      */
+    
     func fetchConnectedUsersInGroupChatInDB(userId: String, completion: @escaping ([Dictionary<String, Any>]?, Error?) -> Void) {
         let dbRef = Database.database().reference().child("connectedUsersGroup")
         

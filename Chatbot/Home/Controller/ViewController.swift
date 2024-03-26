@@ -37,8 +37,10 @@ class ViewController: UIViewController {
     
     func setupUI(){
         let logoImage = UIImageView()
-        logoImage.frame = CGRect(x: 0, y: 0, width: 190, height: 190)
-        logoImage.image = UIImage(systemName: "text.bubble")
+        logoImage.frame = CGRect(x: 0, y: 0, width: 150, height: 150)
+        logoImage.image = UIImage(named: "appIcon")
+        logoImage.layer.cornerRadius = 75
+        logoImage.clipsToBounds = true
         logoImage.center = CGPoint(x: view.center.x, y: view.center.y - 100)
         view.addSubview(logoImage)
         

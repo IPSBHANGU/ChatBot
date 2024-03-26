@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		127851723A68E91EED2E05F9 /* Pods_Chatbot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB43EAF638778BE7A6AA5789 /* Pods_Chatbot.framework */; };
+		DF1A97892BB2DF6E00EC6A63 /* IconPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1A97882BB2DF6E00EC6A63 /* IconPageController.swift */; };
 		FB1B33372BA823020061259F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1B33362BA823020061259F /* AppDelegate.swift */; };
 		FB1B33392BA823020061259F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1B33382BA823020061259F /* SceneDelegate.swift */; };
 		FB1B333B2BA823020061259F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1B333A2BA823020061259F /* ViewController.swift */; };
@@ -54,6 +55,7 @@
 		08166E130B4FFC752DDB7EBE /* Pods-Chatbot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chatbot.debug.xcconfig"; path = "Target Support Files/Pods-Chatbot/Pods-Chatbot.debug.xcconfig"; sourceTree = "<group>"; };
 		9797A2CC0E510E7FD851914C /* Pods-Chatbot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chatbot.release.xcconfig"; path = "Target Support Files/Pods-Chatbot/Pods-Chatbot.release.xcconfig"; sourceTree = "<group>"; };
 		DB43EAF638778BE7A6AA5789 /* Pods_Chatbot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Chatbot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DF1A97882BB2DF6E00EC6A63 /* IconPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPageController.swift; sourceTree = "<group>"; };
 		FB1B33332BA823020061259F /* Chatbot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chatbot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB1B33362BA823020061259F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB1B33382BA823020061259F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -149,7 +151,6 @@
 		FB1B33352BA823020061259F /* Chatbot */ = {
 			isa = PBXGroup;
 			children = (
-				FB73D47A2BAAF241001B314F /* UserLogin */,
 				FB8D7FED2BA9793500FF1C21 /* AppDelegates */,
 				FB8D7FEA2BA9791300FF1C21 /* Home */,
 				FB73D47B2BAAF275001B314F /* LoginPrefrences */,
@@ -217,13 +218,6 @@
 				FB84382E2BB13479006CEA58 /* GroupChatController.xib */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		FB73D47A2BAAF241001B314F /* UserLogin */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = UserLogin;
 			sourceTree = "<group>";
 		};
 		FB73D47B2BAAF275001B314F /* LoginPrefrences */ = {
@@ -377,6 +371,7 @@
 			isa = PBXGroup;
 			children = (
 				FB1B333A2BA823020061259F /* ViewController.swift */,
+				DF1A97882BB2DF6E00EC6A63 /* IconPageController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -544,6 +539,7 @@
 				FB73D4972BAAF738001B314F /* EmailSignINViewController.swift in Sources */,
 				FB822AAE2BA85F35003805BE /* GoogleAuth.swift in Sources */,
 				FB822AAC2BA85E48003805BE /* AlerUser.swift in Sources */,
+				DF1A97892BB2DF6E00EC6A63 /* IconPageController.swift in Sources */,
 				FB1B333B2BA823020061259F /* ViewController.swift in Sources */,
 				FB8D7FE32BA9783D00FF1C21 /* UIColorHex.swift in Sources */,
 				FB1B33372BA823020061259F /* AppDelegate.swift in Sources */,

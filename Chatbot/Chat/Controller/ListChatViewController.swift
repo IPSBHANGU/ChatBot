@@ -95,7 +95,7 @@ class ListChatViewController: UIViewController {
         // UI Elements
         userAvatar.contentMode = .scaleAspectFit
         userAvatar.clipsToBounds = true
-        let rect = CGRect(x: 20, y: 55, width: 35, height: 35)
+        let rect = CGRect(x: 24, y: 52, width: 32, height: 32)
         userAvatar.layer.cornerRadius = min(rect.width, rect.height) / 2.0
         userAvatar.frame = rect
         userAvatar.kf.setImage(with: authUser?.photoURL)
@@ -104,14 +104,14 @@ class ListChatViewController: UIViewController {
         searchButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         searchButton.alpha = 1
         searchButton.tintColor = .black
-        searchButton.frame = CGRect(x: view.frame.width - 90, y: 50, width: 40, height: 44)
+        searchButton.frame = CGRect(x: 282.25, y: 58.25, width: 18.6, height: 18.6)
         searchButton.addTarget(self, action: #selector(searchAction), for: .touchUpInside)
         view.addSubview(searchButton)
         
         editButton.setImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
         editButton.alpha = 1
         editButton.tintColor = .black
-        editButton.frame = CGRect(x: view.frame.width - 50, y: 50, width: 40, height: 44)
+        editButton.frame = CGRect(x: 328, y: 56, width: 24, height: 24)
         
         let logout = UIAction(title: "Logout", image: UIImage(systemName: "xmark")) { _ in
             self.signOutButton()
@@ -122,35 +122,34 @@ class ListChatViewController: UIViewController {
         editButton.menu = menu
         view.addSubview(editButton)
 
-        chatType.frame = CGRect(x: 20, y: 120, width: view.frame.width - 90, height: 40)
+        chatType.frame = CGRect(x: 24, y: 112, width: 184, height: 32)
         chatType.addTarget(self, action: #selector(chatSelectorType(_:)), for: .valueChanged)
         chatType.itemsWithText = true
         chatType.fillEqually = true
         chatType.bottomLineThumbView = true
         chatType.setSegmentedWith(items: ["Chats", "Groups"])
-        chatType.padding = 2
+        chatType.padding = -4
         chatType.textColor = .gray
+        chatType.titlesFont = UIFont(name: "Futura", size: 20)
         chatType.selectedTextColor = .black
-        chatType.thumbViewColor = .cyan
+        chatType.thumbViewColor = UIColorHex().hexStringToUIColor(hex: "#5AD7FF")
         chatType.segmentedBackGroundColor = .systemGray6
         chatType.selectedSegmentIndex = 0
         view.addSubview(chatType)
         
-        chatTable.frame = CGRect(x: 0, y: 190, width: view.frame.width, height: view.frame.height)
+        chatTable.frame = CGRect(x: 0, y: 180, width: view.frame.width, height: view.frame.height + 32)
         
         // Add TableView to View
         view.addSubview(chatTable)
         
         // addButton
-        let buttonWidth: CGFloat = 50
-        let buttonHeight: CGFloat = 50
-        let buttonMargin: CGFloat = 50
-        addButton.frame = CGRect(x: buttonMargin, y: view.bounds.height - buttonHeight - buttonMargin, width: buttonWidth, height: buttonHeight)
+        
+        addButton.frame = CGRect(x: 296, y: 656 , width: 56, height: 56)
         addButton.setImage(UIImage(systemName: "plus"), for: .normal)
         addButton.backgroundColor = .systemGray
+        addButton.layer.cornerRadius = 28
         addButton.tintColor = .black
         addButton.addTarget(self, action: #selector(addButtonAction(_:)), for: .touchUpInside)
-        addButton.layer.cornerRadius = 25
 
         view.addSubview(addButton)
     }
@@ -341,8 +340,9 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return  UITableView.automaticDimension
+        return 56
     }
+    
 }
 
 extension ListChatViewController:UISearchBarDelegate {
