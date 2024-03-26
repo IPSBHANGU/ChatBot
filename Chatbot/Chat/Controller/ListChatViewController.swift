@@ -67,6 +67,7 @@ class ListChatViewController: UIViewController {
             }
             
             self.chatUserArray = users
+            self.filteredChatUserArray?.removeAll()
             self.filteredChatUserArray = self.chatUserArray
             DispatchQueue.main.async {
                 self.activityIndicatorView.stopAnimating()
@@ -218,6 +219,7 @@ class ListChatViewController: UIViewController {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 self.hideActivityIndicatorView()
             }
+            chatTable.reloadData()
             
         case 1:
             is_Group = true

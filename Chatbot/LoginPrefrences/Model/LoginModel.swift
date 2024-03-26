@@ -57,11 +57,12 @@ class LoginModel:NSObject {
         }
     }
     
-    func connectUsersInDB(conversationID:String?, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
+    func connectUsersInDB(authUserUID: String?, otherUserUID:String?, conversationID:String?, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
 
-        let db = Database.database().reference().child("connectedUsers")
+        let db = Database.database().reference().child("connectedUsers").child("conversationID: \(conversationID ?? "")")
         let newConnectedUser = [
-            "conversationID": conversationID ?? ""
+            "User1": authUserUID ?? "",
+            "User2": otherUserUID ?? ""
         ] as [String : Any]
         
         db.setValue(newConnectedUser) { (error, _) in
@@ -76,24 +77,24 @@ class LoginModel:NSObject {
     func fetchConnectedUsersconversationID(completionHandler: @escaping ([String]?, String?) -> Void) {
         let db = Database.database().reference().child("connectedUsers")
         
-        db.observe(.value) { snapshot in
+        db.observeSingleEvent(of: .value) { snapshot in
             guard let userData = snapshot.value as? [String: Any] else {
                 completionHandler(nil, "No Users")
                 return
             }
             
-            var ids: [String] = []
+            var conversationIDs: [String] = []
             
-            for (_, value) in userData {
-                if let id = value as? String {
-                    ids.append(id)
-                }
+            for (conversationID, _) in userData {
+                let cleanConversationID = conversationID.replacingOccurrences(of: "conversationID:", with: "").trimmingCharacters(in: .whitespaces)
+                conversationIDs.append(cleanConversationID)
             }
-            completionHandler(ids, nil)
+            completionHandler(conversationIDs, nil)
         } withCancel: { error in
             completionHandler(nil, error.localizedDescription)
         }
     }
+
     
     func fetchConnectedUsersInDB(authUser: User?, completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
         fetchConnectedUsersconversationID { conversationIDs, error in
