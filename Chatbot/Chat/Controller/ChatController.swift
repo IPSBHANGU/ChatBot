@@ -142,12 +142,15 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
                 guard let authUser = authUser else{
                     return UITableViewCell()
                 }
+        
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "h:mm a"
 
                 if case let .text(text) = message.kind {
                     if message.sender.senderId == authUser.uid {
-                        cell.setCellData(message: text, isCurrentUser: true)
+                        cell.setCellData(message: text, messageStatus: "Read  •  \(dateFormatter.string(from: message.sentDate))", isCurrentUser: true)
                     } else {
-                        cell.setCellData(message: text, isCurrentUser: false)
+                        cell.setCellData(message: text, messageStatus: "Read  •  \(dateFormatter.string(from: message.sentDate))", isCurrentUser: false)
                     }
                 }
                 return cell

@@ -25,12 +25,22 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kr1-1p-B7W">
+                                <rect key="frame" x="120" y="128" width="203" height="16"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="Kr1-1p-B7W" secondAttribute="bottom" constant="8" id="HtP-C7-TvO"/>
                             <constraint firstItem="ilU-ko-Izq" firstAttribute="leading" secondItem="Eqg-Uc-XP4" secondAttribute="leading" constant="16" id="Q28-f7-Vk3"/>
+                            <constraint firstItem="Kr1-1p-B7W" firstAttribute="leading" secondItem="Eqg-Uc-XP4" secondAttribute="leading" constant="120" id="RYn-sc-tyk"/>
                             <constraint firstAttribute="trailing" secondItem="ilU-ko-Izq" secondAttribute="trailing" constant="16" id="Yg3-GS-JYc"/>
+                            <constraint firstItem="Kr1-1p-B7W" firstAttribute="top" secondItem="ilU-ko-Izq" secondAttribute="bottom" constant="8" symbolic="YES" id="cT6-3i-9fa"/>
                             <constraint firstItem="ilU-ko-Izq" firstAttribute="top" secondItem="Eqg-Uc-XP4" secondAttribute="top" constant="8" id="o0P-YH-bcG"/>
                             <constraint firstAttribute="bottom" secondItem="ilU-ko-Izq" secondAttribute="bottom" constant="32" id="wMm-ru-fVZ"/>
+                            <constraint firstAttribute="trailing" secondItem="Kr1-1p-B7W" secondAttribute="trailing" constant="16" id="y0X-Cg-UMr"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -46,6 +56,7 @@
                 <outlet property="bubbleView" destination="Eqg-Uc-XP4" id="gE6-0P-PYq"/>
                 <outlet property="bubbleViewLeading" destination="kVW-xN-fm0" id="pwf-Tz-gUV"/>
                 <outlet property="bubbleViewTrailing" destination="YNp-aK-FgO" id="0gJ-dS-AeT"/>
+                <outlet property="messageDetails" destination="Kr1-1p-B7W" id="hON-4r-g4A"/>
                 <outlet property="messageLable" destination="ilU-ko-Izq" id="ntA-gv-MNG"/>
             </connections>
             <point key="canvasLocation" x="135.1145038167939" y="63.380281690140848"/>

@@ -21,7 +21,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mp6-0m-yNZ">
-                    <rect key="frame" x="0.0" y="749" width="393" height="103"/>
+                    <rect key="frame" x="0.0" y="752" width="393" height="100"/>
                     <subviews>
                         <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eDo-k5-PWD">
                             <rect key="frame" x="25" y="15" width="282.33333333333331" height="40"/>
@@ -61,6 +61,7 @@
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemGray6Color"/>
+            <color key="tintColor" red="0.21568627450980393" green="0.50196078431372548" blue="0.76078431372549016" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="mp6-0m-yNZ" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="n77-1I-nSJ"/>
                 <constraint firstAttribute="bottom" secondItem="mp6-0m-yNZ" secondAttribute="bottom" id="vVr-lT-ztb"/>
