@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class MessageTableViewCell: UITableViewCell {
     
@@ -14,6 +15,8 @@ class MessageTableViewCell: UITableViewCell {
     @IBOutlet weak var bubbleViewTrailing: NSLayoutConstraint!
     @IBOutlet weak var messageLable: UILabel!
     @IBOutlet weak var messageDetails: UILabel!
+    @IBOutlet weak var recieverAvtarView: UIImageView!
+    @IBOutlet weak var senderAvtarView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -23,7 +26,7 @@ class MessageTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    func setCellData(message: String?, messageStatus:String?, isCurrentUser: Bool) {
+    func setCellData(message: String?, messageStatus:String?, senderAvtar:String?, isCurrentUser: Bool) {
         messageLable.numberOfLines = 0
         bubbleView.layer.cornerRadius = 20
         messageLable.text = message ?? ""
@@ -32,14 +35,20 @@ class MessageTableViewCell: UITableViewCell {
             bubbleView.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#3780C2")
             messageLable.textColor = .white
             messageDetails.textColor = .lightText
-            bubbleViewTrailing = bubbleViewTrailing.setRelation(relation: .equal, constant: 10)
+            bubbleViewTrailing = bubbleViewTrailing.setRelation(relation: .equal, constant: 60)
             bubbleViewLeading = bubbleViewLeading.setRelation(relation: .greaterThanOrEqual, constant: 80)
+            recieverAvtarView.removeFromSuperview()
+            senderAvtarView.kf.setImage(with: URL(string: senderAvtar ?? ""))
+            senderAvtarView.layer.cornerRadius = 16.5
         } else {
             bubbleView.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#F4F4F4")
             messageLable.textColor = .black
             messageDetails.textColor = .placeholderText
-            bubbleViewLeading = bubbleViewLeading.setRelation(relation: .equal, constant: 10)
+            bubbleViewLeading = bubbleViewLeading.setRelation(relation: .equal, constant: 60)
             bubbleViewTrailing = bubbleViewTrailing.setRelation(relation: .greaterThanOrEqual, constant: 80)
+            senderAvtarView.removeFromSuperview()
+            recieverAvtarView.kf.setImage(with: URL(string: senderAvtar ?? ""))
+            recieverAvtarView.layer.cornerRadius = 16.5
         }
     }
 }

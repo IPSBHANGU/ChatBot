@@ -148,9 +148,9 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
 
                 if case let .text(text) = message.kind {
                     if message.sender.senderId == authUser.uid {
-                        cell.setCellData(message: text, messageStatus: "Read  •  \(dateFormatter.string(from: message.sentDate))", isCurrentUser: true)
+                        cell.setCellData(message: text, messageStatus: "Read  •  \(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL?.absoluteString, isCurrentUser: true)
                     } else {
-                        cell.setCellData(message: text, messageStatus: "Read  •  \(dateFormatter.string(from: message.sentDate))", isCurrentUser: false)
+                        cell.setCellData(message: text, messageStatus: "Read  •  \(dateFormatter.string(from: message.sentDate))", senderAvtar: senderPhotoURL, isCurrentUser: false)
                     }
                 }
                 return cell
