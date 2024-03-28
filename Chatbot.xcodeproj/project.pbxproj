@@ -133,6 +133,68 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		DF5B46302BB5A53900318EF5 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				DF5B46322BB5A57500318EF5 /* User List */,
+				DF5B46362BB5A5D200318EF5 /* Messages */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		DF5B46312BB5A56300318EF5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FB84382B2BAFF1E3006CEA58 /* GroupModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		DF5B46322BB5A57500318EF5 /* User List */ = {
+			isa = PBXGroup;
+			children = (
+				DF5B46332BB5A58000318EF5 /* Model */,
+				DF5B46342BB5A58400318EF5 /* View */,
+				DF5B46352BB5A58900318EF5 /* Controller */,
+			);
+			path = "User List";
+			sourceTree = "<group>";
+		};
+		DF5B46332BB5A58000318EF5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		DF5B46342BB5A58400318EF5 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				FB71F00E2BA9A43100A79BE7 /* ListChatTableViewCell.xib */,
+				FB71F00A2BA9A04B00A79BE7 /* ListChatViewController.xib */,
+				FB71F00D2BA9A43100A79BE7 /* ListChatTableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		DF5B46352BB5A58900318EF5 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				FB71F0092BA9A04B00A79BE7 /* ListChatViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		DF5B46362BB5A5D200318EF5 /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				FB84381F2BACA6CE006CEA58 /* Model */,
+				FB71F0082BA9A02D00A79BE7 /* View */,
+				FB71F0072BA9A02200A79BE7 /* Controller */,
+			);
+			path = Messages;
+			sourceTree = "<group>";
+		};
 		FB1B332A2BA823020061259F = {
 			isa = PBXGroup;
 			children = (
@@ -158,8 +220,7 @@
 				FB8D7FED2BA9793500FF1C21 /* AppDelegates */,
 				FB8D7FEA2BA9791300FF1C21 /* Home */,
 				FB73D47B2BAAF275001B314F /* LoginPrefrences */,
-				FB71F0062BA9A00500A79BE7 /* Chat */,
-				FB2F5F112BB300A50077C2D8 /* GroupChat */,
+				FB71F0062BA9A00500A79BE7 /* Message */,
 				FB8D7FE72BA978BA00FF1C21 /* Resources */,
 				FB8D7FE42BA9788E00FF1C21 /* Utils */,
 			);
@@ -169,6 +230,7 @@
 		FB2F5F112BB300A50077C2D8 /* GroupChat */ = {
 			isa = PBXGroup;
 			children = (
+				DF5B46312BB5A56300318EF5 /* Model */,
 				FB2F5F132BB300B60077C2D8 /* View */,
 				FB2F5F122BB300B10077C2D8 /* Controller */,
 			);
@@ -216,20 +278,18 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		FB71F0062BA9A00500A79BE7 /* Chat */ = {
+		FB71F0062BA9A00500A79BE7 /* Message */ = {
 			isa = PBXGroup;
 			children = (
-				FB84381F2BACA6CE006CEA58 /* Model */,
-				FB71F0082BA9A02D00A79BE7 /* View */,
-				FB71F0072BA9A02200A79BE7 /* Controller */,
+				DF5B46302BB5A53900318EF5 /* Chat */,
+				FB2F5F112BB300A50077C2D8 /* GroupChat */,
 			);
-			path = Chat;
+			path = Message;
 			sourceTree = "<group>";
 		};
 		FB71F0072BA9A02200A79BE7 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				FB71F0092BA9A04B00A79BE7 /* ListChatViewController.swift */,
 				FB73D49B2BAAFF89001B314F /* ChatController.swift */,
 				FB8438272BAEC178006CEA58 /* AddUsersViewController.swift */,
 			);
@@ -239,9 +299,6 @@
 		FB71F0082BA9A02D00A79BE7 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				FB71F00A2BA9A04B00A79BE7 /* ListChatViewController.xib */,
-				FB71F00D2BA9A43100A79BE7 /* ListChatTableViewCell.swift */,
-				FB71F00E2BA9A43100A79BE7 /* ListChatTableViewCell.xib */,
 				FB73D49C2BAAFF89001B314F /* ChatController.xib */,
 				FB8438282BAEC178006CEA58 /* AddUsersViewController.xib */,
 				FB2F5F142BB302630077C2D8 /* MessageTableViewCell.swift */,
@@ -324,7 +381,6 @@
 			isa = PBXGroup;
 			children = (
 				FB8438202BACA6DD006CEA58 /* ChatModel.swift */,
-				FB84382B2BAFF1E3006CEA58 /* GroupModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";

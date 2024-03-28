@@ -2,7 +2,7 @@
 //  AddUsersViewController.swift
 //  Chatbot
 //
-//  Created by Inderpreet Singh on 23/03/24.
+//  Created by Umang Kedan on 23/03/24.
 //
 
 import UIKit
