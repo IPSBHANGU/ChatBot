@@ -10,6 +10,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ChatControllerViewController" customModule="Chatbot" customModuleProvider="target">
             <connections>
+                <outlet property="inputTextField" destination="eDo-k5-PWD" id="2Kw-mP-l1l"/>
+                <outlet property="sendButton" destination="le3-EA-KjB" id="5oi-eb-sAm"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -17,12 +19,61 @@
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mp6-0m-yNZ">
+                    <rect key="frame" x="0.0" y="749" width="393" height="103"/>
+                    <subviews>
+                        <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eDo-k5-PWD">
+                            <rect key="frame" x="25" y="15" width="282.33333333333331" height="40"/>
+                            <color key="backgroundColor" systemColor="systemGray6Color"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="Fvd-R6-H9X"/>
+                                <constraint firstAttribute="width" constant="282.32999999999998" id="zCb-fR-mN3"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </textField>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="le3-EA-KjB">
+                            <rect key="frame" x="317.33333333333331" y="15" width="50.666666666666686" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="50.670000000000002" id="mJs-bl-7QQ"/>
+                                <constraint firstAttribute="height" constant="40" id="wqQ-ix-SW8"/>
+                            </constraints>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" image="paperplane.fill" catalog="system"/>
+                            <connections>
+                                <action selector="sendButtonAction:" destination="-1" eventType="touchUpInside" id="57J-0y-mcB"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="le3-EA-KjB" firstAttribute="leading" secondItem="eDo-k5-PWD" secondAttribute="trailing" constant="10" id="02h-gk-08j"/>
+                        <constraint firstItem="eDo-k5-PWD" firstAttribute="top" secondItem="mp6-0m-yNZ" secondAttribute="top" constant="15" id="2h7-a6-rfI"/>
+                        <constraint firstAttribute="bottom" secondItem="eDo-k5-PWD" secondAttribute="bottom" constant="48" id="4vo-u0-Gm9"/>
+                        <constraint firstAttribute="height" constant="100" id="Dqn-RV-K2E"/>
+                        <constraint firstItem="le3-EA-KjB" firstAttribute="top" secondItem="eDo-k5-PWD" secondAttribute="top" id="I4n-Hy-Nbg"/>
+                        <constraint firstAttribute="trailing" secondItem="le3-EA-KjB" secondAttribute="trailing" constant="25" id="L6q-3d-aSI"/>
+                        <constraint firstItem="le3-EA-KjB" firstAttribute="bottom" secondItem="eDo-k5-PWD" secondAttribute="bottom" id="NY9-bb-wy6"/>
+                        <constraint firstItem="eDo-k5-PWD" firstAttribute="leading" secondItem="mp6-0m-yNZ" secondAttribute="leading" constant="25" id="atX-Fu-OvW"/>
+                    </constraints>
+                </view>
+            </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemGray6Color"/>
-            <point key="canvasLocation" x="76" y="20"/>
+            <constraints>
+                <constraint firstItem="mp6-0m-yNZ" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="n77-1I-nSJ"/>
+                <constraint firstAttribute="bottom" secondItem="mp6-0m-yNZ" secondAttribute="bottom" id="vVr-lT-ztb"/>
+                <constraint firstItem="mp6-0m-yNZ" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="vyP-Cf-AT4"/>
+            </constraints>
+            <point key="canvasLocation" x="75.572519083969468" y="19.718309859154932"/>
         </view>
     </objects>
     <resources>
+        <image name="paperplane.fill" catalog="system" width="128" height="119"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemGray6Color">
             <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

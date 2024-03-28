@@ -29,9 +29,11 @@ class LoginPrefrencesViewController: UIViewController {
         // Logo
         let logoImage = UIImageView()
         logoImage.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-        logoImage.image = UIImage(systemName: "text.bubble")
+        logoImage.image = UIImage(named: "appIcon")
         logoImage.center = CGPoint(x: view.center.x, y: view.center.y / 2 - 100)
         logoImage.tintColor = .systemGray
+        logoImage.clipsToBounds = true
+        logoImage.layer.cornerRadius = 50
         view.addSubview(logoImage)
         
         let appName = UILabel()

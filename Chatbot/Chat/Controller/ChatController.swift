@@ -14,9 +14,12 @@ import Kingfisher
 import FirebaseDatabaseInternal
 
 
-class ChatController: MessagesViewController {
+class ChatController: UIViewController {
     
     private var messages = [Message]()
+    
+    @IBOutlet weak var sendButton: UIButton!
+    @IBOutlet weak var inputTextField: UITextField!
     
     var selfSender: SenderType?
     var conversationID: String?
@@ -27,25 +30,17 @@ class ChatController: MessagesViewController {
     
     var photoUrl:URL?
     
+    lazy var messageTableView = UITableView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        messageInputBar.delegate = self
-        
+        inputTextField.delegate = self
+        inputTextField.becomeFirstResponder()
         observeMessages()
-        messagesSend()
         setupHeaderView()
-        setupMessageViewFeatures()
+        setupTableView()
     }
     
-    func setupMessageViewFeatures(){
-        self.showMessageTimestampOnSwipeLeft = true
-    }
-    
-    func messagesSend() {
-        messagesCollectionView.messagesDataSource = self
-        messagesCollectionView.messagesLayoutDelegate = self
-        messagesCollectionView.messagesDisplayDelegate = self
-    }
     
     func setupHeaderView() {
         let headerHeight: CGFloat = 90
@@ -66,10 +61,20 @@ class ChatController: MessagesViewController {
         
         view.addSubview(headerView)
         
-        let messagesCollectionViewY = headerView.frame.maxY
-        messagesCollectionView.frame = CGRect(x: 0, y: messagesCollectionViewY, width: view.frame.width, height: view.frame.height - messagesCollectionViewY)
+        messageTableView.frame = CGRect(x: 0, y: headerView.frame.maxY, width: view.frame.width, height: view.frame.height - 190 )
+        view.addSubview(messageTableView)
     }
 
+    func setupTableView(){
+        messageTableView.separatorStyle = .none
+        messageTableView.delegate = self
+        messageTableView.dataSource = self
+        messageTableView.backgroundColor = .white
+        messageTableView.tintColor = .white
+        messageTableView.rowHeight = UITableView.automaticDimension
+        messageTableView.estimatedRowHeight = 100
+        messageTableView.register(UINib(nibName: "MessageTableViewCell", bundle: .main), forCellReuseIdentifier: "messageTableViewCell")
+    }
     
     @objc func backButtonTapped() {
         self.navigationController?.popViewController(animated: true)
@@ -85,68 +90,74 @@ class ChatController: MessagesViewController {
             self.messages.append(contentsOf: message)
             
             // Reload the messages collection view to display the new message
-            self.messagesCollectionView.reloadData()
+            self.messageTableView.reloadData()
             
             // Scroll to the last message
             DispatchQueue.main.async {
-                self.messagesCollectionView.scrollToLastItem(animated: true)
+                let indexPath = IndexPath(row: self.messages.count-1, section: 0)
+                self.messageTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
             }
         }
     }
+    
+    @IBAction func sendButtonAction(_ sender: Any) {
+        guard let messageText = inputTextField.text, !messageText.isEmpty else {
+                   return
+               }
+
+               let newMessage = Message(sender: Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? ""),
+                                        messageId: "\(authUser?.uid ?? "")", // Set an appropriate message ID
+                                        sentDate: Date(),
+                                        kind: .text(messageText))
+
+               // Append the new message to the messages array
+               messages.append(newMessage)
+
+               // Reload the table view to display the new message
+               messageTableView.reloadData()
+
+               ChatModel().sendMessage(conversationID: conversationID ?? "", senderID: authUser?.uid ?? "", senderDisplayName: authUser?.displayName ?? "", message: messageText) { error in
+                   if let error = error {
+                       AlerUser().alertUser(viewController: self, title: "Error", message: error)
+                   } else {
+                       // Clear the input text after sending message
+                       print("message sent")
+                       self.inputTextField.text = ""
+                   }
+               }
+           }
 }
 
-extension ChatController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
-    func currentSender() -> SenderType {
-        return selfSender ?? Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? "")
+extension ChatController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        messages.count
     }
     
-    func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-        return messages[indexPath.section]
-    }
-    
-    func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
-        return messages.count
-    }
-    
-    func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-        if message.sender.senderId == self.authUser?.uid {
-            avatarView.kf.setImage(with: authUser?.photoURL)
-        } else if message.sender.displayName == self.senderUserName {
-            avatarView.kf.setImage(with: URL(string: self.senderPhotoURL ?? ""))
-        } else {
-            avatarView.image = UIImage(systemName: "person")
-        }
-    }
-    
-    func headerViewSize(for section: Int, in messagesCollectionView: MessagesCollectionView) -> CGSize {
-        CGSize(width: 0, height: 30)
-    }
-    
-    func messageTimestampLabelAttributedText(for message: any MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "h:mm a"
-        let dateString = formatter.string(from: message.sentDate)
-        return NSAttributedString(string: dateString, attributes: [
-            .font: UIFont.systemFont(ofSize: 12),
-            .foregroundColor: UIColor.darkGray
-        ])
-    }
-}
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let message = messages[indexPath.row]
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: "messageTableViewCell", for: indexPath) as? MessageTableViewCell else {
+                    return UITableViewCell()
+                }
 
-extension ChatController: InputBarAccessoryViewDelegate {
-    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        // Ensure there's text entered by the user
-        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return
-        }
+                guard let authUser = authUser else{
+                    return UITableViewCell()
+                }
 
-        ChatModel().sendMessage(conversationID: conversationID ?? "", senderID: authUser?.uid ?? "", senderDisplayName: authUser?.displayName ?? "", message: text) { error in
-            if let error = error {
-                AlerUser().alertUser(viewController: self, title: "Error", message: error)
-            }
-        }
+                if case let .text(text) = message.kind {
+                    if message.sender.senderId == authUser.uid {
+                        cell.setCellData(message: text, isCurrentUser: true)
+                    } else {
+                        cell.setCellData(message: text, isCurrentUser: false)
+                    }
+                }
+                return cell
         
-        // Clear the input text
-        inputBar.inputTextView.text = ""
+    }
+    
+}
+ 
+extension ChatController : UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
     }
 }

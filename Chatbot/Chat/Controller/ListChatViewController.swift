@@ -41,13 +41,17 @@ class ListChatViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         if let result = result {
             authUser = result.user
         }
-        setupUI()
+        
         setupTableView()
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        setupUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -101,17 +105,17 @@ class ListChatViewController: UIViewController {
         userAvatar.kf.setImage(with: authUser?.photoURL)
         view.addSubview(userAvatar)
         
-        searchButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        searchButton.alpha = 1
-        searchButton.tintColor = .black
-        searchButton.frame = CGRect(x: 282.25, y: 58.25, width: 18.6, height: 18.6)
-        searchButton.addTarget(self, action: #selector(searchAction), for: .touchUpInside)
-        view.addSubview(searchButton)
-        
         editButton.setImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
         editButton.alpha = 1
         editButton.tintColor = .black
-        editButton.frame = CGRect(x: 328, y: 56, width: 24, height: 24)
+        editButton.frame = CGRect(x: view.frame.width - 24 - 23, y: userAvatar.frame.origin.y, width: 24, height: 24)
+        
+        searchButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+        searchButton.alpha = 1
+        searchButton.tintColor = .black
+        searchButton.frame = CGRect(x: editButton.frame.maxX - editButton.frame.width - 44, y: editButton.frame.origin.y, width: 24, height: 24)
+        searchButton.addTarget(self, action: #selector(searchAction), for: .touchUpInside)
+        view.addSubview(searchButton)
         
         let logout = UIAction(title: "Logout", image: UIImage(systemName: "xmark")) { _ in
             self.signOutButton()
@@ -143,12 +147,11 @@ class ListChatViewController: UIViewController {
         view.addSubview(chatTable)
         
         // addButton
-        
-        addButton.frame = CGRect(x: 296, y: 656 , width: 56, height: 56)
-        addButton.setImage(UIImage(systemName: "plus"), for: .normal)
-        addButton.backgroundColor = .systemGray
+        addButton.frame = CGRect(x: 296, y: view.frame.maxY - 100 , width: 56, height: 56)
+        addButton.setImage(UIImage(systemName: "message.fill"), for: .normal)
+        addButton.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#3780C2")
         addButton.layer.cornerRadius = 28
-        addButton.tintColor = .black
+        addButton.tintColor = .white
         addButton.addTarget(self, action: #selector(addButtonAction(_:)), for: .touchUpInside)
 
         view.addSubview(addButton)

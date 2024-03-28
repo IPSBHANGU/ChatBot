@@ -45,7 +45,7 @@ class ViewController: UIViewController {
         view.addSubview(logoImage)
         
         let appName = UILabel()
-        appName.frame = CGRect(x: logoImage.frame.origin.x + 40, y: logoImage.frame.maxY + 10, width: view.frame.width - 50, height: 30)
+        appName.frame = CGRect(x: logoImage.frame.origin.x + 20, y: logoImage.frame.maxY + 10, width: view.frame.width - 50, height: 30)
         appName.text = "ChatApp"
         appName.font = UIFont(name: "Gill Sans", size: 30)
         view.addSubview(appName)

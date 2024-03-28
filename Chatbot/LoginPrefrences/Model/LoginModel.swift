@@ -111,8 +111,11 @@ class LoginModel:NSObject {
             var uidArray:[String] = []
             
             for id in ids {
-                if let reversedUID = ChatModel().getOtherUserID(conversationID: id, currentUserID: authUser?.uid ?? "") {
-                    uidArray.append(reversedUID)
+                let check = ChatModel().checkForUserRelation(conversationID: id, currentUserID: authUser?.uid ?? "")
+                if check == true {
+                    if let reversedUID = ChatModel().getOtherUserID(conversationID: id, currentUserID: authUser?.uid ?? "") {
+                        uidArray.append(reversedUID)
+                    }
                 }
             }
             
