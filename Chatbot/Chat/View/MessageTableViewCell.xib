@@ -39,22 +39,65 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kr1-1p-B7W">
+                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JHK-kJ-Hpa">
                                 <rect key="frame" x="120" y="128" width="125" height="16"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sent" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XMq-tZ-5BY">
+                                        <rect key="frame" x="0.0" y="0.0" width="33.333333333333336" height="16"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="33.333333333333336" id="Cbf-VV-fIS"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r0A-VG-Mp7">
+                                        <rect key="frame" x="33.33333333333335" y="0.0" width="91.666666666666686" height="16"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="50z-Zt-z85">
+                                                <rect key="frame" x="8" y="6" width="4" height="4"/>
+                                                <color key="backgroundColor" red="0.60784313729999995" green="0.74901960779999999" blue="0.87843137250000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="4" id="epc-WO-e62"/>
+                                                    <constraint firstAttribute="height" constant="4" id="obA-LG-8zX"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="2"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12:30 am" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xkG-lP-zkM">
+                                                <rect key="frame" x="20" y="0.3333333333333437" width="66.666666666666671" height="15.333333333333336"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="50z-Zt-z85" firstAttribute="centerY" secondItem="r0A-VG-Mp7" secondAttribute="centerY" id="2N3-kG-udj"/>
+                                            <constraint firstItem="xkG-lP-zkM" firstAttribute="top" secondItem="r0A-VG-Mp7" secondAttribute="top" constant="0.33333333333334281" id="CXi-CE-1DM"/>
+                                            <constraint firstAttribute="trailing" secondItem="xkG-lP-zkM" secondAttribute="trailing" constant="5" id="Fnq-pR-AFr"/>
+                                            <constraint firstItem="50z-Zt-z85" firstAttribute="leading" secondItem="r0A-VG-Mp7" secondAttribute="leading" constant="8" id="bGh-gl-xOV"/>
+                                            <constraint firstItem="xkG-lP-zkM" firstAttribute="centerY" secondItem="50z-Zt-z85" secondAttribute="centerY" id="pHc-6p-5ci"/>
+                                            <constraint firstItem="xkG-lP-zkM" firstAttribute="leading" secondItem="50z-Zt-z85" secondAttribute="trailing" constant="8" id="s8t-a1-WAg"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="16" id="JHd-DT-aDK"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="Kr1-1p-B7W" secondAttribute="bottom" constant="8" id="HtP-C7-TvO"/>
+                            <constraint firstAttribute="bottom" secondItem="JHK-kJ-Hpa" secondAttribute="bottom" constant="8" id="OtA-kl-w5I"/>
                             <constraint firstItem="ilU-ko-Izq" firstAttribute="leading" secondItem="Eqg-Uc-XP4" secondAttribute="leading" constant="16" id="Q28-f7-Vk3"/>
-                            <constraint firstItem="Kr1-1p-B7W" firstAttribute="leading" secondItem="Eqg-Uc-XP4" secondAttribute="leading" constant="120" id="RYn-sc-tyk"/>
+                            <constraint firstAttribute="trailing" secondItem="JHK-kJ-Hpa" secondAttribute="trailing" constant="16" id="Xr9-w8-0BB"/>
                             <constraint firstAttribute="trailing" secondItem="ilU-ko-Izq" secondAttribute="trailing" constant="16" id="Yg3-GS-JYc"/>
-                            <constraint firstItem="Kr1-1p-B7W" firstAttribute="top" secondItem="ilU-ko-Izq" secondAttribute="bottom" constant="8" symbolic="YES" id="cT6-3i-9fa"/>
+                            <constraint firstItem="JHK-kJ-Hpa" firstAttribute="leading" secondItem="Eqg-Uc-XP4" secondAttribute="leading" constant="120" id="gAh-1p-2zU"/>
                             <constraint firstItem="ilU-ko-Izq" firstAttribute="top" secondItem="Eqg-Uc-XP4" secondAttribute="top" constant="8" id="o0P-YH-bcG"/>
+                            <constraint firstItem="JHK-kJ-Hpa" firstAttribute="top" secondItem="ilU-ko-Izq" secondAttribute="bottom" constant="8" id="o1H-zp-7Hj"/>
                             <constraint firstAttribute="bottom" secondItem="ilU-ko-Izq" secondAttribute="bottom" constant="32" id="wMm-ru-fVZ"/>
-                            <constraint firstAttribute="trailing" secondItem="Kr1-1p-B7W" secondAttribute="trailing" constant="16" id="y0X-Cg-UMr"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -76,8 +119,9 @@
                 <outlet property="bubbleView" destination="Eqg-Uc-XP4" id="gE6-0P-PYq"/>
                 <outlet property="bubbleViewLeading" destination="kVW-xN-fm0" id="pwf-Tz-gUV"/>
                 <outlet property="bubbleViewTrailing" destination="YNp-aK-FgO" id="0gJ-dS-AeT"/>
-                <outlet property="messageDetails" destination="Kr1-1p-B7W" id="hON-4r-g4A"/>
                 <outlet property="messageLable" destination="ilU-ko-Izq" id="ntA-gv-MNG"/>
+                <outlet property="messageStatusLable" destination="XMq-tZ-5BY" id="10a-0U-9Cm"/>
+                <outlet property="messageTime" destination="xkG-lP-zkM" id="exM-I9-Mwz"/>
                 <outlet property="recieverAvtarView" destination="iGS-Cw-HnK" id="HmO-wT-guV"/>
                 <outlet property="senderAvtarView" destination="fzX-pN-n7x" id="t4R-Ds-SOv"/>
             </connections>

@@ -14,7 +14,8 @@ class MessageTableViewCell: UITableViewCell {
     @IBOutlet weak var bubbleViewLeading: NSLayoutConstraint!
     @IBOutlet weak var bubbleViewTrailing: NSLayoutConstraint!
     @IBOutlet weak var messageLable: UILabel!
-    @IBOutlet weak var messageDetails: UILabel!
+    @IBOutlet weak var messageTime: UILabel!
+    @IBOutlet weak var messageStatusLable: UILabel!
     @IBOutlet weak var recieverAvtarView: UIImageView!
     @IBOutlet weak var senderAvtarView: UIImageView!
     
@@ -30,11 +31,12 @@ class MessageTableViewCell: UITableViewCell {
         messageLable.numberOfLines = 0
         bubbleView.layer.cornerRadius = 20
         messageLable.text = message ?? ""
-        messageDetails.text = messageStatus ?? ""
+        messageTime.text = messageStatus ?? ""
         if isCurrentUser {
             bubbleView.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#3780C2")
             messageLable.textColor = .white
-            messageDetails.textColor = .lightText
+            messageTime.textColor = .lightText
+            messageStatusLable.textColor = .lightText
             bubbleViewTrailing = bubbleViewTrailing.setRelation(relation: .equal, constant: 60)
             bubbleViewLeading = bubbleViewLeading.setRelation(relation: .greaterThanOrEqual, constant: 80)
             recieverAvtarView.removeFromSuperview()
@@ -43,7 +45,8 @@ class MessageTableViewCell: UITableViewCell {
         } else {
             bubbleView.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#F4F4F4")
             messageLable.textColor = .black
-            messageDetails.textColor = .placeholderText
+            messageTime.textColor = .placeholderText
+            messageStatusLable.textColor = .placeholderText
             bubbleViewLeading = bubbleViewLeading.setRelation(relation: .equal, constant: 60)
             bubbleViewTrailing = bubbleViewTrailing.setRelation(relation: .greaterThanOrEqual, constant: 80)
             senderAvtarView.removeFromSuperview()
