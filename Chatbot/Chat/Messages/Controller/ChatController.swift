@@ -39,7 +39,11 @@ class ChatController: UIViewController {
         inputTextField.font = UIFont(name: "Rubik-Regular.ttf", size: 15)
         inputTextField.placeholder = "Send a message..."
         inputTextField.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#F4F4F4")
-        inputTextField.layer.cornerRadius = 16
+        
+        inputTextField.borderStyle = .roundedRect
+        inputTextField.layer.cornerRadius = 15
+        inputTextField.layer.masksToBounds = true
+        
         observeMessages()
         setupHeaderView()
         setupTableView()

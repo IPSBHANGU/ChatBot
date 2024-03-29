@@ -22,6 +22,8 @@ class MessageTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        recieverAvtarView.contentMode = .scaleAspectFill
+        senderAvtarView.contentMode = .scaleAspectFill
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -35,6 +37,8 @@ class MessageTableViewCell: UITableViewCell {
         messageTime.text = messageStatus ?? ""
         messageLable.font = UIFont(name: "Rubik Regular", size: 14)
         if isCurrentUser {
+            bubbleView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner ,  .layerMaxXMinYCorner , .layerMaxXMaxYCorner]
+            bubbleView.clipsToBounds = true
             senderAvtarView?.isHidden = false
             recieverAvtarView?.isHidden = true
             bubbleView.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#3780C2")
@@ -48,14 +52,18 @@ class MessageTableViewCell: UITableViewCell {
             recieverAvtarView.isHidden = true
             senderAvtarView.isHidden = false
             senderAvtarView.kf.setImage(with: URL(string: senderAvtar ?? ""))
-            senderAvtarView.layer.cornerRadius = 16.5
+            senderAvtarView.layer.cornerRadius = senderAvtarView.frame.height / 2
         } else {
+            bubbleView.layer.maskedCorners = [/*.layerMinXMinYCorner,*/ .layerMaxXMinYCorner , .layerMaxXMaxYCorner , .layerMinXMaxYCorner ]
+            bubbleView.clipsToBounds = true
             recieverAvtarView?.isHidden = false
             senderAvtarView?.isHidden = true
             bubbleView.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#F4F4F4")
             messageLable.textColor = .black
             messageTime.textColor = UIColorHex().hexStringToUIColor(hex: "#A2A2A2")
+            
             // messageStatus should not be visible for recieved meassages
+            
             messageSepratorDotView.isHidden = true
             messageStatusLable.isHidden = true
             bubbleViewLeading = bubbleViewLeading.setRelation(relation: .equal, constant: 60)
@@ -63,7 +71,7 @@ class MessageTableViewCell: UITableViewCell {
             senderAvtarView.isHidden = true
             recieverAvtarView.isHidden = false
             recieverAvtarView.kf.setImage(with: URL(string: senderAvtar ?? ""))
-            recieverAvtarView.layer.cornerRadius = 16.5
+            recieverAvtarView.layer.cornerRadius = recieverAvtarView.frame.height / 2
         }
     }
 }
