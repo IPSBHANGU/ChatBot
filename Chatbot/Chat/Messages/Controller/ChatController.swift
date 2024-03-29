@@ -13,13 +13,13 @@ import FirebaseAuth
 import Kingfisher
 import FirebaseDatabaseInternal
 
-
 class ChatController: UIViewController {
     
     private var messages = [Message]()
     
-    @IBOutlet weak var sendButton: UIButton!
-    @IBOutlet weak var inputTextField: UITextField!
+    @IBOutlet var sendButton: UIButton!
+    @IBOutlet var inputTextField: UITextField!
+   
     
     var selfSender: SenderType?
     var conversationID: String?
@@ -36,9 +36,15 @@ class ChatController: UIViewController {
         super.viewDidLoad()
         inputTextField.delegate = self
         inputTextField.becomeFirstResponder()
+        inputTextField.font = UIFont(name: "Rubik-Regular.ttf", size: 15)
+        inputTextField.placeholder = "Send a message..."
+        inputTextField.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#F4F4F4")
+        inputTextField.layer.cornerRadius = 16
         observeMessages()
         setupHeaderView()
         setupTableView()
+        sendButton.layer.cornerRadius = sendButton.frame.height / 2
+        
     }
     
     
@@ -63,7 +69,7 @@ class ChatController: UIViewController {
         
         view.addSubview(headerView)
         
-        messageTableView.frame = CGRect(x: 0, y: headerView.frame.maxY, width: view.frame.width, height: view.frame.height - 190 )
+        messageTableView.frame = CGRect(x: 0, y: headerView.frame.maxY, width: view.frame.width, height: view.frame.height - 200 )
         view.addSubview(messageTableView)
     }
 
@@ -123,7 +129,6 @@ class ChatController: UIViewController {
                        AlerUser().alertUser(viewController: self, title: "Error", message: error)
                    } else {
                        // Clear the input text after sending message
-                       print("message sent")
                        self.inputTextField.text = ""
                    }
                }
