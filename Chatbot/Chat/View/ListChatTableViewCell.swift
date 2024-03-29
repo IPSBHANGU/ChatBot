@@ -34,8 +34,14 @@ class ListChatTableViewCell: UITableViewCell {
             profileImageView.tintColor = .black
         }
         nameLabel.text = username ?? ""
+        nameLabel.font = UIFont(name: "Rubik-SemiBold", size: 15)
+        nameLabel.textColor = UIColorHex().hexStringToUIColor(hex: "#191919")
         messageLabel.text = userRecentMeassage ?? ""
+        messageLabel.font = UIFont(name: "Rubik-Regular", size: 14)
+        messageLabel.textColor = UIColorHex().hexStringToUIColor(hex: "#A2A2A2")
         timingLabel.text = meassageTime ?? ""
+        timingLabel.font = UIFont(name: "Rubik-Regular", size: 13)
+        timingLabel.textColor = UIColorHex().hexStringToUIColor(hex: "#A2A2A2")
     }
     
 }

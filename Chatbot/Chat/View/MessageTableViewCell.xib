@@ -94,7 +94,7 @@
                             <constraint firstItem="ilU-ko-Izq" firstAttribute="leading" secondItem="Eqg-Uc-XP4" secondAttribute="leading" constant="16" id="Q28-f7-Vk3"/>
                             <constraint firstAttribute="trailing" secondItem="JHK-kJ-Hpa" secondAttribute="trailing" constant="16" id="Xr9-w8-0BB"/>
                             <constraint firstAttribute="trailing" secondItem="ilU-ko-Izq" secondAttribute="trailing" constant="16" id="Yg3-GS-JYc"/>
-                            <constraint firstItem="JHK-kJ-Hpa" firstAttribute="leading" secondItem="Eqg-Uc-XP4" secondAttribute="leading" constant="120" id="gAh-1p-2zU"/>
+                            <constraint firstItem="JHK-kJ-Hpa" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Eqg-Uc-XP4" secondAttribute="leading" constant="16" id="gAh-1p-2zU"/>
                             <constraint firstItem="ilU-ko-Izq" firstAttribute="top" secondItem="Eqg-Uc-XP4" secondAttribute="top" constant="8" id="o0P-YH-bcG"/>
                             <constraint firstItem="JHK-kJ-Hpa" firstAttribute="top" secondItem="ilU-ko-Izq" secondAttribute="bottom" constant="8" id="o1H-zp-7Hj"/>
                             <constraint firstAttribute="bottom" secondItem="ilU-ko-Izq" secondAttribute="bottom" constant="32" id="wMm-ru-fVZ"/>
@@ -120,6 +120,7 @@
                 <outlet property="bubbleViewLeading" destination="kVW-xN-fm0" id="pwf-Tz-gUV"/>
                 <outlet property="bubbleViewTrailing" destination="YNp-aK-FgO" id="0gJ-dS-AeT"/>
                 <outlet property="messageLable" destination="ilU-ko-Izq" id="ntA-gv-MNG"/>
+                <outlet property="messageSepratorDotView" destination="50z-Zt-z85" id="qaP-Ru-0aV"/>
                 <outlet property="messageStatusLable" destination="XMq-tZ-5BY" id="10a-0U-9Cm"/>
                 <outlet property="messageTime" destination="xkG-lP-zkM" id="exM-I9-Mwz"/>
                 <outlet property="recieverAvtarView" destination="iGS-Cw-HnK" id="HmO-wT-guV"/>
