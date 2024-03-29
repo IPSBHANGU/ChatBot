@@ -134,7 +134,7 @@ class ListChatViewController: UIViewController {
         chatType.setSegmentedWith(items: ["Chats", "Groups"])
         chatType.padding = -4
         chatType.textColor = .gray
-        chatType.titlesFont = UIFont(name: "Futura", size: 20)
+        chatType.titlesFont = UIFont(name: "Rubik-Regular", size: 20)
         chatType.selectedTextColor = .black
         chatType.thumbViewColor = UIColorHex().hexStringToUIColor(hex: "#5AD7FF")
         chatType.segmentedBackGroundColor = .systemGray6
@@ -340,10 +340,6 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
                 navigationController?.pushViewController(chatController, animated: true)
             }
         }
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 56
     }
     
 }

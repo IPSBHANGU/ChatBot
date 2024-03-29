@@ -50,6 +50,8 @@
 		FB84382F2BB13479006CEA58 /* GroupChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB84382D2BB13479006CEA58 /* GroupChatController.swift */; };
 		FB8438302BB13479006CEA58 /* GroupChatController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB84382E2BB13479006CEA58 /* GroupChatController.xib */; };
 		FB8D7FE32BA9783D00FF1C21 /* UIColorHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8D7FE22BA9783D00FF1C21 /* UIColorHex.swift */; };
+		FBCE7B352BB671890059F2D5 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FBCE7B342BB671890059F2D5 /* Rubik-Regular.ttf */; };
+		FBCE7B372BB672700059F2D5 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FBCE7B362BB672700059F2D5 /* Rubik-SemiBold.ttf */; };
 		FBFF4CA62BB57EA100B35247 /* NSLayoutContraint+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBFF4CA52BB57EA100B35247 /* NSLayoutContraint+Custom.swift */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +92,8 @@
 		FB84382D2BB13479006CEA58 /* GroupChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChatController.swift; sourceTree = "<group>"; };
 		FB84382E2BB13479006CEA58 /* GroupChatController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupChatController.xib; sourceTree = "<group>"; };
 		FB8D7FE22BA9783D00FF1C21 /* UIColorHex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorHex.swift; sourceTree = "<group>"; };
+		FBCE7B342BB671890059F2D5 /* Rubik-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-Regular.ttf"; sourceTree = "<group>"; };
+		FBCE7B362BB672700059F2D5 /* Rubik-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-SemiBold.ttf"; sourceTree = "<group>"; };
 		FBFF4CA52BB57EA100B35247 /* NSLayoutContraint+Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutContraint+Custom.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -136,6 +140,8 @@
 		FB1B332A2BA823020061259F = {
 			isa = PBXGroup;
 			children = (
+				FBCE7B342BB671890059F2D5 /* Rubik-Regular.ttf */,
+				FBCE7B362BB672700059F2D5 /* Rubik-SemiBold.ttf */,
 				FB1B33352BA823020061259F /* Chatbot */,
 				FB73D4992BAAF8C3001B314F /* GoogleService-Info.plist */,
 				FB1B33342BA823020061259F /* Products */,
@@ -509,6 +515,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB71F00B2BA9A04B00A79BE7 /* ListChatViewController.xib in Resources */,
+				FBCE7B352BB671890059F2D5 /* Rubik-Regular.ttf in Resources */,
 				FB73D4982BAAF738001B314F /* EmailSignINViewController.xib in Resources */,
 				FB2F5F172BB302630077C2D8 /* MessageTableViewCell.xib in Resources */,
 				FB1B33402BA823030061259F /* Assets.xcassets in Resources */,
@@ -519,6 +526,7 @@
 				FB73D49A2BAAF8C3001B314F /* GoogleService-Info.plist in Resources */,
 				FB73D4872BAAF40E001B314F /* LoginPrefrencesViewController.xib in Resources */,
 				FB73D49E2BAAFF89001B314F /* ChatController.xib in Resources */,
+				FBCE7B372BB672700059F2D5 /* Rubik-SemiBold.ttf in Resources */,
 				FB84382A2BAEC178006CEA58 /* AddUsersViewController.xib in Resources */,
 				FB1B333E2BA823020061259F /* Base in Resources */,
 			);

@@ -18,6 +18,7 @@ class MessageTableViewCell: UITableViewCell {
     @IBOutlet weak var messageStatusLable: UILabel!
     @IBOutlet weak var recieverAvtarView: UIImageView!
     @IBOutlet weak var senderAvtarView: UIImageView!
+    @IBOutlet weak var messageSepratorDotView: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -32,24 +33,31 @@ class MessageTableViewCell: UITableViewCell {
         bubbleView.layer.cornerRadius = 20
         messageLable.text = message ?? ""
         messageTime.text = messageStatus ?? ""
+        messageLable.font = UIFont(name: "Rubik Regular", size: 14)
         if isCurrentUser {
             bubbleView.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#3780C2")
             messageLable.textColor = .white
-            messageTime.textColor = .lightText
+            messageTime.textColor = UIColorHex().hexStringToUIColor(hex: "#9BBFE0")
+            messageSepratorDotView.isHidden = false
+            messageStatusLable.isHidden = false
             messageStatusLable.textColor = .lightText
             bubbleViewTrailing = bubbleViewTrailing.setRelation(relation: .equal, constant: 60)
             bubbleViewLeading = bubbleViewLeading.setRelation(relation: .greaterThanOrEqual, constant: 80)
-            recieverAvtarView.removeFromSuperview()
+            recieverAvtarView.isHidden = true
+            senderAvtarView.isHidden = false
             senderAvtarView.kf.setImage(with: URL(string: senderAvtar ?? ""))
             senderAvtarView.layer.cornerRadius = 16.5
         } else {
             bubbleView.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#F4F4F4")
             messageLable.textColor = .black
-            messageTime.textColor = .placeholderText
-            messageStatusLable.textColor = .placeholderText
+            messageTime.textColor = UIColorHex().hexStringToUIColor(hex: "#A2A2A2")
+            // messageStatus should not be visible for recieved meassages
+            messageSepratorDotView.isHidden = true
+            messageStatusLable.isHidden = true
             bubbleViewLeading = bubbleViewLeading.setRelation(relation: .equal, constant: 60)
             bubbleViewTrailing = bubbleViewTrailing.setRelation(relation: .greaterThanOrEqual, constant: 80)
-            senderAvtarView.removeFromSuperview()
+            senderAvtarView.isHidden = true
+            recieverAvtarView.isHidden = false
             recieverAvtarView.kf.setImage(with: URL(string: senderAvtar ?? ""))
             recieverAvtarView.layer.cornerRadius = 16.5
         }

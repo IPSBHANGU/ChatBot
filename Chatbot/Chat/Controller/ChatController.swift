@@ -56,7 +56,9 @@ class ChatController: UIViewController {
         
         let headerLabel = UILabel(frame: CGRect(x: 60, y: 60, width: view.frame.width - 120, height: 30))
         headerLabel.textAlignment = .center
-        headerLabel.text = senderUserName ?? ""
+        headerLabel.text = "Messages"
+        headerLabel.font = UIFont(name: "Rubik SemiBold", size: 18)
+        headerLabel.textColor = UIColorHex().hexStringToUIColor(hex: "#191919")
         headerView.addSubview(headerLabel)
         
         view.addSubview(headerView)
