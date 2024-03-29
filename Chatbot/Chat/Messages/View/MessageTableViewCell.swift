@@ -42,7 +42,7 @@ class MessageTableViewCell: UITableViewCell {
             messageTime.textColor = UIColorHex().hexStringToUIColor(hex: "#9BBFE0")
             messageSepratorDotView.isHidden = false
             messageStatusLable.isHidden = false
-            messageStatusLable.textColor = .lightText
+            messageStatusLable.textColor = .white
             bubbleViewTrailing = bubbleViewTrailing.setRelation(relation: .equal, constant: 60)
             bubbleViewLeading = bubbleViewLeading.setRelation(relation: .greaterThanOrEqual, constant: 80)
             recieverAvtarView.isHidden = true
