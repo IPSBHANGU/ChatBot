@@ -37,7 +37,8 @@ class MessageTableViewCell: UITableViewCell {
         messageTime.text = messageStatus ?? ""
         messageLable.font = UIFont(name: "Rubik Regular", size: 14)
         if isCurrentUser {
-            bubbleView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner ,  .layerMaxXMinYCorner , .layerMaxXMaxYCorner]
+//            bubbleView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner ,  .layerMaxXMinYCorner , .layerMaxXMaxYCorner]
+            bubbleView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMaxYCorner , .layerMinXMaxYCorner ]
             bubbleView.clipsToBounds = true
             senderAvtarView?.isHidden = false
             recieverAvtarView?.isHidden = true
