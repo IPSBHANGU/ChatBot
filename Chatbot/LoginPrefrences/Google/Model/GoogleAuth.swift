@@ -2,7 +2,7 @@
 //  GoogleAuth.swift
 //  SocialSignIN
 //
-//  Created by Inderpreet Singh on 06/03/24.
+//  Created by Umang Kedan on 06/03/24.
 //
 
 import Foundation

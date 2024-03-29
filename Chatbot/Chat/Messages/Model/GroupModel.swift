@@ -2,7 +2,7 @@
 //  GroupModel.swift
 //  Chatbot
 //
-//  Created by Inderpreet Singh on 24/03/24.
+//  Created by Umang Kedan on 24/03/24.
 //
 
 import Foundation

@@ -2,7 +2,7 @@
 //  UIColor.swift
 //  Github Rest APi
 //
-//  Created by Inderpreet Singh on 01/03/24.
+//  Created by Umang Kedan on 01/03/24.
 //
 
 import Foundation

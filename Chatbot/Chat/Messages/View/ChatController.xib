@@ -21,26 +21,31 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mp6-0m-yNZ">
-                    <rect key="frame" x="0.0" y="752" width="393" height="100"/>
+                    <rect key="frame" x="0.0" y="749" width="393" height="103"/>
                     <subviews>
                         <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eDo-k5-PWD">
-                            <rect key="frame" x="25" y="15" width="282.33333333333331" height="40"/>
+                            <rect key="frame" x="25" y="15" width="270" height="50"/>
                             <color key="backgroundColor" systemColor="systemGray6Color"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="40" id="Fvd-R6-H9X"/>
-                                <constraint firstAttribute="width" constant="282.32999999999998" id="zCb-fR-mN3"/>
+                                <constraint firstAttribute="height" constant="50" id="Fvd-R6-H9X"/>
+                                <constraint firstAttribute="width" constant="270" id="zCb-fR-mN3"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="le3-EA-KjB">
-                            <rect key="frame" x="317.33333333333331" y="15" width="50.666666666666686" height="40"/>
+                            <rect key="frame" x="315" y="15" width="50.666666666666686" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="50.670000000000002" id="mJs-bl-7QQ"/>
-                                <constraint firstAttribute="height" constant="40" id="wqQ-ix-SW8"/>
                             </constraints>
+                            <color key="tintColor" red="0.59666119210000002" green="0.25235043439999999" blue="0.91591566800000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="filled" image="paperplane.fill" catalog="system"/>
+                            <buttonConfiguration key="configuration" style="filled" image="bubble" catalog="system"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <integer key="value" value="25"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="sendButtonAction:" destination="-1" eventType="touchUpInside" id="57J-0y-mcB"/>
                             </connections>
@@ -48,14 +53,13 @@
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
-                        <constraint firstItem="le3-EA-KjB" firstAttribute="leading" secondItem="eDo-k5-PWD" secondAttribute="trailing" constant="10" id="02h-gk-08j"/>
+                        <constraint firstItem="le3-EA-KjB" firstAttribute="leading" secondItem="eDo-k5-PWD" secondAttribute="trailing" constant="20" id="02h-gk-08j"/>
                         <constraint firstItem="eDo-k5-PWD" firstAttribute="top" secondItem="mp6-0m-yNZ" secondAttribute="top" constant="15" id="2h7-a6-rfI"/>
-                        <constraint firstAttribute="bottom" secondItem="eDo-k5-PWD" secondAttribute="bottom" constant="48" id="4vo-u0-Gm9"/>
-                        <constraint firstAttribute="height" constant="100" id="Dqn-RV-K2E"/>
                         <constraint firstItem="le3-EA-KjB" firstAttribute="top" secondItem="eDo-k5-PWD" secondAttribute="top" id="I4n-Hy-Nbg"/>
-                        <constraint firstAttribute="trailing" secondItem="le3-EA-KjB" secondAttribute="trailing" constant="25" id="L6q-3d-aSI"/>
                         <constraint firstItem="le3-EA-KjB" firstAttribute="bottom" secondItem="eDo-k5-PWD" secondAttribute="bottom" id="NY9-bb-wy6"/>
                         <constraint firstItem="eDo-k5-PWD" firstAttribute="leading" secondItem="mp6-0m-yNZ" secondAttribute="leading" constant="25" id="atX-Fu-OvW"/>
+                        <constraint firstAttribute="trailing" secondItem="le3-EA-KjB" secondAttribute="trailing" constant="27.329999999999998" id="sbu-Gr-9Y2"/>
+                        <constraint firstAttribute="bottom" secondItem="eDo-k5-PWD" secondAttribute="bottom" constant="38" id="xPH-Ix-E38"/>
                     </constraints>
                 </view>
             </subviews>
@@ -71,7 +75,7 @@
         </view>
     </objects>
     <resources>
-        <image name="paperplane.fill" catalog="system" width="128" height="119"/>
+        <image name="bubble" catalog="system" width="128" height="110"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

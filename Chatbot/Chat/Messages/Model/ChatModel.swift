@@ -2,7 +2,7 @@
 //  ChatModel.swift
 //  Chatbot
 //
-//  Created by Inderpreet Singh on 21/03/24.
+//  Created by Umang Kedan on 21/03/24.
 //
 
 import MessageKit

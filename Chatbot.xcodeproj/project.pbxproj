@@ -137,6 +137,43 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		DFB570CA2BB69DB600632374 /* List Users */ = {
+			isa = PBXGroup;
+			children = (
+				DFB570CB2BB69DBF00632374 /* View */,
+				DFB570CC2BB69DC800632374 /* Controller */,
+			);
+			path = "List Users";
+			sourceTree = "<group>";
+		};
+		DFB570CB2BB69DBF00632374 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				FB71F00E2BA9A43100A79BE7 /* ListChatTableViewCell.xib */,
+				FB71F00D2BA9A43100A79BE7 /* ListChatTableViewCell.swift */,
+				FB71F00A2BA9A04B00A79BE7 /* ListChatViewController.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		DFB570CC2BB69DC800632374 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				FB71F0092BA9A04B00A79BE7 /* ListChatViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		DFB570CD2BB69DE800632374 /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				FB84381F2BACA6CE006CEA58 /* Model */,
+				FB71F0082BA9A02D00A79BE7 /* View */,
+				FB71F0072BA9A02200A79BE7 /* Controller */,
+			);
+			path = Messages;
+			sourceTree = "<group>";
+		};
 		FB1B332A2BA823020061259F = {
 			isa = PBXGroup;
 			children = (
@@ -225,9 +262,8 @@
 		FB71F0062BA9A00500A79BE7 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				FB84381F2BACA6CE006CEA58 /* Model */,
-				FB71F0082BA9A02D00A79BE7 /* View */,
-				FB71F0072BA9A02200A79BE7 /* Controller */,
+				DFB570CA2BB69DB600632374 /* List Users */,
+				DFB570CD2BB69DE800632374 /* Messages */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -235,7 +271,6 @@
 		FB71F0072BA9A02200A79BE7 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				FB71F0092BA9A04B00A79BE7 /* ListChatViewController.swift */,
 				FB73D49B2BAAFF89001B314F /* ChatController.swift */,
 				FB8438272BAEC178006CEA58 /* AddUsersViewController.swift */,
 			);
@@ -245,9 +280,6 @@
 		FB71F0082BA9A02D00A79BE7 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				FB71F00A2BA9A04B00A79BE7 /* ListChatViewController.xib */,
-				FB71F00D2BA9A43100A79BE7 /* ListChatTableViewCell.swift */,
-				FB71F00E2BA9A43100A79BE7 /* ListChatTableViewCell.xib */,
 				FB73D49C2BAAFF89001B314F /* ChatController.xib */,
 				FB8438282BAEC178006CEA58 /* AddUsersViewController.xib */,
 				FB2F5F142BB302630077C2D8 /* MessageTableViewCell.swift */,
