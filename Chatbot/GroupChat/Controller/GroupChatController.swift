@@ -6,14 +6,11 @@
 //
 
 import UIKit
-import MessageKit
-import InputBarAccessoryView
-import IQKeyboardManager
 import FirebaseAuth
 import Kingfisher
 import FirebaseDatabaseInternal
 
-class GroupChatController: MessagesViewController {
+class GroupChatController: UIViewController {
     
     private var messages = [GroupMessage]()
     
@@ -22,24 +19,19 @@ class GroupChatController: MessagesViewController {
     var conversationID: String?
     var groupName: String?
     
+    lazy var messageTableView = UITableView()
+    
+    @IBOutlet weak var sendButton: UIButton!
+    @IBOutlet weak var inputTextField: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        messageInputBar.delegate = self
+        inputTextField.delegate = self
+        inputTextField.becomeFirstResponder()
         
         observeMessages()
-        messagesSend()
         setupHeaderView()
-        setupMessageViewFeatures()
-    }
-    
-    func setupMessageViewFeatures(){
-        self.showMessageTimestampOnSwipeLeft = true
-    }
-    
-    func messagesSend() {
-        messagesCollectionView.messagesDataSource = self
-        messagesCollectionView.messagesLayoutDelegate = self
-        messagesCollectionView.messagesDisplayDelegate = self
+        setupTableView()
     }
     
     func setupHeaderView() {
@@ -61,10 +53,20 @@ class GroupChatController: MessagesViewController {
         
         view.addSubview(headerView)
         
-        let messagesCollectionViewY = headerView.frame.maxY
-        messagesCollectionView.frame = CGRect(x: 0, y: messagesCollectionViewY, width: view.frame.width, height: view.frame.height - messagesCollectionViewY)
+        messageTableView.frame = CGRect(x: 0, y: headerView.frame.maxY, width: view.frame.width, height: view.frame.height - 190 )
+        view.addSubview(messageTableView)
     }
 
+    func setupTableView(){
+        messageTableView.separatorStyle = .none
+        messageTableView.delegate = self
+        messageTableView.dataSource = self
+        messageTableView.backgroundColor = .white
+        messageTableView.tintColor = .white
+        messageTableView.rowHeight = UITableView.automaticDimension
+        messageTableView.estimatedRowHeight = 100
+        messageTableView.register(UINib(nibName: "MessageTableViewCell", bundle: .main), forCellReuseIdentifier: "messageTableViewCell")
+    }
     
     @objc func backButtonTapped() {
         self.navigationController?.popViewController(animated: true)
@@ -80,64 +82,78 @@ class GroupChatController: MessagesViewController {
             self.messages.append(contentsOf: message)
             
             // Reload the messages collection view to display the new message
-            self.messagesCollectionView.reloadData()
+            self.messageTableView.reloadData()
             
             // Scroll to the last message
             DispatchQueue.main.async {
-                self.messagesCollectionView.scrollToLastItem(animated: true)
+                let indexPath = IndexPath(row: self.messages.count-1, section: 0)
+                self.messageTableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
             }
         }
     }
-}
-
-extension GroupChatController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
-    func currentSender() -> SenderType {
-        return selfSender ?? Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? "")
-    }
     
-    func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-        return messages[indexPath.section]
-    }
     
-    func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
-        return messages.count
-    }
-    
-    func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-        let currentMessage = messages[indexPath.section]
-        let photoURL = currentMessage.senderAvtar
-        avatarView.kf.setImage(with: URL(string: photoURL))
-    }
-    
-    func headerViewSize(for section: Int, in messagesCollectionView: MessagesCollectionView) -> CGSize {
-        CGSize(width: 0, height: 30)
-    }
-    
-    func messageTimestampLabelAttributedText(for message: any MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "h:mm a"
-        let dateString = formatter.string(from: message.sentDate)
-        return NSAttributedString(string: dateString, attributes: [
-            .font: UIFont.systemFont(ofSize: 12),
-            .foregroundColor: UIColor.darkGray
-        ])
-    }
-}
-
-extension GroupChatController: InputBarAccessoryViewDelegate {
-    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        // Ensure there's text entered by the user
-        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+    @IBAction func sendButtonAction(_ sender: Any) {
+        guard let messageText = inputTextField.text, !messageText.isEmpty else {
             return
         }
         
-        GroupModel().sendGroupMessage(conversationID: conversationID ?? "", sender: authUser, message: text) { error in
+        let newMessage = GroupMessage(sender: Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? ""),
+                                 messageId: "\(authUser?.uid ?? "")", // Set an appropriate message ID
+                                 sentDate: Date(),
+                                      kind: .text(messageText), senderAvtar: authUser?.photoURL?.absoluteString ?? "")
+
+        // Append the new message to the messages array
+        messages.append(newMessage)
+
+        // Reload the table view to display the new message
+        messageTableView.reloadData()
+
+
+        GroupModel().sendGroupMessage(conversationID: conversationID ?? "", sender: authUser, message: messageText) { error in
             if let error = error {
                 AlerUser().alertUser(viewController: self, title: "Error", message: error)
+            } else {
+                // Clear the input text after sending message
+                print("message sent")
+                self.inputTextField.text = ""
             }
         }
-        
-        // Clear the input text
-        inputBar.inputTextView.text = ""
+    }
+}
+
+extension GroupChatController:UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        messages.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let message = messages[indexPath.row]
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "messageTableViewCell", for: indexPath) as? MessageTableViewCell else {
+            return UITableViewCell()
+        }
+
+        guard let authUser = authUser else{
+            return UITableViewCell()
+        }
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h:mm a"
+
+        let photoURL = message.senderAvtar
+        if case let .text(text) = message.kind {
+            if message.sender.senderId == authUser.uid {
+                cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL?.absoluteString, isCurrentUser: true)
+            } else {
+                cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: photoURL, isCurrentUser: false)
+            }
+        }
+        return cell
+    }
+}
+
+extension GroupChatController : UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
     }
 }

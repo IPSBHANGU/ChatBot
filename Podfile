@@ -6,10 +6,10 @@ target 'Chatbot' do
   use_frameworks!
 
   # Pods for Chatbot
-pod 'IQKeyboardManager' #iOS13 and later
+#pod 'IQKeyboardManager' #iOS13 and later
 pod 'MASegmentedControl'
 pod 'Kingfisher', '~> 7.0'
 pod 'NVActivityIndicatorView'
-pod 'MessageKit'
+#pod 'MessageKit'
 pod 'SwiftyContextMenu'
 end

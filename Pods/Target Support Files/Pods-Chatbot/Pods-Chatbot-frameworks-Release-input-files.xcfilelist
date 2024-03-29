@@ -1,8 +1,5 @@
 ${PODS_ROOT}/Target Support Files/Pods-Chatbot/Pods-Chatbot-frameworks.sh
-${BUILT_PRODUCTS_DIR}/IQKeyboardManager/IQKeyboardManager.framework
-${BUILT_PRODUCTS_DIR}/InputBarAccessoryView/InputBarAccessoryView.framework
 ${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework
 ${BUILT_PRODUCTS_DIR}/MASegmentedControl/MASegmentedControl.framework
-${BUILT_PRODUCTS_DIR}/MessageKit/MessageKit.framework
 ${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework
 ${BUILT_PRODUCTS_DIR}/SwiftyContextMenu/SwiftyContextMenu.framework

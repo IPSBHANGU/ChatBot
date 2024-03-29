@@ -5,7 +5,6 @@
 //  Created by Umang Kedan on 21/03/24.
 //
 
-import MessageKit
 import FirebaseDatabaseInternal
 
 struct Message: MessageType {
@@ -18,6 +17,22 @@ struct Message: MessageType {
 struct Sender: SenderType {
     var senderId: String
     var displayName: String
+}
+
+public enum MessageKind {
+    case text(String)
+}
+
+public protocol MessageType {
+  var sender: SenderType { get }
+  var messageId: String { get }
+  var sentDate: Date { get }
+  var kind: MessageKind { get }
+}
+
+public protocol SenderType {
+  var senderId: String { get }
+  var displayName: String { get }
 }
 
 class ChatModel: NSObject {
