@@ -36,8 +36,8 @@ class MessageTableViewCell: UITableViewCell {
         messageLable.text = message ?? ""
         messageTime.text = messageStatus ?? ""
         messageLable.font = UIFont(name: "Rubik Regular", size: 14)
+        
         if isCurrentUser {
-//            bubbleView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner ,  .layerMaxXMinYCorner , .layerMaxXMaxYCorner]
             bubbleView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMaxYCorner , .layerMinXMaxYCorner ]
             bubbleView.clipsToBounds = true
             senderAvtarView?.isHidden = false
@@ -54,8 +54,10 @@ class MessageTableViewCell: UITableViewCell {
             senderAvtarView.isHidden = false
             senderAvtarView.kf.setImage(with: URL(string: senderAvtar ?? ""))
             senderAvtarView.layer.cornerRadius = senderAvtarView.frame.height / 2
-        } else {
-            bubbleView.layer.maskedCorners = [/*.layerMinXMinYCorner,*/ .layerMaxXMinYCorner , .layerMaxXMaxYCorner , .layerMinXMaxYCorner ]
+        }
+        else
+        {
+            bubbleView.layer.maskedCorners = [ .layerMaxXMinYCorner , .layerMaxXMaxYCorner , .layerMinXMaxYCorner ]
             bubbleView.clipsToBounds = true
             recieverAvtarView?.isHidden = false
             senderAvtarView?.isHidden = true

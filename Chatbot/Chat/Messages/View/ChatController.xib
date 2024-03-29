@@ -11,6 +11,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ChatControllerViewController" customModule="Chatbot" customModuleProvider="target">
             <connections>
                 <outlet property="inputTextField" destination="Ltr-q5-RDi" id="pZL-n3-VH9"/>
+                <outlet property="messageTableView" destination="Zo5-yJ-ec6" id="BDh-HB-GTx"/>
                 <outlet property="sendButton" destination="TNU-Zy-IYu" id="Qr1-61-YWf"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -67,12 +68,20 @@
                         <constraint firstItem="Adg-GL-T8g" firstAttribute="top" secondItem="mp6-0m-yNZ" secondAttribute="top" id="ytV-Fm-B2Y"/>
                     </constraints>
                 </view>
+                <tableView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Zo5-yJ-ec6">
+                    <rect key="frame" x="0.0" y="90" width="393" height="668"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                </tableView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <color key="tintColor" red="0.21568627450980393" green="0.50196078431372548" blue="0.76078431372549016" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="mp6-0m-yNZ" secondAttribute="bottom" id="0nP-Ad-482"/>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="mp6-0m-yNZ" secondAttribute="bottom" id="0nP-Ad-482"/>
+                <constraint firstItem="Zo5-yJ-ec6" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="1hJ-Xo-HfV"/>
+                <constraint firstItem="Zo5-yJ-ec6" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="75V-7H-6Gz"/>
+                <constraint firstItem="Zo5-yJ-ec6" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="90" id="9xQ-Ac-n2u"/>
+                <constraint firstItem="mp6-0m-yNZ" firstAttribute="top" secondItem="Zo5-yJ-ec6" secondAttribute="bottom" constant="10" id="hIb-qD-2AA"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="mp6-0m-yNZ" secondAttribute="trailing" constant="23" id="q8L-nz-5sU"/>
                 <constraint firstItem="mp6-0m-yNZ" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="24" id="sDU-33-0T6"/>
                 <constraint firstAttribute="bottom" secondItem="mp6-0m-yNZ" secondAttribute="bottom" id="vVr-lT-ztb"/>
@@ -86,7 +95,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

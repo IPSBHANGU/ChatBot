@@ -14,9 +14,9 @@ class ChatController: UIViewController {
     
     private var messages = [Message]()
     
+    @IBOutlet var messageTableView: UITableView!
     @IBOutlet var sendButton: UIButton!
     @IBOutlet var inputTextField: UITextField!
-   
     
     var selfSender: SenderType?
     var conversationID: String?
@@ -24,10 +24,7 @@ class ChatController: UIViewController {
     var senderPhotoURL: String?
     var senderUID: String?
     var authUser:User?
-    
     var photoUrl:URL?
-    
-    lazy var messageTableView = UITableView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,7 +44,6 @@ class ChatController: UIViewController {
         sendButton.layer.cornerRadius = sendButton.frame.height / 2
         
     }
-    
     
     func setupHeaderView() {
         let headerHeight: CGFloat = 90
@@ -75,11 +71,8 @@ class ChatController: UIViewController {
     }
 
     func setupTableView(){
-        messageTableView.separatorStyle = .none
         messageTableView.delegate = self
         messageTableView.dataSource = self
-        messageTableView.backgroundColor = .white
-        messageTableView.tintColor = .white
         messageTableView.rowHeight = UITableView.automaticDimension
         messageTableView.estimatedRowHeight = 100
         messageTableView.register(UINib(nibName: "MessageTableViewCell", bundle: .main), forCellReuseIdentifier: "messageTableViewCell")
