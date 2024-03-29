@@ -8,7 +8,6 @@
 import Foundation
 import FirebaseDatabaseInternal
 import FirebaseAuth
-import MessageKit
 
 struct GroupMessage: MessageType {
     var sender: SenderType

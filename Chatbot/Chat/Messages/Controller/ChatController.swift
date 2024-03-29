@@ -6,9 +6,6 @@
 //
 
 import UIKit
-import MessageKit
-import InputBarAccessoryView
-import IQKeyboardManager
 import FirebaseAuth
 import Kingfisher
 import FirebaseDatabaseInternal
@@ -142,26 +139,25 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let message = messages[indexPath.row]
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: "messageTableViewCell", for: indexPath) as? MessageTableViewCell else {
-                    return UITableViewCell()
-                }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "messageTableViewCell", for: indexPath) as? MessageTableViewCell else {
+            return UITableViewCell()
+        }
 
-                guard let authUser = authUser else{
-                    return UITableViewCell()
-                }
-        
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "h:mm a"
+        guard let authUser = authUser else{
+            return UITableViewCell()
+        }
 
-                if case let .text(text) = message.kind {
-                    if message.sender.senderId == authUser.uid {
-                        cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL?.absoluteString, isCurrentUser: true)
-                    } else {
-                        cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: senderPhotoURL, isCurrentUser: false)
-                    }
-                }
-                return cell
-        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h:mm a"
+
+        if case let .text(text) = message.kind {
+            if message.sender.senderId == authUser.uid {
+                cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL?.absoluteString, isCurrentUser: true)
+            } else {
+                cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: senderPhotoURL, isCurrentUser: false)
+            }
+        }
+        return cell
     }
     
 }
