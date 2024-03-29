@@ -2,7 +2,7 @@
 //  GroupChatController.swift
 //  Chatbot
 //
-//  Created by Inderpreet Singh on 25/03/24.
+//  Created by Umang Kedan on 25/03/24.
 //
 
 import UIKit

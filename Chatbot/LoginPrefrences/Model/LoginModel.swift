@@ -2,7 +2,7 @@
 //  LoginModel.swift
 //  Chatbot
 //
-//  Created by Inderpreet Singh on 22/03/24.
+//  Created by Umang Kedan on 22/03/24.
 //
 
 import Foundation

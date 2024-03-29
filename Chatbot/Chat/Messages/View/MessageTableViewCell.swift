@@ -2,7 +2,7 @@
 //  MessageTableViewCell.swift
 //  Chatbot
 //
-//  Created by Inderpreet Singh on 26/03/24.
+//  Created by Umang Kedan on 26/03/24.
 //
 
 import UIKit
@@ -35,6 +35,8 @@ class MessageTableViewCell: UITableViewCell {
         messageTime.text = messageStatus ?? ""
         messageLable.font = UIFont(name: "Rubik Regular", size: 14)
         if isCurrentUser {
+            senderAvtarView?.isHidden = false
+            recieverAvtarView?.isHidden = true
             bubbleView.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#3780C2")
             messageLable.textColor = .white
             messageTime.textColor = UIColorHex().hexStringToUIColor(hex: "#9BBFE0")
@@ -48,6 +50,8 @@ class MessageTableViewCell: UITableViewCell {
             senderAvtarView.kf.setImage(with: URL(string: senderAvtar ?? ""))
             senderAvtarView.layer.cornerRadius = 16.5
         } else {
+            recieverAvtarView?.isHidden = false
+            senderAvtarView?.isHidden = true
             bubbleView.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#F4F4F4")
             messageLable.textColor = .black
             messageTime.textColor = UIColorHex().hexStringToUIColor(hex: "#A2A2A2")

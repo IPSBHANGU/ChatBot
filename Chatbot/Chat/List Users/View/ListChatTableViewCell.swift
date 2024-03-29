@@ -2,7 +2,7 @@
 //  ListChatTableViewCell.swift
 //  Chatbot
 //
-//  Created by Inderpreet Singh on 19/03/24.
+//  Created by Umang Kedan on 19/03/24.
 //
 
 import UIKit
