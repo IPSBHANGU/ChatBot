@@ -20,9 +20,11 @@ class EmailSignUPViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         setupUI()
     }
-
 
     func setupUI(){
         emailTextField.placeholder = "Email Address"

@@ -37,7 +37,6 @@ class MessageTableViewCell: UITableViewCell {
         messageTime.text = messageStatus ?? ""
         messageLable.font = UIFont(name: "Rubik Regular", size: 14)
         if isCurrentUser {
-//            bubbleView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner ,  .layerMaxXMinYCorner , .layerMaxXMaxYCorner]
             bubbleView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMaxYCorner , .layerMinXMaxYCorner ]
             bubbleView.clipsToBounds = true
             senderAvtarView?.isHidden = false
@@ -52,7 +51,12 @@ class MessageTableViewCell: UITableViewCell {
             bubbleViewLeading = bubbleViewLeading.setRelation(relation: .greaterThanOrEqual, constant: 80)
             recieverAvtarView.isHidden = true
             senderAvtarView.isHidden = false
-            senderAvtarView.kf.setImage(with: URL(string: senderAvtar ?? ""))
+            if let senderAvtar = senderAvtar, !senderAvtar.isEmpty {
+                senderAvtarView.kf.setImage(with: URL(string: senderAvtar))
+            } else {
+                senderAvtarView.image = UIImage(systemName: "person")
+                senderAvtarView.tintColor = .black
+            }
             senderAvtarView.layer.cornerRadius = senderAvtarView.frame.height / 2
         } else {
             bubbleView.layer.maskedCorners = [/*.layerMinXMinYCorner,*/ .layerMaxXMinYCorner , .layerMaxXMaxYCorner , .layerMinXMaxYCorner ]
@@ -64,14 +68,18 @@ class MessageTableViewCell: UITableViewCell {
             messageTime.textColor = UIColorHex().hexStringToUIColor(hex: "#A2A2A2")
             
             // messageStatus should not be visible for recieved meassages
-            
             messageSepratorDotView.isHidden = true
             messageStatusLable.isHidden = true
             bubbleViewLeading = bubbleViewLeading.setRelation(relation: .equal, constant: 60)
             bubbleViewTrailing = bubbleViewTrailing.setRelation(relation: .greaterThanOrEqual, constant: 80)
             senderAvtarView.isHidden = true
             recieverAvtarView.isHidden = false
-            recieverAvtarView.kf.setImage(with: URL(string: senderAvtar ?? ""))
+            if let senderAvtar = senderAvtar, !senderAvtar.isEmpty {
+                recieverAvtarView.kf.setImage(with: URL(string: senderAvtar))
+            } else {
+                recieverAvtarView.image = UIImage(systemName: "person")
+                recieverAvtarView.backgroundColor = .black
+            }
             recieverAvtarView.layer.cornerRadius = recieverAvtarView.frame.height / 2
         }
     }

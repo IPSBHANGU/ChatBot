@@ -42,12 +42,13 @@ class ChatController: UIViewController {
         inputTextField.layer.masksToBounds = true
         
         observeMessages()
-        setupHeaderView()
-        setupTableView()
         sendButton.layer.cornerRadius = sendButton.frame.height / 2
-        
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        setupHeaderView()
+        setupTableView()
+    }
     
     func setupHeaderView() {
         let headerHeight: CGFloat = 90

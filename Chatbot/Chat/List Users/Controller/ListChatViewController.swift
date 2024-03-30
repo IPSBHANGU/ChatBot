@@ -102,7 +102,12 @@ class ListChatViewController: UIViewController {
         let rect = CGRect(x: 24, y: 52, width: 32, height: 32)
         userAvatar.layer.cornerRadius = min(rect.width, rect.height) / 2.0
         userAvatar.frame = rect
-        userAvatar.kf.setImage(with: authUser?.photoURL)
+        if let userAvtar = authUser?.photoURL, ((authUser?.photoURL?.absoluteString.isEmpty) != nil) {
+            userAvatar.kf.setImage(with: userAvtar)
+        } else {
+            userAvatar.image = UIImage(systemName: "person")
+            userAvatar.tintColor = .black
+        }
         view.addSubview(userAvatar)
         
         editButton.setImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)

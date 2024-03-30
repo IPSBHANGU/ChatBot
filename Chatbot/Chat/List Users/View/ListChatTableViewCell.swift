@@ -27,7 +27,7 @@ class ListChatTableViewCell: UITableViewCell {
     }
     
     func setCellData(userImage:String?, username:String?, userRecentMeassage:String?, meassageTime:String?) {
-        if let userImage = userImage {
+        if let userImage = userImage, !userImage.isEmpty {
             profileImageView.kf.setImage(with: URL(string: userImage))
         } else {
             profileImageView.image = UIImage(systemName: "person")
