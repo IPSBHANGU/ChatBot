@@ -14,6 +14,7 @@
 		FB1B333E2BA823020061259F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = FB1B333D2BA823020061259F /* Base */; };
 		FB1B33402BA823030061259F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB1B333F2BA823030061259F /* Assets.xcassets */; };
 		FB1B33432BA823030061259F /* Base in Resources */ = {isa = PBXBuildFile; fileRef = FB1B33422BA823030061259F /* Base */; };
+		FB2831D12BB8116F008BFBE8 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = FB2831D02BB8116F008BFBE8 /* FirebaseStorage */; };
 		FB2F5F162BB302630077C2D8 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2F5F142BB302630077C2D8 /* MessageTableViewCell.swift */; };
 		FB2F5F172BB302630077C2D8 /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB2F5F152BB302630077C2D8 /* MessageTableViewCell.xib */; };
 		FB50BC912BA859A600E863AC /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC902BA859A600E863AC /* GoogleSignIn */; };
@@ -110,6 +111,7 @@
 				FB8438232BACA8C0006CEA58 /* FirebaseFirestore in Frameworks */,
 				FB71F0052BA9855100A79BE7 /* FirebaseAuth in Frameworks */,
 				FB50BC982BA85ACE00E863AC /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
+				FB2831D12BB8116F008BFBE8 /* FirebaseStorage in Frameworks */,
 				FB50BC9C2BA85ACE00E863AC /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				FB84381E2BAC3A39006CEA58 /* FirebaseDatabaseSwift in Frameworks */,
 				FB50BC962BA85ACE00E863AC /* FirebaseAnalytics in Frameworks */,
@@ -499,6 +501,7 @@
 				FB84381B2BAC3A39006CEA58 /* FirebaseDatabase */,
 				FB84381D2BAC3A39006CEA58 /* FirebaseDatabaseSwift */,
 				FB8438222BACA8C0006CEA58 /* FirebaseFirestore */,
+				FB2831D02BB8116F008BFBE8 /* FirebaseStorage */,
 			);
 			productName = Chatbot;
 			productReference = FB1B33332BA823020061259F /* Chatbot.app */;
@@ -875,6 +878,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		FB2831D02BB8116F008BFBE8 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB50BC942BA85A7300E863AC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
 		FB50BC902BA859A600E863AC /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FB50BC8F2BA859A600E863AC /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;

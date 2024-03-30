@@ -8,6 +8,8 @@
 import Foundation
 import FirebaseAuth
 import FirebaseDatabase
+import UIKit
+import FirebaseStorage
 
 struct FirebaseUser:Codable {
     var displayName: String?
@@ -19,14 +21,24 @@ class LoginModel:NSObject {
     
     let usersDatabase = Database.database().reference().child("users")
     
-    func addUsersToDb(user:User?, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
-
+    func addUsersToDb(user:User?, displayName:String? = nil, photoURL:String? = nil, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
+        var displayName = displayName
+        var photoURL = photoURL
+        
+        if let userDisplayName = user?.displayName, !userDisplayName.isEmpty {
+            displayName = userDisplayName
+        }
+        
+        if let userPhotoURL = user?.photoURL?.absoluteString, !userPhotoURL.isEmpty {
+            photoURL = userPhotoURL
+        }
+        
         let db = usersDatabase.child(user?.uid ?? "")
         let newUser = [
             "uid": user?.uid ?? "",
-            "displayName": user?.displayName ?? "",
+            "displayName": displayName ?? "",
             "email": user?.email ?? "",
-            "photoURL": user?.photoURL?.absoluteString ?? "",
+            "photoURL": photoURL ?? "",
         ] as [String : Any]
         
         db.setValue(newUser) { (error, _) in
@@ -37,6 +49,7 @@ class LoginModel:NSObject {
             }
         }
     }
+
     
     func fetchUsersFromDb(completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
         usersDatabase.observe(.value) { snapshot in
@@ -134,6 +147,51 @@ class LoginModel:NSObject {
                 }
                 completionHandler(usersList, nil)
             }
+        }
+    }
+    
+    // Function to upload image to Firebase Storage
+    func uploadUserAvtar(userAvtar: UIImage?, currentUser: User?, completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard let imageData = userAvtar?.jpegData(compressionQuality: 0.5) else {
+            completion(.failure("Error: Unable to convert image to data" as! Error))
+            return
+        }
+        
+        guard let currentUserID = currentUser?.uid else {
+            completion(.failure("Error: User ID is nil" as! Error))
+            return
+        }
+
+        let storageRef = Storage.storage().reference().child("profile_images").child("\(currentUserID).jpg")
+
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpeg"
+
+        storageRef.putData(imageData, metadata: metadata) { (metadata, error) in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(true))
+            }
+        }
+    }
+    
+    // Function to download image to Firebase Storage
+    func downloadUserAvtarURL(currentUser: User?, completionHandler: @escaping (Bool?, String?) -> Void) {
+        guard let currentUserID = currentUser?.uid else {
+            completionHandler(false, "Error: User ID is nil")
+            return
+        }
+        
+        let storageRef = Storage.storage().reference().child("profile_images").child("\(currentUserID).jpg")
+        
+        storageRef.downloadURL { (url, error) in
+            if let error = error {
+                completionHandler(false, "Error getting download URL: \(error.localizedDescription)")
+                return
+            }
+            
+            completionHandler(true, url?.absoluteString)
         }
     }
 }
