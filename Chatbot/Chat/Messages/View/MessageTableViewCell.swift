@@ -51,12 +51,7 @@ class MessageTableViewCell: UITableViewCell {
             bubbleViewLeading = bubbleViewLeading.setRelation(relation: .greaterThanOrEqual, constant: 80)
             recieverAvtarView.isHidden = true
             senderAvtarView.isHidden = false
-            if let senderAvtar = senderAvtar, !senderAvtar.isEmpty {
-                senderAvtarView.kf.setImage(with: URL(string: senderAvtar))
-            } else {
-                senderAvtarView.image = UIImage(systemName: "person")
-                senderAvtarView.tintColor = .black
-            }
+            senderAvtarView.kf.setImage(with: URL(string: senderAvtar ?? ""))
             senderAvtarView.layer.cornerRadius = senderAvtarView.frame.height / 2
         } else {
             bubbleView.layer.maskedCorners = [/*.layerMinXMinYCorner,*/ .layerMaxXMinYCorner , .layerMaxXMaxYCorner , .layerMinXMaxYCorner ]
@@ -74,12 +69,7 @@ class MessageTableViewCell: UITableViewCell {
             bubbleViewTrailing = bubbleViewTrailing.setRelation(relation: .greaterThanOrEqual, constant: 80)
             senderAvtarView.isHidden = true
             recieverAvtarView.isHidden = false
-            if let senderAvtar = senderAvtar, !senderAvtar.isEmpty {
-                recieverAvtarView.kf.setImage(with: URL(string: senderAvtar))
-            } else {
-                recieverAvtarView.image = UIImage(systemName: "person")
-                recieverAvtarView.backgroundColor = .black
-            }
+            recieverAvtarView.kf.setImage(with: URL(string: senderAvtar ?? ""))
             recieverAvtarView.layer.cornerRadius = recieverAvtarView.frame.height / 2
         }
     }
