@@ -16,7 +16,7 @@ class ListChatViewController: UIViewController {
     
     // authResult
     var result:AuthDataResult?
-    var authUser:User?
+    var authUser:AuthenticatedUser?
     
     // Start UIElements
     lazy var userAvatar = UIImageView()
@@ -43,7 +43,7 @@ class ListChatViewController: UIViewController {
         super.viewDidLoad()
         
         if let result = result {
-            authUser = result.user
+            authUser = AuthenticatedUser(displayName: result.user.displayName, email: result.user.email, photoURL: result.user.photoURL?.absoluteString, uid: result.user.uid)
         }
         
         setupTableView()
@@ -102,7 +102,7 @@ class ListChatViewController: UIViewController {
         let rect = CGRect(x: 24, y: 52, width: 32, height: 32)
         userAvatar.layer.cornerRadius = min(rect.width, rect.height) / 2.0
         userAvatar.frame = rect
-        userAvatar.kf.setImage(with: authUser?.photoURL)
+        userAvatar.kf.setImage(with: URL(string: authUser?.photoURL ?? ""))
         view.addSubview(userAvatar)
         
         editButton.setImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)

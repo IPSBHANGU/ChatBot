@@ -139,7 +139,7 @@ class GroupModel: NSObject {
                                             }
      - returns: Closure Function returns true if no error else gives error as String
      */
-    func sendGroupMessage(conversationID: String, sender: User?, message:String?, completionHandler: @escaping (_ error: String?) -> Void) {
+    func sendGroupMessage(conversationID: String, sender: AuthenticatedUser?, message:String?, completionHandler: @escaping (_ error: String?) -> Void) {
         let messageRef = messagesDatabase.child(conversationID).childByAutoId()
         
         let newMessage = [
@@ -147,7 +147,7 @@ class GroupModel: NSObject {
             "displayName": sender?.displayName ?? "",
             "text": message ?? "",
             "sentDate": Date().timeIntervalSince1970,
-            "photoURL": sender?.photoURL?.absoluteString ?? ""
+            "photoURL": sender?.photoURL ?? ""
         ] as [String : Any]
         
         messageRef.setValue(newMessage) { (error, _) in

@@ -11,15 +11,38 @@ import FirebaseDatabase
 import UIKit
 import FirebaseStorage
 
-struct FirebaseUser:Codable {
+struct AuthenticatedUser: Codable {
     var displayName: String?
     var email: String?
-    var photoURl: String?
+    var photoURL: String?
+    var uid: String?
 }
 
-class LoginModel:NSObject {
+class LoginModel: NSObject {
     
     let usersDatabase = Database.database().reference().child("users")
+    
+    func fetchUserDetails(userID: String, completion: @escaping (AuthenticatedUser?, Error?) -> Void) {
+        let userRef = usersDatabase.child(userID)
+        
+        userRef.observeSingleEvent(of: .value) { snapshot in
+            guard let userData = snapshot.value as? [String: Any] else {
+                completion(nil, "User data not found" as? Error)
+                return
+            }
+            
+            guard let displayName = userData["displayName"] as? String,
+                  let email = userData["email"] as? String,
+                  let photoURL = userData["photoURL"] as? String,
+                  let uid = userData["uid"] as? String else {
+                completion(nil, NSError(domain: "com.yourapp", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid user data"]))
+                return
+            }
+            
+            let user = AuthenticatedUser(displayName: displayName, email: email, photoURL: photoURL, uid: uid)
+            completion(user, nil)
+        }
+    }
     
     func addUsersToDb(user:User?, displayName:String? = nil, photoURL:String? = nil, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
         var displayName = displayName
@@ -109,7 +132,7 @@ class LoginModel:NSObject {
     }
 
     
-    func fetchConnectedUsersInDB(authUser: User?, completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
+    func fetchConnectedUsersInDB(authUser: AuthenticatedUser?, completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
         fetchConnectedUsersconversationID { conversationIDs, error in
             if let error = error {
                 completionHandler(nil, error)

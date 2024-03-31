@@ -64,14 +64,21 @@ class ViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             let user = Auth.auth().currentUser
             if user?.uid != nil {
-                /*
-                 * At this point User is Authenticated
-                 * move to next View
-                 */
-                let listChatView = ListChatViewController()
-                // pass whole result
-                listChatView.authUser = user
-                self.navigationController?.pushViewController(listChatView, animated: true)
+                LoginModel().fetchUserDetails(userID: user?.uid ?? "") { authUser, error in
+                    if let error = error {
+                        AlerUser().alertUser(viewController: self, title: "Alert", message: error.localizedDescription)
+                    }
+                    
+                    /*
+                     * At this point User is Authenticated
+                     * move to next View
+                     */
+                    let listChatView = ListChatViewController()
+                    // pass whole result
+                    listChatView.authUser = authUser
+                    self.navigationController?.pushViewController(listChatView, animated: true)
+                    
+                }
             } else {
                 let loginPrefrencesView = LoginPrefrencesViewController()
                 self.navigationController?.pushViewController(loginPrefrencesView, animated: true)

@@ -15,7 +15,7 @@ class GroupChatController: UIViewController {
     private var messages = [GroupMessage]()
     
     var selfSender: SenderType?
-    var authUser:User?
+    var authUser:AuthenticatedUser?
     var conversationID: String?
     var groupName: String?
     
@@ -101,7 +101,7 @@ class GroupChatController: UIViewController {
         let newMessage = GroupMessage(sender: Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? ""),
                                  messageId: "\(authUser?.uid ?? "")", // Set an appropriate message ID
                                  sentDate: Date(),
-                                      kind: .text(messageText), senderAvtar: authUser?.photoURL?.absoluteString ?? "")
+                                      kind: .text(messageText), senderAvtar: authUser?.photoURL ?? "")
 
         // Append the new message to the messages array
         messages.append(newMessage)
@@ -143,7 +143,7 @@ extension GroupChatController:UITableViewDelegate, UITableViewDataSource {
         let photoURL = message.senderAvtar
         if case let .text(text) = message.kind {
             if message.sender.senderId == authUser.uid {
-                cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL?.absoluteString, isCurrentUser: true)
+                cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL, isCurrentUser: true)
             } else {
                 cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: photoURL, isCurrentUser: false)
             }

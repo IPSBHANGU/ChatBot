@@ -14,7 +14,7 @@ class AddUsersViewController: UIViewController {
     lazy var usersTable = UITableView()
     lazy var groupNameTextField = UITextField()
     
-    var authUser:User?
+    var authUser:AuthenticatedUser?
     var chatUserArray:[[String:Any]]?
     var is_Group = false
     var selectedUsers: [String] = [] // to be used by group users

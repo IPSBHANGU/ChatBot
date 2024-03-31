@@ -23,7 +23,7 @@ class ChatController: UIViewController {
     var senderUserName: String?
     var senderPhotoURL: String?
     var senderUID: String?
-    var authUser:User?
+    var authUser:AuthenticatedUser?
     
     var photoUrl:URL?
     
@@ -157,7 +157,7 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
 
         if case let .text(text) = message.kind {
             if message.sender.senderId == authUser.uid {
-                cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL?.absoluteString, isCurrentUser: true)
+                cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL, isCurrentUser: true)
             } else {
                 cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: senderPhotoURL, isCurrentUser: false)
             }
