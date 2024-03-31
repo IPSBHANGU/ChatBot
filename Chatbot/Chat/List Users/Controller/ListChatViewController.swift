@@ -52,10 +52,7 @@ class ListChatViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         setupUI()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        setupActivityIndicator()
         
         if is_Group == false {
             fetchChatUsers()
@@ -170,8 +167,11 @@ class ListChatViewController: UIViewController {
         chatTable.dataSource = self
         chatTable.backgroundColor = .systemGray6
         chatTable.register(UINib(nibName: "ListChatTableViewCell", bundle: .main), forCellReuseIdentifier: "listChatTableView")
-        activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: chatTable.frame.midX, y: chatTable.frame.midY, width: 40, height: 40), type: .ballClipRotate, color: .blue, padding: nil)
-        activityIndicatorView.center = chatTable.center
+    }
+    
+    func setupActivityIndicator(){
+        activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: view.frame.midX, y: view.frame.midY, width: 40, height: 40), type: .ballClipRotate, color: .blue, padding: nil)
+        activityIndicatorView.center = view.center
         chatTable.addSubview(activityIndicatorView)
         activityIndicatorView.isHidden = true
     }
