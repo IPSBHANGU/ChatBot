@@ -19,6 +19,8 @@ class AlerUser:NSObject {
     func alertUser(viewController: UIViewController, title: String, message: String, action: UIAlertAction? = nil) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
+        alert.view.tintColor = .blue
+        
         if let action = action {
             alert.addAction(action)
         } else {
