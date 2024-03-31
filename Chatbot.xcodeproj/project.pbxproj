@@ -214,6 +214,7 @@
 		FB2F5F112BB300A50077C2D8 /* GroupChat */ = {
 			isa = PBXGroup;
 			children = (
+				FBBD9E3B2BB960F400C4E2D1 /* Model */,
 				FB2F5F132BB300B60077C2D8 /* View */,
 				FB2F5F122BB300B10077C2D8 /* Controller */,
 			);
@@ -364,7 +365,6 @@
 			isa = PBXGroup;
 			children = (
 				FB8438202BACA6DD006CEA58 /* ChatModel.swift */,
-				FB84382B2BAFF1E3006CEA58 /* GroupModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -461,6 +461,14 @@
 				FB1B33382BA823020061259F /* SceneDelegate.swift */,
 			);
 			path = AppDelegates;
+			sourceTree = "<group>";
+		};
+		FBBD9E3B2BB960F400C4E2D1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FB84382B2BAFF1E3006CEA58 /* GroupModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		FBFF4CA72BB580F100B35247 /* NSLayoutConstraints+Extenstions */ = {
