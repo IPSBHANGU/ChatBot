@@ -63,7 +63,6 @@ class LoginModel: NSObject {
             "email": user?.email ?? "",
             "photoURL": photoURL ?? "",
             "registeredDate": Date().timeIntervalSince1970,
-            "connectedUsers": ["nil"],
         ] as [String : Any]
         
         db.setValue(newUser) { (error, _) in
@@ -112,6 +111,60 @@ class LoginModel: NSObject {
         }
     }
 
+    func addUsers(authUserUID: String?, otherUserUID: String?, conversationID: String?, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
+        
+        guard let authUserUID = authUserUID, let otherUserUID = otherUserUID else {
+            completionHandler(false, "authUserUID or otherUserUID is nil")
+            return
+        }
+        
+        let usersRef = Database.database().reference().child("users")
+        
+        // Update authUser's connected users
+        usersRef.child(authUserUID).observeSingleEvent(of: .value) { authUserSnapshot in
+            guard var authUserData = authUserSnapshot.value as? [String: Any] else {
+                completionHandler(false, "Failed to get authUserData")
+                return
+            }
+            
+            var connectedUsers = authUserData["connectedUsers"] as? [String:Any] ?? [:]
+            connectedUsers.updateValue(conversationID ?? "", forKey: otherUserUID)
+            
+            authUserData["connectedUsers"] = connectedUsers
+            
+            usersRef.child(authUserUID).setValue(authUserData) { (error, _) in
+                if let error = error {
+                    completionHandler(false, error.localizedDescription)
+                } else {
+                    // Update otherUser's connected users
+                    usersRef.child(otherUserUID).observeSingleEvent(of: .value) { otherUserSnapshot in
+                        guard var otherUserData = otherUserSnapshot.value as? [String: Any] else {
+                            completionHandler(false, "Failed to get otherUserData")
+                            return
+                        }
+                        
+                        var otherConnectedUsers = otherUserData["connectedUsers"] as? [String:Any] ?? [:]
+                        otherConnectedUsers.updateValue(conversationID ?? "", forKey: authUserUID)
+                        
+                        otherUserData["connectedUsers"] = otherConnectedUsers
+                        
+                        usersRef.child(otherUserUID).setValue(otherUserData) { (error, _) in
+                            if let error = error {
+                                completionHandler(false, error.localizedDescription)
+                            } else {
+                                completionHandler(true, nil)
+                            }
+                        }
+                    } withCancel: { error in
+                        completionHandler(false, error.localizedDescription)
+                    }
+                }
+            }
+        } withCancel: { error in
+            completionHandler(false, error.localizedDescription)
+        }
+    }
+    
     func fetchConnectedUsersconversationID(completionHandler: @escaping ([String]?, String?) -> Void) {
         let db = Database.database().reference().child("connectedUsers")
         
