@@ -110,8 +110,8 @@ class LoginModel: NSObject {
                 return
             }
             
-            var connectedUsers = authUserData["connectedUsers"] as? [String: [String]] ?? [:]
-            connectedUsers[otherUserUID] = [conversationID ?? ""]
+            var connectedUsers = authUserData["connectedUsers"] as? [String: [String:String]] ?? [:]
+            connectedUsers[otherUserUID] = ["conversationID": conversationID ?? ""]
             
             authUserData["connectedUsers"] = connectedUsers
             
@@ -126,9 +126,9 @@ class LoginModel: NSObject {
                             return
                         }
                         
-                        var otherConnectedUsers = otherUserData["connectedUsers"] as? [String: [String]] ?? [:]
+                        var otherConnectedUsers = otherUserData["connectedUsers"] as? [String: [String:String]] ?? [:]
                         
-                        otherConnectedUsers[authUserUID] = [conversationID ?? ""]
+                        otherConnectedUsers[authUserUID] = ["conversationID": conversationID ?? ""]
                         
                         otherUserData["connectedUsers"] = otherConnectedUsers
                         
