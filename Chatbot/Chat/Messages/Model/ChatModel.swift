@@ -53,6 +53,14 @@ class ChatModel: NSObject {
         return conversationID
     }
     
+    func extractUserIDs(from conversationID: String) -> (user1ID: String, user2ID: String) {
+        let userIDs = conversationID.components(separatedBy: "_")
+        guard userIDs.count == 2 else {
+            fatalError("Invalid conversationID format")
+        }
+        return (userIDs[0], userIDs[1])
+    }
+    
     func checkForUserRelation(conversationID: String, currentUserID: String) -> Bool{
             let userIDs = conversationID.components(separatedBy: "_")
             
