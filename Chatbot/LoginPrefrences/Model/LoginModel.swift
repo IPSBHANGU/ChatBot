@@ -93,23 +93,6 @@ class LoginModel: NSObject {
             completionHandler(nil, error.localizedDescription)
         }
     }
-    
-    func connectUsersInDB(authUserUID: String?, otherUserUID:String?, conversationID:String?, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
-
-        let db = Database.database().reference().child("connectedUsers").child("conversationID: \(conversationID ?? "")")
-        let newConnectedUser = [
-            "User1": authUserUID ?? "",
-            "User2": otherUserUID ?? ""
-        ] as [String : Any]
-        
-        db.setValue(newConnectedUser) { (error, _) in
-            if let error = error {
-                completionHandler(false, error.localizedDescription)
-            } else {
-                completionHandler(true, nil)
-            }
-        }
-    }
 
     func addUsers(authUserUID: String?, otherUserUID: String?, conversationID: String?, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
         

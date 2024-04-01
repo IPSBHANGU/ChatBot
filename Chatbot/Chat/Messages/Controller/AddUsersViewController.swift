@@ -174,14 +174,6 @@ extension AddUsersViewController:UITableViewDelegate,UITableViewDataSource {
                     self.dismiss(animated: true, completion: nil)
                 }
             }
-//            LoginModel().connectUsersInDB(authUserUID: authUser?.uid ?? "", otherUserUID: userUID, conversationID: conversationID) { isSucceeded, error in
-//                if let error = error {
-//                    AlerUser().alertUser(viewController: self, title: "Error", message: error)
-//                }
-//                if isSucceeded {
-//                    self.dismiss(animated: true, completion: nil)
-//                }
-//            }
         }
     }
 }
