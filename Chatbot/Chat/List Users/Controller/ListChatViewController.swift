@@ -26,6 +26,7 @@ class ListChatViewController: UIViewController {
     lazy var chatTable = UITableView()
     lazy var addButton = UIButton(type: .custom)
     var isButtonPressed:Bool?
+    lazy var warning = UILabel()
     
     // SearchBar
     lazy var searchBar = UISearchBar()
@@ -50,12 +51,17 @@ class ListChatViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewIsAppearing(_ animated: Bool) {
         setupUI()
         setupActivityIndicator()
         
         if is_Group == false {
             fetchChatUsers()
+        } else {
+            fetchGroups()
+        }
+        if let chatUserArray = self.chatUserArray, !chatUserArray.isEmpty {
+            warning.removeFromSuperview()
         }
     }
     
@@ -72,8 +78,12 @@ class ListChatViewController: UIViewController {
             self.filteredChatUserArray = self.chatUserArray
             DispatchQueue.main.async {
                 self.activityIndicatorView.stopAnimating()
+                self.chatTable.reloadData()
+                
+                if let chatUserArray = self.chatUserArray, chatUserArray.isEmpty {
+                    self.view.addSubview(self.warning)
+                }
             }
-            self.chatTable.reloadData()
         }
     }
     
@@ -87,8 +97,12 @@ class ListChatViewController: UIViewController {
             self.filteredChatUserArray = self.chatUserArray
             DispatchQueue.main.async {
                 self.activityIndicatorView.stopAnimating()
+                self.chatTable.reloadData()
+                
+                if let chatUserArray = self.chatUserArray, chatUserArray.isEmpty {
+                    self.view.addSubview(self.warning)
+                }
             }
-            self.chatTable.reloadData()
         }
     }
     
@@ -152,6 +166,12 @@ class ListChatViewController: UIViewController {
         addButton.addTarget(self, action: #selector(addButtonAction(_:)), for: .touchUpInside)
 
         view.addSubview(addButton)
+        
+        warning.text = "No Conversations Found! Add Users to Start a Conversation"
+        warning.numberOfLines = 0
+        warning.font = UIFont(name: "Rubik-Regular", size: 18)
+        warning.textColor = .placeholderText
+        warning.frame = CGRect(x: 24, y: self.view.frame.midY, width: self.view.frame.width - 48, height: 50)
     }
     
     @objc func addButtonAction(_ sender: UIButton) {
