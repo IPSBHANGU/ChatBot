@@ -27,12 +27,7 @@ class ListChatTableViewCell: UITableViewCell {
     }
     
     func setCellData(userImage:String?, username:String?, userRecentMeassage:String?, meassageTime:String?) {
-        if let userImage = userImage {
-            profileImageView.kf.setImage(with: URL(string: userImage))
-        } else {
-            profileImageView.image = UIImage(systemName: "person")
-            profileImageView.tintColor = .black
-        }
+        profileImageView.kf.setImage(with: URL(string: userImage ?? ""))
         nameLabel.text = username ?? ""
         nameLabel.font = UIFont(name: "Rubik-SemiBold", size: 15)
         nameLabel.textColor = UIColorHex().hexStringToUIColor(hex: "#191919")

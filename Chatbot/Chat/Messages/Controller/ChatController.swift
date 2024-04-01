@@ -23,7 +23,8 @@ class ChatController: UIViewController {
     var senderUserName: String?
     var senderPhotoURL: String?
     var senderUID: String?
-    var authUser:User?
+    var authUser:AuthenticatedUser?
+    
     var photoUrl:URL?
     
     override func viewDidLoad() {
@@ -39,10 +40,12 @@ class ChatController: UIViewController {
         inputTextField.layer.masksToBounds = true
         
         observeMessages()
+        sendButton.layer.cornerRadius = sendButton.frame.height / 2
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         setupHeaderView()
         setupTableView()
-        sendButton.layer.cornerRadius = sendButton.frame.height / 2
-        
     }
     
     func setupHeaderView() {
@@ -51,13 +54,13 @@ class ChatController: UIViewController {
         headerView.backgroundColor = .white
         
         let backButton = UIButton(type: .custom)
-        backButton.frame = CGRect(x: 10, y: 60, width: 50, height: 30)
+        backButton.frame = CGRect(x: 24, y: 60, width: 24, height: 24)
         backButton.setImage(UIImage(systemName: "arrow.backward"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         backButton.tintColor = .black
         headerView.addSubview(backButton)
         
-        let headerLabel = UILabel(frame: CGRect(x: 60, y: 60, width: view.frame.width - 120, height: 30))
+        let headerLabel = UILabel(frame: CGRect(x: backButton.frame.origin.x + 16, y: backButton.frame.origin.y, width: 136, height: 30))
         headerLabel.textAlignment = .center
         headerLabel.text = "Messages"
         headerLabel.font = UIFont(name: "Rubik SemiBold", size: 18)
@@ -149,7 +152,7 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
 
         if case let .text(text) = message.kind {
             if message.sender.senderId == authUser.uid {
-                cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL?.absoluteString, isCurrentUser: true)
+                cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL, isCurrentUser: true)
             } else {
                 cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: senderPhotoURL, isCurrentUser: false)
             }

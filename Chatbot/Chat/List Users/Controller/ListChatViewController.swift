@@ -16,7 +16,7 @@ class ListChatViewController: UIViewController {
     
     // authResult
     var result:AuthDataResult?
-    var authUser:User?
+    var authUser:AuthenticatedUser?
     
     // Start UIElements
     lazy var userAvatar = UIImageView()
@@ -26,6 +26,7 @@ class ListChatViewController: UIViewController {
     lazy var chatTable = UITableView()
     lazy var addButton = UIButton(type: .custom)
     var isButtonPressed:Bool?
+    lazy var warning = UILabel()
     
     // SearchBar
     lazy var searchBar = UISearchBar()
@@ -43,22 +44,24 @@ class ListChatViewController: UIViewController {
         super.viewDidLoad()
         
         if let result = result {
-            authUser = result.user
+            authUser = AuthenticatedUser(displayName: result.user.displayName, email: result.user.email, photoURL: result.user.photoURL?.absoluteString, uid: result.user.uid)
         }
         
         setupTableView()
         // Do any additional setup after loading the view.
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewIsAppearing(_ animated: Bool) {
         setupUI()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        setupActivityIndicator()
         
         if is_Group == false {
             fetchChatUsers()
+        } else {
+            fetchGroups()
+        }
+        if let chatUserArray = self.chatUserArray, !chatUserArray.isEmpty {
+            warning.removeFromSuperview()
         }
     }
     
@@ -75,8 +78,16 @@ class ListChatViewController: UIViewController {
             self.filteredChatUserArray = self.chatUserArray
             DispatchQueue.main.async {
                 self.activityIndicatorView.stopAnimating()
+                self.chatTable.reloadData()
+                
+                if let chatUserArray = self.chatUserArray, chatUserArray.isEmpty {
+                    self.view.addSubview(self.warning)
+                }
+                
+                if let chatUserArray = self.chatUserArray, !chatUserArray.isEmpty {
+                    self.warning.removeFromSuperview()
+                }
             }
-            self.chatTable.reloadData()
         }
     }
     
@@ -90,8 +101,16 @@ class ListChatViewController: UIViewController {
             self.filteredChatUserArray = self.chatUserArray
             DispatchQueue.main.async {
                 self.activityIndicatorView.stopAnimating()
+                self.chatTable.reloadData()
+                
+                if let chatUserArray = self.chatUserArray, chatUserArray.isEmpty {
+                    self.view.addSubview(self.warning)
+                }
+                
+                if let chatUserArray = self.chatUserArray, !chatUserArray.isEmpty {
+                    self.warning.removeFromSuperview()
+                }
             }
-            self.chatTable.reloadData()
         }
     }
     
@@ -102,7 +121,7 @@ class ListChatViewController: UIViewController {
         let rect = CGRect(x: 24, y: 52, width: 32, height: 32)
         userAvatar.layer.cornerRadius = min(rect.width, rect.height) / 2.0
         userAvatar.frame = rect
-        userAvatar.kf.setImage(with: authUser?.photoURL)
+        userAvatar.kf.setImage(with: URL(string: authUser?.photoURL ?? ""))
         view.addSubview(userAvatar)
         
         editButton.setImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
@@ -155,6 +174,12 @@ class ListChatViewController: UIViewController {
         addButton.addTarget(self, action: #selector(addButtonAction(_:)), for: .touchUpInside)
 
         view.addSubview(addButton)
+        
+        warning.text = "No Conversations Found! Add Users to Start a Conversation"
+        warning.numberOfLines = 0
+        warning.font = UIFont(name: "Rubik-Regular", size: 18)
+        warning.textColor = .placeholderText
+        warning.frame = CGRect(x: 24, y: self.view.frame.midY, width: self.view.frame.width - 48, height: 50)
     }
     
     @objc func addButtonAction(_ sender: UIButton) {
@@ -170,8 +195,11 @@ class ListChatViewController: UIViewController {
         chatTable.dataSource = self
         chatTable.backgroundColor = .systemGray6
         chatTable.register(UINib(nibName: "ListChatTableViewCell", bundle: .main), forCellReuseIdentifier: "listChatTableView")
-        activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: chatTable.frame.midX, y: chatTable.frame.midY, width: 40, height: 40), type: .ballClipRotate, color: .blue, padding: nil)
-        activityIndicatorView.center = chatTable.center
+    }
+    
+    func setupActivityIndicator(){
+        activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: view.frame.midX, y: view.frame.midY, width: 40, height: 40), type: .ballClipRotate, color: .blue, padding: nil)
+        activityIndicatorView.center = view.center
         chatTable.addSubview(activityIndicatorView)
         activityIndicatorView.isHidden = true
     }

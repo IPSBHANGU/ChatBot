@@ -20,10 +20,12 @@ class LoginPrefrencesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupUI()
         // Do any additional setup after loading the view.
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        setupUI()
+    }
 
     func setupUI() {
         // Logo
@@ -57,7 +59,7 @@ class LoginPrefrencesViewController: UIViewController {
         // seprator
         orLable.text = "OR"
         orLable.textColor = .lightGray
-        orLable.frame = CGRect(x: 180, y: view.frame.width - 100 + 20, width: view.frame.width - 80, height: 40)
+        orLable.frame = CGRect(x: view.frame.midX - 10, y: view.frame.width - 100 + 20, width: view.frame.width - 80, height: 40)
         view.addSubview(orLable)
         
         // login with Google Button

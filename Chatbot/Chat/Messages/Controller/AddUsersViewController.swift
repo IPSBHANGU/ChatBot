@@ -14,7 +14,7 @@ class AddUsersViewController: UIViewController {
     lazy var usersTable = UITableView()
     lazy var groupNameTextField = UITextField()
     
-    var authUser:User?
+    var authUser:AuthenticatedUser?
     var chatUserArray:[[String:Any]]?
     var is_Group = false
     var selectedUsers: [String] = [] // to be used by group users
@@ -22,10 +22,13 @@ class AddUsersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupUI()
-        setupTableView()
         fetchUsers()
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        setupUI()
+        setupTableView()
     }
 
     func fetchUsers(){
@@ -41,51 +44,46 @@ class AddUsersViewController: UIViewController {
     }
     
     func setupUI() {
-        let backButtonWidth: CGFloat = 50
-        let backButtonHeight: CGFloat = 50
-        let backButtonX: CGFloat = 15
-        let backButtonY: CGFloat = 40
-        
         let backButton = UIButton(type: .custom)
-        backButton.frame = CGRect(x: backButtonX, y: backButtonY, width: backButtonWidth, height: backButtonHeight)
+        backButton.frame = CGRect(x: 24, y: 34, width: 24, height: 24)
         backButton.setImage(UIImage(systemName: "arrow.backward"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         backButton.tintColor = .black
         view.addSubview(backButton)
         
-        let headerLabelX: CGFloat = backButton.frame.maxX
-        let headerLabelY: CGFloat = 40
-        let headerLabelWidth: CGFloat = view.bounds.width - backButton.frame.maxX - 15
-        let headerLabelHeight: CGFloat = 30
-        
-        let headerLabel = UILabel(frame: CGRect(x: headerLabelX, y: headerLabelY, width: headerLabelWidth, height: headerLabelHeight))
+        let headerLabel = UILabel(frame: CGRect(x: backButton.frame.maxX + 16, y: backButton.frame.origin.y, width: 136, height: backButton.frame.height))
         headerLabel.textAlignment = .center
         headerLabel.text = "Add Users"
+        headerLabel.font = UIFont(name: "Rubik SemiBold", size: 18)
         view.addSubview(headerLabel)
         
-        // Add a "Done" button
-        let doneButtonWidth: CGFloat = 80
-        let doneButtonHeight: CGFloat = 40
-        let doneButtonX: CGFloat = view.bounds.width - doneButtonWidth - 15
-        let doneButtonY: CGFloat = headerLabel.frame.minY
-        let doneButton = UIButton(type: .system)
-        doneButton.frame = CGRect(x: doneButtonX, y: doneButtonY, width: doneButtonWidth, height: doneButtonHeight)
-        doneButton.setTitle("Done", for: .normal)
-        doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
-        view.addSubview(doneButton)
+        var usersTableY: CGFloat?
+        var usersTableHeight: CGFloat = view.bounds.height - (usersTableY ?? 0)
         
-        // Add a text field for group name
-        let groupNameTextFieldY: CGFloat = headerLabel.frame.maxY + 20
-        let groupNameTextFieldHeight: CGFloat = 40
-        groupNameTextField = UITextField(frame: CGRect(x: 15, y: groupNameTextFieldY, width: view.bounds.width - 30, height: groupNameTextFieldHeight))
-        groupNameTextField.placeholder = "Enter Group Name"
-        groupNameTextField.borderStyle = .roundedRect
-        groupNameTextField.backgroundColor = .white
-        view.addSubview(groupNameTextField)
+        if is_Group {
+            // Add a "Done" button
+            let doneButton = UIButton(type: .system)
+            doneButton.frame = CGRect(x: view.frame.width - 46, y: headerLabel.frame.origin.y, width: 24, height: headerLabel.frame.height)
+            doneButton.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
+            doneButton.tintColor = .black
+            doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
+            view.addSubview(doneButton)
+            
+            // Add a text field for group name
+            let groupNameTextFieldY: CGFloat = headerLabel.frame.maxY + 20
+            let groupNameTextFieldHeight: CGFloat = 40
+            groupNameTextField = UITextField(frame: CGRect(x: 15, y: groupNameTextFieldY, width: view.bounds.width - 30, height: groupNameTextFieldHeight))
+            groupNameTextField.placeholder = "Enter Group Name"
+            groupNameTextField.borderStyle = .roundedRect
+            groupNameTextField.backgroundColor = .white
+            view.addSubview(groupNameTextField)
+            
+            usersTableY = groupNameTextField.frame.maxY + 20
+        } else {
+            usersTableY = headerLabel.frame.maxY + 20
+        }
         
-        let usersTableY: CGFloat = groupNameTextField.frame.maxY + 20
-        let usersTableHeight: CGFloat = view.bounds.height - usersTableY
-        usersTable = UITableView(frame: CGRect(x: 0, y: usersTableY, width: view.bounds.width, height: usersTableHeight))
+        usersTable = UITableView(frame: CGRect(x: 0, y: usersTableY ?? 0, width: view.bounds.width, height: usersTableHeight))
         view.addSubview(usersTable)
     }
 
@@ -168,7 +166,7 @@ extension AddUsersViewController:UITableViewDelegate,UITableViewDataSource {
             let conversationID = ChatModel().generateConversationID(user1ID: authUser?.uid ?? "", user2ID: userUID)
             
             // Call API to connect users in DB
-            LoginModel().connectUsersInDB(authUserUID: authUser?.uid ?? "", otherUserUID: userUID, conversationID: conversationID) { isSucceeded, error in
+            LoginModel().addUsers(authUserUID: authUser?.uid ?? "", otherUserUID: userUID, conversationID: conversationID) { isSucceeded, error in
                 if let error = error {
                     AlerUser().alertUser(viewController: self, title: "Error", message: error)
                 }
@@ -176,6 +174,14 @@ extension AddUsersViewController:UITableViewDelegate,UITableViewDataSource {
                     self.dismiss(animated: true, completion: nil)
                 }
             }
+//            LoginModel().connectUsersInDB(authUserUID: authUser?.uid ?? "", otherUserUID: userUID, conversationID: conversationID) { isSucceeded, error in
+//                if let error = error {
+//                    AlerUser().alertUser(viewController: self, title: "Error", message: error)
+//                }
+//                if isSucceeded {
+//                    self.dismiss(animated: true, completion: nil)
+//                }
+//            }
         }
     }
 }

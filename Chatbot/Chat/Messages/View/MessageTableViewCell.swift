@@ -66,7 +66,6 @@ class MessageTableViewCell: UITableViewCell {
             messageTime.textColor = UIColorHex().hexStringToUIColor(hex: "#A2A2A2")
             
             // messageStatus should not be visible for recieved meassages
-            
             messageSepratorDotView.isHidden = true
             messageStatusLable.isHidden = true
             bubbleViewLeading = bubbleViewLeading.setRelation(relation: .equal, constant: 60)
