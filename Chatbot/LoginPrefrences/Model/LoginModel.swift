@@ -62,6 +62,8 @@ class LoginModel: NSObject {
             "displayName": displayName ?? "",
             "email": user?.email ?? "",
             "photoURL": photoURL ?? "",
+            "registeredDate": Date().timeIntervalSince1970,
+            "connectedUsers": ["nil"],
         ] as [String : Any]
         
         db.setValue(newUser) { (error, _) in

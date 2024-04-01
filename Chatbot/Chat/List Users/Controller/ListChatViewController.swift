@@ -83,6 +83,10 @@ class ListChatViewController: UIViewController {
                 if let chatUserArray = self.chatUserArray, chatUserArray.isEmpty {
                     self.view.addSubview(self.warning)
                 }
+                
+                if let chatUserArray = self.chatUserArray, !chatUserArray.isEmpty {
+                    self.warning.removeFromSuperview()
+                }
             }
         }
     }
@@ -101,6 +105,10 @@ class ListChatViewController: UIViewController {
                 
                 if let chatUserArray = self.chatUserArray, chatUserArray.isEmpty {
                     self.view.addSubview(self.warning)
+                }
+                
+                if let chatUserArray = self.chatUserArray, !chatUserArray.isEmpty {
+                    self.warning.removeFromSuperview()
                 }
             }
         }
