@@ -66,7 +66,7 @@ class ListChatViewController: UIViewController {
     }
     
     func fetchChatUsers(){
-        LoginModel().fetchConnectedUsersInDB(authUser: authUser) { users, error in
+        LoginModel().fetchConnectedUsers(authUser: authUser) { users, error in
             self.activityIndicatorView.startAnimating()
             if let error = error {
                 AlerUser().alertUser(viewController: self, title: "Error", message: error)

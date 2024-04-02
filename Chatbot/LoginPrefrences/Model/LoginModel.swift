@@ -73,7 +73,7 @@ class LoginModel: NSObject {
             }
         }
     }
-    
+
     
     func fetchUsersFromDb(completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
         usersDatabase.observe(.value) { snapshot in
@@ -93,101 +93,25 @@ class LoginModel: NSObject {
             completionHandler(nil, error.localizedDescription)
         }
     }
-    
-    func connectUsersInDB(authUserUID: String?, otherUserUID:String?, conversationID:String?, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
 
-        let db = Database.database().reference().child("connectedUsers").child("conversationID: \(conversationID ?? "")")
-        let newConnectedUser = [
-            "User1": authUserUID ?? "",
-            "User2": otherUserUID ?? ""
-        ] as [String : Any]
-        
-        db.setValue(newConnectedUser) { (error, _) in
-            if let error = error {
-                completionHandler(false, error.localizedDescription)
-            } else {
-                completionHandler(true, nil)
-            }
-        }
-    }
-
-//    func fetchLastMessage(conversationId: String?, completionHandler: @escaping ([String: Any]?, String?) -> Void) {
-//        guard let conversationId = conversationId else {
-//            completionHandler(nil, "Conversation ID is nil")
-//            return
-//        }
-//        
-//        let (user1ID, user2ID) = ChatModel().extractUserIDs(from: conversationId)
-//        
-//        ChatModel().observeMessages(conversationID: conversationId, currentUserID: user1ID, otherUserID: user2ID) { messages in
-//            
-//            guard let lastMessage = messages.last else {
-//                completionHandler(nil, "No messages found")
-//                return
-//            }
-//            
-//            let lastMessageData: [String: Any] = [
-//                "sentDate": lastMessage.sentDate.timeIntervalSince1970
-//            ]
-//            
-//            completionHandler(lastMessageData, "Success")
-//            
-//            let usersRef = Database.database().reference().child("users")
-//            
-//            guard let authUserUID = Auth.auth().currentUser?.uid else {
-//                completionHandler(nil, "Auth user UID is nil")
-//                return
-//            }
-//            
-//            usersRef.child(authUserUID).setValue(lastMessageData) { error, _ in
-//                if let error = error {
-//                    completionHandler(nil, error.localizedDescription)
-//                    return
-//                }
-//                
-//                // Update otherUser's connected users
-//                usersRef.child(user2ID).observeSingleEvent(of: .value) { otherUserSnapshot in
-//                    guard var otherUserData = otherUserSnapshot.value as? [String: Any] else {
-//                        completionHandler(nil, "Failed to get otherUserData")
-//                        return
-//                    }
-//                    
-//                    var otherConnectedUsers = otherUserData["connectedUsers"] as? [String: [String: String]] ?? [:]
-//                    
-//                    otherConnectedUsers[authUserUID] = ["conversationID": conversationId]
-//                    
-//                    otherUserData["connectedUsers"] = otherConnectedUsers
-//                    
-//                    usersRef.child(user2ID).setValue(otherUserData) { error, _ in
-//                        if let error = error {
-//                            completionHandler(nil, error.localizedDescription)
-//                        } else {
-//                            completionHandler(lastMessageData, nil)
-//                        }
-//                    }
-//                } withCancel: { error in
-//                    completionHandler(nil, error.localizedDescription)
-//                }
-//            }
-//        }
-//    }
-    
     func addUsers(authUserUID: String?, otherUserUID: String?, conversationID: String?, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
+        
         guard let authUserUID = authUserUID, let otherUserUID = otherUserUID else {
             completionHandler(false, "authUserUID or otherUserUID is nil")
             return
         }
+        
         let usersRef = Database.database().reference().child("users")
         
         // Update authUser's connected users
-        usersRef.child(authUserUID).observeSingleEvent(of: .value) { authUserSnapshot,_  in
+        usersRef.child(authUserUID).observeSingleEvent(of: .value) { authUserSnapshot in
             guard var authUserData = authUserSnapshot.value as? [String: Any] else {
                 completionHandler(false, "Failed to get authUserData")
                 return
             }
             
-            var connectedUsers = authUserData["connectedUsers"] as? [String:Any] ?? [:]
-            connectedUsers.updateValue(conversationID ?? "", forKey: otherUserUID)
+            var connectedUsers = authUserData["connectedUsers"] as? [String: [String:String]] ?? [:]
+            connectedUsers[otherUserUID] = ["conversationID": conversationID ?? ""]
             
             authUserData["connectedUsers"] = connectedUsers
             
@@ -202,8 +126,9 @@ class LoginModel: NSObject {
                             return
                         }
                         
-                        var otherConnectedUsers = otherUserData["connectedUsers"] as? [String:Any] ?? [:]
-                        otherConnectedUsers.updateValue(conversationID ?? "", forKey: authUserUID)
+                        var otherConnectedUsers = otherUserData["connectedUsers"] as? [String: [String:String]] ?? [:]
+                        
+                        otherConnectedUsers[authUserUID] = ["conversationID": conversationID ?? ""]
                         
                         otherUserData["connectedUsers"] = otherConnectedUsers
                         
@@ -211,7 +136,7 @@ class LoginModel: NSObject {
                             if let error = error {
                                 completionHandler(false, error.localizedDescription)
                             } else {
-                               completionHandler(true,nil)
+                                completionHandler(true, nil)
                             }
                         }
                     } withCancel: { error in
@@ -219,114 +144,104 @@ class LoginModel: NSObject {
                     }
                 }
             }
+        } withCancel: { error in
+            completionHandler(false, error.localizedDescription)
+        }
+    }
+
+    func fetchConnectedUsers(authUser: AuthenticatedUser?, completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
+        let db = usersDatabase.child(authUser?.uid ?? "").child("connectedUsers")
+        
+        db.observeSingleEvent(of: .value) { snapshot in
+            guard let usersUID = snapshot.value as? [String: [String:String]] else {
+                completionHandler(nil, "No Users")
+                return
+            }
+            
+            var userDetailsArray: [[String: Any]] = []
+            let dispatchGroup = DispatchGroup()
+            
+            for (userId, _) in usersUID {
+                dispatchGroup.enter()
+                
+                self.fetchUserDetails(userID: userId) { userData, error in
+                    defer {
+                        dispatchGroup.leave()
+                    }
+                    
+                    guard let userDetails = userData else {
+                        completionHandler(nil, "No Data")
+                        return
+                    }
+                    
+                    guard let conversationIDDict = usersUID[userId],
+                          let conversationID = conversationIDDict["conversationID"] else {
+                        completionHandler(nil, "Failed to convert conversationID")
+                        return
+                    }
+                    
+                    let modifiedConversationID = conversationID.replacingOccurrences(of: "conversationID:", with: "").trimmingCharacters(in: .whitespaces)
+                    
+                    let userDetailsDict: [String: Any] = [
+                        "displayName": userDetails.displayName ?? "",
+                        "email": userDetails.email ?? "",
+                        "photoURL": userDetails.photoURL ?? "",
+                        "uid": userDetails.uid ?? "",
+                        "conversationID": modifiedConversationID
+                    ]
+                    
+                    userDetailsArray.append(userDetailsDict)
+                }
+            }
+            
+            dispatchGroup.notify(queue: .main) {
+                completionHandler(userDetailsArray, nil)
+            }
         }
     }
     
-            func fetchConnectedUsersconversationID(completionHandler: @escaping ([String]?, String?) -> Void) {
-                let db = Database.database().reference().child("connectedUsers")
-                
-                db.observeSingleEvent(of: .value) { snapshot in
-                    guard let userData = snapshot.value as? [String: Any] else {
-                        completionHandler(nil, "No Users")
-                        return
-                    }
-                    
-                    var conversationIDs: [String] = []
-                    
-                    for (conversationID, _) in userData {
-                        let cleanConversationID = conversationID.replacingOccurrences(of: "conversationID:", with: "").trimmingCharacters(in: .whitespaces)
-                        conversationIDs.append(cleanConversationID)
-                    }
-                    completionHandler(conversationIDs, nil)
-                } withCancel: { error in
-                    completionHandler(nil, error.localizedDescription)
-                }
-            }
-            
-    func fetchConnectedUsersInDB(authUser: AuthenticatedUser?, completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
-        fetchConnectedUsersconversationID { conversationIDs, error in
-            if let error = error {
-                completionHandler(nil, error)
-                return
-            }
-            
-            guard let ids = conversationIDs else {
-                completionHandler(nil, "No IDs found")
-                return
-            }
-            
-            var uidArray:[String] = []
-            
-            for id in ids {
-                let check = ChatModel().checkForUserRelation(conversationID: id, currentUserID: authUser?.uid ?? "")
-                if check == true {
-                    if let reversedUID = ChatModel().getOtherUserID(conversationID: id, currentUserID: authUser?.uid ?? "") {
-                        uidArray.append(reversedUID)
-                    }
-                }
-            }
-            
-            self.usersDatabase.observeSingleEvent(of: .value) { snapshot in
-                guard let userData = snapshot.value as? [String: Any] else {
-                    completionHandler(nil, "No user data found")
-                    return
-                }
-                
-                var usersList: [Dictionary<String, Any>] = []
-                
-                for uid in uidArray {
-                    if let user = userData[uid] as? [String: Any] {
-                        usersList.append(user)
-                    }
-                }
-                completionHandler(usersList, nil)
-            }
+    // Function to upload image to Firebase Storage
+    func uploadUserAvtar(userAvtar: UIImage?, currentUser: User?, completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard let imageData = userAvtar?.jpegData(compressionQuality: 0.5) else {
+            completion(.failure("Error: Unable to convert image to data" as! Error))
+            return
         }
         
-    }
-                // Function to upload image to Firebase Storage
-                func uploadUserAvtar(userAvtar: UIImage?, currentUser: User?, completion: @escaping (Result<Bool, Error>) -> Void) {
-                    guard let imageData = userAvtar?.jpegData(compressionQuality: 0.5) else {
-                        completion(.failure("Error: Unable to convert image to data" as! Error))
-                        return
-                    }
-                    
-                    guard let currentUserID = currentUser?.uid else {
-                        completion(.failure("Error: User ID is nil" as! Error))
-                        return
-                    }
-                    
-                    let storageRef = Storage.storage().reference().child("profile_images").child("\(currentUserID).jpg")
-                    
-                    let metadata = StorageMetadata()
-                    metadata.contentType = "image/jpeg"
-                    
-                    storageRef.putData(imageData, metadata: metadata) { (metadata, error) in
-                        if let error = error {
-                            completion(.failure(error))
-                        } else {
-                            completion(.success(true))
-                        }
-                    }
-                }
-                
-                // Function to download image to Firebase Storage
-                func downloadUserAvtarURL(currentUser: User?, completionHandler: @escaping (Bool?, String?) -> Void) {
-                    guard let currentUserID = currentUser?.uid else {
-                        completionHandler(false, "Error: User ID is nil")
-                        return
-                    }
-                    
-                    let storageRef = Storage.storage().reference().child("profile_images").child("\(currentUserID).jpg")
-                    
-                    storageRef.downloadURL { (url, error) in
-                        if let error = error {
-                            completionHandler(false, "Error getting download URL: \(error.localizedDescription)")
-                            return
-                        }
-                        
-                        completionHandler(true, url?.absoluteString)
-                    }
-                }
-            
+        guard let currentUserID = currentUser?.uid else {
+            completion(.failure("Error: User ID is nil" as! Error))
+            return
+        }
+
+        let storageRef = Storage.storage().reference().child("profile_images").child("\(currentUserID).jpg")
+
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpeg"
+
+        storageRef.putData(imageData, metadata: metadata) { (metadata, error) in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(true))
             }
+        }
+    }
+    
+    // Function to download image to Firebase Storage
+    func downloadUserAvtarURL(currentUser: User?, completionHandler: @escaping (Bool?, String?) -> Void) {
+        guard let currentUserID = currentUser?.uid else {
+            completionHandler(false, "Error: User ID is nil")
+            return
+        }
+        
+        let storageRef = Storage.storage().reference().child("profile_images").child("\(currentUserID).jpg")
+        
+        storageRef.downloadURL { (url, error) in
+            if let error = error {
+                completionHandler(false, "Error getting download URL: \(error.localizedDescription)")
+                return
+            }
+            
+            completionHandler(true, url?.absoluteString)
+        }
+    }
+}
