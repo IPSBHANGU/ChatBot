@@ -243,7 +243,6 @@ class LoginModel: NSObject {
                 }
             }
             
-            
     func fetchConnectedUsersInDB(authUser: AuthenticatedUser?, completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
         fetchConnectedUsersconversationID { conversationIDs, error in
             if let error = error {

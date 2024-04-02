@@ -171,6 +171,7 @@ extension AddUsersViewController:UITableViewDelegate,UITableViewDataSource {
                     AlerUser().alertUser(viewController: self, title: "Error", message: error)
                 }
                 if isSucceeded {
+                    
                     self.dismiss(animated: true, completion: nil)
                 }
             }
