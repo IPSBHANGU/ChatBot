@@ -54,7 +54,10 @@ class ListChatViewController: UIViewController {
     override func viewIsAppearing(_ animated: Bool) {
         setupUI()
         setupActivityIndicator()
-        
+        fetchData()
+    }
+    
+    func fetchData(){
         if is_Group == false {
             fetchChatUsers()
         } else {
@@ -73,8 +76,9 @@ class ListChatViewController: UIViewController {
                 return
             }
             
-            self.chatUserArray = users
+            self.chatUserArray?.removeAll()
             self.filteredChatUserArray?.removeAll()
+            self.chatUserArray = users
             self.filteredChatUserArray = self.chatUserArray
             DispatchQueue.main.async {
                 self.activityIndicatorView.stopAnimating()
@@ -186,6 +190,7 @@ class ListChatViewController: UIViewController {
         let addUsersView = AddUsersViewController()
         addUsersView.authUser = authUser
         addUsersView.is_Group = is_Group
+        addUsersView.delegate = self
         let navController = UINavigationController(rootViewController: addUsersView)
         self.present(navController, animated: true, completion: nil)
     }
@@ -330,8 +335,8 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
                         default:
                             lastMessageText = "Unsupported message type"
                         }
-                        
                         cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: lastMessageText, meassageTime: dateString)
+                        print(avtarURL, username, lastMessageText, dateString)
                     }
                 }
             }
@@ -400,3 +405,10 @@ extension ListChatViewController:UISearchBarDelegate {
     }
 
 }
+
+extension ListChatViewController: AddUsersDelegate {
+    func didSelectUser() {
+        self.fetchData()
+    }
+}
+

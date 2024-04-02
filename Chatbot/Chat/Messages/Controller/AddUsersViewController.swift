@@ -9,6 +9,11 @@ import UIKit
 import FirebaseAuth
 import NVActivityIndicatorView
 
+protocol AddUsersDelegate: AnyObject {
+    func didSelectUser()
+}
+
+
 class AddUsersViewController: UIViewController {
 
     lazy var usersTable = UITableView()
@@ -18,6 +23,8 @@ class AddUsersViewController: UIViewController {
     var chatUserArray:[[String:Any]]?
     var is_Group = false
     var selectedUsers: [String] = [] // to be used by group users
+    
+    weak var delegate: AddUsersDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -171,7 +178,11 @@ extension AddUsersViewController:UITableViewDelegate,UITableViewDataSource {
                     AlerUser().alertUser(viewController: self, title: "Error", message: error)
                 }
                 if isSucceeded {
-                    self.dismiss(animated: true, completion: nil)
+                    self.dismiss(animated: true) {
+                        if let delegate = self.delegate {
+                            delegate.didSelectUser()
+                        }
+                    }
                 }
             }
         }
