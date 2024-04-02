@@ -148,66 +148,54 @@ class LoginModel: NSObject {
             completionHandler(false, error.localizedDescription)
         }
     }
-    
-    func fetchConnectedUsersconversationID(completionHandler: @escaping ([String]?, String?) -> Void) {
-        let db = Database.database().reference().child("connectedUsers")
+
+    func fetchConnectedUsers(authUser: AuthenticatedUser?, completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
+        let db = usersDatabase.child(authUser?.uid ?? "").child("connectedUsers")
         
         db.observeSingleEvent(of: .value) { snapshot in
-            guard let userData = snapshot.value as? [String: Any] else {
+            guard let usersUID = snapshot.value as? [String: [String:String]] else {
                 completionHandler(nil, "No Users")
                 return
             }
             
-            var conversationIDs: [String] = []
+            var userDetailsArray: [[String: Any]] = []
+            let dispatchGroup = DispatchGroup()
             
-            for (conversationID, _) in userData {
-                let cleanConversationID = conversationID.replacingOccurrences(of: "conversationID:", with: "").trimmingCharacters(in: .whitespaces)
-                conversationIDs.append(cleanConversationID)
-            }
-            completionHandler(conversationIDs, nil)
-        } withCancel: { error in
-            completionHandler(nil, error.localizedDescription)
-        }
-    }
-
-    
-    func fetchConnectedUsersInDB(authUser: AuthenticatedUser?, completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
-        fetchConnectedUsersconversationID { conversationIDs, error in
-            if let error = error {
-                completionHandler(nil, error)
-                return
-            }
-            
-            guard let ids = conversationIDs else {
-                completionHandler(nil, "No IDs found")
-                return
-            }
-            
-            var uidArray:[String] = []
-            
-            for id in ids {
-                let check = ChatModel().checkForUserRelation(conversationID: id, currentUserID: authUser?.uid ?? "")
-                if check == true {
-                    if let reversedUID = ChatModel().getOtherUserID(conversationID: id, currentUserID: authUser?.uid ?? "") {
-                        uidArray.append(reversedUID)
-                    }
-                }
-            }
-            
-            self.usersDatabase.observeSingleEvent(of: .value) { snapshot in
-                guard let userData = snapshot.value as? [String: Any] else {
-                    completionHandler(nil, "No user data found")
-                    return
-                }
+            for (userId, _) in usersUID {
+                dispatchGroup.enter()
                 
-                var usersList: [Dictionary<String, Any>] = []
-                
-                for uid in uidArray {
-                    if let user = userData[uid] as? [String: Any] {
-                        usersList.append(user)
+                self.fetchUserDetails(userID: userId) { userData, error in
+                    defer {
+                        dispatchGroup.leave()
                     }
+                    
+                    guard let userDetails = userData else {
+                        completionHandler(nil, "No Data")
+                        return
+                    }
+                    
+                    guard let conversationIDDict = usersUID[userId],
+                          let conversationID = conversationIDDict["conversationID"] else {
+                        completionHandler(nil, "Failed to convert conversationID")
+                        return
+                    }
+                    
+                    let modifiedConversationID = conversationID.replacingOccurrences(of: "conversationID:", with: "").trimmingCharacters(in: .whitespaces)
+                    
+                    let userDetailsDict: [String: Any] = [
+                        "displayName": userDetails.displayName ?? "",
+                        "email": userDetails.email ?? "",
+                        "photoURL": userDetails.photoURL ?? "",
+                        "uid": userDetails.uid ?? "",
+                        "conversationID": modifiedConversationID
+                    ]
+                    
+                    userDetailsArray.append(userDetailsDict)
                 }
-                completionHandler(usersList, nil)
+            }
+            
+            dispatchGroup.notify(queue: .main) {
+                completionHandler(userDetailsArray, nil)
             }
         }
     }
