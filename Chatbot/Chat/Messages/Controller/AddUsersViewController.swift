@@ -32,7 +32,7 @@ class AddUsersViewController: UIViewController {
     }
 
     func fetchUsers(){
-        LoginModel().fetchUsersFromDb { users, error in
+        LoginModel().fetchUsersFromDb(currentUserUID: authUser?.uid ?? "") { users, error in
             if let error = error {
                 AlerUser().alertUser(viewController: self, title: "Error", message: error)
                 return
