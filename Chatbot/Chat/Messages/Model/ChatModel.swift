@@ -53,22 +53,6 @@ class ChatModel: NSObject {
         return conversationID
     }
     
-    func checkForUserRelation(conversationID: String, currentUserID: String) -> Bool{
-            let userIDs = conversationID.components(separatedBy: "_")
-            
-            guard userIDs.count == 2 else {
-                return false
-            }
-            
-            if userIDs.first == currentUserID {
-                return true
-            } else if userIDs.last == currentUserID {
-                return true
-            } else {
-                return false
-            }
-        }
-    
     /**
      func getOtherUserID(conversationID: String, currentUserID: String) -> String?
      - Note: Used to get other user UID
