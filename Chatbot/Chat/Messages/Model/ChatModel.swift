@@ -60,6 +60,7 @@ class ChatModel: NSObject {
      - parameter currentUserID: current Authenticated user UID
      - returns: other user's UID
      */
+    
     func getOtherUserID(conversationID: String, currentUserID: String) -> String? {
         let userIDs = conversationID.components(separatedBy: "_")
         
@@ -142,6 +143,47 @@ class ChatModel: NSObject {
             )
             messages.append(message)
             completionHandler(messages)
+        }
+    }
+    
+    func updateLastMessage(authUserUID: String?, otherUserUID: String?, message: String, sentDate: Date, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
+            
+        guard let authUserUID = authUserUID, let otherUserUID = otherUserUID else {
+            completionHandler(false, "authUserUID or otherUserUID is nil")
+            return
+        }
+        
+        let usersRef = Database.database().reference().child("users")
+        
+        // Update authUser's connected users
+        usersRef.child(authUserUID).observeSingleEvent(of: .value) { authUserSnapshot  in
+            guard let authUserData = authUserSnapshot.value as? [String: Any] else {
+                completionHandler(false, "Failed to get authUserData")
+                return
+            }
+            
+            guard let conversationIDDict = authUserData["conversationID"] as? [String: Any],
+                  let conversationID = conversationIDDict["conversationID"] as? String else {
+                completionHandler(false, "Failed to convert conversationID")
+                return
+            }
+            
+            let modifiedConversationID = conversationID.replacingOccurrences(of: "conversationID:", with: "").trimmingCharacters(in: .whitespaces)
+            
+            var connectedUsers = authUserData["connectedUsers"] as? [String: [String:String]] ?? [:]
+            connectedUsers[otherUserUID] = [
+                "conversationID": modifiedConversationID,
+                "lastMessage": message,
+                "lastMessageDate": "\(sentDate)"
+            ]
+            
+            usersRef.child(authUserUID).child("connectedUsers").setValue(connectedUsers) { (error, _) in
+                if let error = error {
+                    completionHandler(false, error.localizedDescription)
+                } else {
+                    completionHandler(true, nil)
+                }
+            }
         }
     }
 }

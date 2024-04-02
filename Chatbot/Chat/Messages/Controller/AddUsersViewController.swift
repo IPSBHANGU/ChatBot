@@ -9,6 +9,14 @@ import UIKit
 import FirebaseAuth
 import NVActivityIndicatorView
 
+//protocol AddUsersDelegate: AnyObject {
+//    func didSelectUser()
+//}
+
+protocol AddUsersDelegate: AnyObject {
+    func didSelectUser(_ user: [String: Any])
+}
+
 class AddUsersViewController: UIViewController {
 
     lazy var usersTable = UITableView()
@@ -19,11 +27,12 @@ class AddUsersViewController: UIViewController {
     var is_Group = false
     var selectedUsers: [String] = [] // to be used by group users
     
+    weak var delegate: AddUsersDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
         fetchUsers()
-        // Do any additional setup after loading the view.
+       
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -171,18 +180,18 @@ extension AddUsersViewController:UITableViewDelegate,UITableViewDataSource {
                     AlerUser().alertUser(viewController: self, title: "Error", message: error)
                 }
                 if isSucceeded {
-                    
+//                    self.dismiss(animated: true) {
+//                        if let delegate = self.delegate {
+//                            delegate.didSelectUser()
+//                        }
+//                    }
+                    let selectedUser = chatUserArray[indexPath.row]
+                    self.delegate?.didSelectUser(selectedUser)
+                    ListChatViewController().chatTable.reloadData()
                     self.dismiss(animated: true, completion: nil)
+                   
                 }
             }
-//            LoginModel().connectUsersInDB(authUserUID: authUser?.uid ?? "", otherUserUID: userUID, conversationID: conversationID) { isSucceeded, error in
-//                if let error = error {
-//                    AlerUser().alertUser(viewController: self, title: "Error", message: error)
-//                }
-//                if isSucceeded {
-//                    self.dismiss(animated: true, completion: nil)
-//                }
-//            }
         }
     }
 }

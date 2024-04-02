@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import NVActivityIndicatorView
 
 class EmailSignINViewController: UIViewController {
 
@@ -14,11 +15,20 @@ class EmailSignINViewController: UIViewController {
     @IBOutlet var passwordTextField: UITextField!
     @IBOutlet var submitButton: UIButton!
     
+    var activityIndicatorView: NVActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 40, height: 40), type: .ballClipRotateMultiple, color: .systemRed, padding: nil)
+           activityIndicatorView.center = view.center
+           activityIndicatorView.isHidden = true // Initially hidden
+          
+           view.addSubview(activityIndicatorView)
     }
 
     @IBAction func submitButtonAction(_ sender: Any) {
+        self.activityIndicatorView.startAnimating()
+        
         Auth.auth().signIn(withEmail: emailTextField.text ?? "", password: passwordTextField.text ?? "") { [weak self] result, error in
             guard let strongSelf = self else { return }
             if let error = error {
@@ -35,6 +45,7 @@ class EmailSignINViewController: UIViewController {
                         let listChatView = ListChatViewController()
                         // pass whole result
                         listChatView.result = result
+                        self?.activityIndicatorView.stopAnimating()
                         strongSelf.navigationController?.pushViewController(listChatView, animated: true)
                     }
                 }

@@ -28,6 +28,8 @@ class ListChatViewController: UIViewController {
     var isButtonPressed:Bool?
     lazy var warning = UILabel()
     
+    var refreshController : UIRefreshControl!
+    
     // SearchBar
     lazy var searchBar = UISearchBar()
     
@@ -46,15 +48,34 @@ class ListChatViewController: UIViewController {
         if let result = result {
             authUser = AuthenticatedUser(displayName: result.user.displayName, email: result.user.email, photoURL: result.user.photoURL?.absoluteString, uid: result.user.uid)
         }
-        
+        setupRefreshControl()
         setupTableView()
         // Do any additional setup after loading the view.
+    }
+    
+    func setupRefreshControl() {
+        refreshController = UIRefreshControl()
+        refreshController.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        chatTable.refreshControl = refreshController
+    }
+
+    @objc func refreshData() {
+        fetchChatUsers()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.refreshController.endRefreshing()
+            // Reload table view after data fetching
+            self.chatTable.reloadData()
+        }
     }
     
     override func viewIsAppearing(_ animated: Bool) {
         setupUI()
         setupActivityIndicator()
-        
+        fetchData()
+    }
+    
+    func fetchData(){
         if is_Group == false {
             fetchChatUsers()
         } else {
@@ -73,8 +94,9 @@ class ListChatViewController: UIViewController {
                 return
             }
             
-            self.chatUserArray = users
+            self.chatUserArray?.removeAll()
             self.filteredChatUserArray?.removeAll()
+            self.chatUserArray = users
             self.filteredChatUserArray = self.chatUserArray
             DispatchQueue.main.async {
                 self.activityIndicatorView.stopAnimating()
@@ -121,7 +143,15 @@ class ListChatViewController: UIViewController {
         let rect = CGRect(x: 24, y: 52, width: 32, height: 32)
         userAvatar.layer.cornerRadius = min(rect.width, rect.height) / 2.0
         userAvatar.frame = rect
+        
         userAvatar.kf.setImage(with: URL(string: authUser?.photoURL ?? ""))
+        
+        if let avatarURL = URL(string: authUser?.photoURL ?? "") {
+            userAvatar.kf.setImage(with: avatarURL, placeholder: UIImage(systemName: "person.circle"))
+        } else {
+            userAvatar.image = UIImage(systemName: "person.circle")
+            userAvatar.tintColor = .black
+        }
         view.addSubview(userAvatar)
         
         editButton.setImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
@@ -186,6 +216,7 @@ class ListChatViewController: UIViewController {
         let addUsersView = AddUsersViewController()
         addUsersView.authUser = authUser
         addUsersView.is_Group = is_Group
+        addUsersView.delegate = self
         let navController = UINavigationController(rootViewController: addUsersView)
         self.present(navController, animated: true, completion: nil)
     }
@@ -330,8 +361,8 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
                         default:
                             lastMessageText = "Unsupported message type"
                         }
-                        
                         cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: lastMessageText, meassageTime: dateString)
+                        print(avtarURL, username, lastMessageText, dateString)
                     }
                 }
             }
@@ -399,4 +430,15 @@ extension ListChatViewController:UISearchBarDelegate {
         searchBar.resignFirstResponder()
     }
 
+}
+
+extension ListChatViewController: AddUsersDelegate {
+    func didSelectUser(_ user: [String: Any]) {
+        // Append the selected user to your data source
+        chatUserArray?.append(user)
+        filteredChatUserArray = chatUserArray
+        
+        // Reload the table view
+        chatTable.reloadData()
+    }
 }

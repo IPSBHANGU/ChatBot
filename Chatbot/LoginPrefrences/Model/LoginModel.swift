@@ -156,7 +156,7 @@ class LoginModel: NSObject {
         
         db.observeSingleEvent(of: .value) { snapshot in
             guard let usersUID = snapshot.value as? [String: [String:String]] else {
-                completionHandler(nil, "No Users")
+                //completionHandler(nil, "No Users")
                 return
             }
             
