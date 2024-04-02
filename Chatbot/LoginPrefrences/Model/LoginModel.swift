@@ -35,7 +35,7 @@ class LoginModel: NSObject {
                   let email = userData["email"] as? String,
                   let photoURL = userData["photoURL"] as? String,
                   let uid = userData["uid"] as? String else {
-                completion(nil, NSError(domain: "com.yourapp", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid user data"]))
+                completion(nil, "Invalid user data" as? Error)
                 return
             }
             
@@ -75,7 +75,7 @@ class LoginModel: NSObject {
     }
 
     
-    func fetchUsersFromDb(completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
+    func fetchUsersFromDb(currentUserUID: String, completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
         usersDatabase.observe(.value) { snapshot in
             guard let userData = snapshot.value as? [String: [String: Any]] else {
                 completionHandler(nil, "No user data found")
@@ -85,7 +85,9 @@ class LoginModel: NSObject {
             var usersList: [Dictionary<String, Any>] = []
             
             for (_, value) in userData {
-                usersList.append(value) // Append each user's data to the usersList
+                if let uid = value["uid"] as? String, uid != currentUserUID {
+                    usersList.append(value)
+                }
             }
             
             completionHandler(usersList, nil)
