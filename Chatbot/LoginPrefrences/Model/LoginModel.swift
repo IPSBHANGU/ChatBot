@@ -96,7 +96,7 @@ class LoginModel: NSObject {
         }
     }
 
-    func addUsers(authUserUID: String?, otherUserUID: String?, conversationID: String?, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
+    func connectUsers(authUserUID: String?, otherUserUID: String?, conversationID: String?, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
         
         guard let authUserUID = authUserUID, let otherUserUID = otherUserUID else {
             completionHandler(false, "authUserUID or otherUserUID is nil")

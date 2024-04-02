@@ -166,7 +166,7 @@ extension AddUsersViewController:UITableViewDelegate,UITableViewDataSource {
             let conversationID = ChatModel().generateConversationID(user1ID: authUser?.uid ?? "", user2ID: userUID)
             
             // Call API to connect users in DB
-            LoginModel().addUsers(authUserUID: authUser?.uid ?? "", otherUserUID: userUID, conversationID: conversationID) { isSucceeded, error in
+            LoginModel().connectUsers(authUserUID: authUser?.uid ?? "", otherUserUID: userUID, conversationID: conversationID) { isSucceeded, error in
                 if let error = error {
                     AlerUser().alertUser(viewController: self, title: "Error", message: error)
                 }
