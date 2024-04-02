@@ -359,7 +359,7 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
                 let username = user["displayName"] as? String ?? ""
                 let userphoto = user["photoURL"] as? String ?? ""
                 let senderUID = user["uid"] as? String ?? ""
-                let conversationID = ChatModel().generateConversationID(user1ID: authUser?.uid ?? "", user2ID: senderUID)
+                let conversationID = user["conversationID"] as? String ?? ""
                 chatController.authUser = authUser
                 chatController.senderUserName = username
                 chatController.senderPhotoURL = userphoto
