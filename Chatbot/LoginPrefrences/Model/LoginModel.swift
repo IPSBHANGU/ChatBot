@@ -156,7 +156,7 @@ class LoginModel: NSObject {
         
         db.observeSingleEvent(of: .value) { snapshot in
             guard let usersUID = snapshot.value as? [String: [String:String]] else {
-                //completionHandler(nil, "No Users")
+                completionHandler(nil, "No Users")
                 return
             }
             
@@ -184,40 +184,20 @@ class LoginModel: NSObject {
                     
                     let modifiedConversationID = conversationID.replacingOccurrences(of: "conversationID:", with: "").trimmingCharacters(in: .whitespaces)
                     
-                    ChatModel().observeMessages(conversationID: modifiedConversationID, currentUserID: userDetails.uid ?? "") { messages in
-                        if let lastMessage = messages.last {
-                            let formatter = DateFormatter()
-                            formatter.dateFormat = "h:mm a"
-                            let dateString = formatter.string(from: lastMessage.sentDate)
-                            
-                            let lastMessageText: String
-                            switch lastMessage.kind {
-                            case .text(let text):
-                                lastMessageText = text
-                            default:
-                                lastMessageText = "Unsupported message type"
-                            }
-                            
-                            let userDetailsDict: [String: Any] = [
-                                "displayName": userDetails.displayName ?? "",
-                                "email": userDetails.email ?? "",
-                                "photoURL": userDetails.photoURL ?? "",
-                                "uid": userDetails.uid ?? "",
-                                "conversationID": modifiedConversationID,
-                                "lastMessage": lastMessageText,
-                                "lastMessageTime": dateString
-                            ]
-                            
-                            userDetailsArray.append(userDetailsDict)
-                            
-                            if userDetailsArray.count == usersUID.count {
-                                dispatchGroup.notify(queue: .main) {
-                                    completionHandler(userDetailsArray, nil)
-                                }
-                            }
-                        }
-                    }
+                    let userDetailsDict: [String: Any] = [
+                        "displayName": userDetails.displayName ?? "",
+                        "email": userDetails.email ?? "",
+                        "photoURL": userDetails.photoURL ?? "",
+                        "uid": userDetails.uid ?? "",
+                        "conversationID": modifiedConversationID
+                    ]
+                    
+                    userDetailsArray.append(userDetailsDict)
                 }
+            }
+            
+            dispatchGroup.notify(queue: .main) {
+                completionHandler(userDetailsArray, nil)
             }
         }
     }

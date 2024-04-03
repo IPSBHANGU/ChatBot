@@ -9,15 +9,14 @@ import UIKit
 import FirebaseAuth
 import Kingfisher
 import FirebaseDatabaseInternal
-import GrowingTextView
 
 class ChatController: UIViewController {
     
     private var messages = [Message]()
     
     @IBOutlet var sendButton: UIButton!
-    @IBOutlet weak var inputTextField: GrowingTextView!
-    
+    @IBOutlet var inputTextField: UITextField!
+   
     
     var selfSender: SenderType?
     var conversationID: String?
@@ -38,7 +37,7 @@ class ChatController: UIViewController {
         inputTextField.placeholder = "Send a message..."
         inputTextField.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#F4F4F4")
         
-//        inputTextField.borderStyle = .roundedRect
+        inputTextField.borderStyle = .roundedRect
         inputTextField.layer.cornerRadius = 15
         inputTextField.layer.masksToBounds = true
         
@@ -92,7 +91,7 @@ class ChatController: UIViewController {
     }
     
     func observeMessages() {
-        ChatModel().observeMessages(conversationID: conversationID ?? "", currentUserID: self.authUser?.uid ?? "") { message  in
+        ChatModel().observeMessages(conversationID: conversationID ?? "", currentUserID: self.authUser?.uid ?? "", otherUserID: self.senderUID ?? "") { message in
             
             // empty message array every time
             self.messages.removeAll()
@@ -127,7 +126,7 @@ class ChatController: UIViewController {
                // Reload the table view to display the new message
                messageTableView.reloadData()
 
-               ChatModel().sendMessage(conversationID: conversationID ?? "", sender : authUser, message: messageText) { error in
+               ChatModel().sendMessage(conversationID: conversationID ?? "", senderID: authUser?.uid ?? "", senderDisplayName: authUser?.displayName ?? "", message: messageText) { error in
                    if let error = error {
                        AlerUser().alertUser(viewController: self, title: "Error", message: error)
                    } else {
@@ -168,16 +167,8 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
     
 }
  
-extension ChatController : GrowingTextViewDelegate {
-    func textViewDidChangeHeight(_ textView: GrowingTextView, height: CGFloat) {
-       UIView.animate(withDuration: 0.2) {
-           self.view.layoutIfNeeded()
-       }
-    }
-    
-    func textViewDidChange(_ textView: UITextView) {
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
+extension ChatController : UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
     }
 }

@@ -47,14 +47,14 @@ class ListChatViewController: UIViewController {
             authUser = AuthenticatedUser(displayName: result.user.displayName, email: result.user.email, photoURL: result.user.photoURL?.absoluteString, uid: result.user.uid)
         }
         
+        setupTableView()
         // Do any additional setup after loading the view.
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewIsAppearing(_ animated: Bool) {
         setupUI()
         setupActivityIndicator()
         fetchData()
-        setupTableView()
     }
     
     func fetchData(){
@@ -315,14 +315,30 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
         } else {
             if let chatUserArray = filteredChatUserArray, indexPath.row < chatUserArray.count {
                 let user = chatUserArray[indexPath.row]
+                
                 let username = user["displayName"] as? String ?? ""
                 let avtarURL = user["photoURL"] as? String ?? ""
+                let senderUID = user["uid"] as? String ?? ""
+                let conversationID = ChatModel().generateConversationID(user1ID: authUser?.uid ?? "", user2ID: senderUID)
                 
-                // Get the last message details
-                let lastMessage = user["lastMessage"] as? String ?? ""
-                let lastMessageTime = user["lastMessageTime"] as? String ?? ""
-                
-                cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: lastMessage, meassageTime: lastMessageTime)
+                // Get the last message text
+                ChatModel().observeMessages(conversationID: conversationID, currentUserID: self.authUser?.uid ?? "", otherUserID: senderUID) { messages in
+                    if let lastMessage = messages.last {
+                        let formatter = DateFormatter()
+                        formatter.dateFormat = "h:mm a"
+                        let dateString = formatter.string(from: lastMessage.sentDate)
+                        
+                        let lastMessageText: String
+                        switch lastMessage.kind {
+                        case .text(let text):
+                            lastMessageText = text
+                        default:
+                            lastMessageText = "Unsupported message type"
+                        }
+                        cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: lastMessageText, meassageTime: dateString)
+                        print(avtarURL, username, lastMessageText, dateString)
+                    }
+                }
             }
         }
         return cell
@@ -344,6 +360,7 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
             let chatController = ChatController()
             if let chatUserArray = filteredChatUserArray, indexPath.row < chatUserArray.count {
                 let user = chatUserArray[indexPath.row]
+                
                 let username = user["displayName"] as? String ?? ""
                 let userphoto = user["photoURL"] as? String ?? ""
                 let senderUID = user["uid"] as? String ?? ""

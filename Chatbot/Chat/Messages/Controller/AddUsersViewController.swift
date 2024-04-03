@@ -13,6 +13,7 @@ protocol AddUsersDelegate: AnyObject {
     func didSelectUser()
 }
 
+
 class AddUsersViewController: UIViewController {
 
     lazy var usersTable = UITableView()
@@ -177,10 +178,11 @@ extension AddUsersViewController:UITableViewDelegate,UITableViewDataSource {
                     AlerUser().alertUser(viewController: self, title: "Error", message: error)
                 }
                 if isSucceeded {
-                    if let delegate = self.delegate {
-                        delegate.didSelectUser()
+                    self.dismiss(animated: true) {
+                        if let delegate = self.delegate {
+                            delegate.didSelectUser()
+                        }
                     }
-                    self.dismiss(animated: true, completion: nil)
                 }
             }
         }

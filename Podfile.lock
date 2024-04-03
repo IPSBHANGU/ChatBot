@@ -1,5 +1,4 @@
 PODS:
-  - GrowingTextView (0.7.2)
   - Kingfisher (7.11.0)
   - MASegmentedControl (0.0.5)
   - NVActivityIndicatorView (5.1.1):
@@ -8,7 +7,6 @@ PODS:
   - SwiftyContextMenu (0.1.5)
 
 DEPENDENCIES:
-  - GrowingTextView (= 0.7.2)
   - Kingfisher (~> 7.0)
   - MASegmentedControl
   - NVActivityIndicatorView
@@ -16,19 +14,17 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - GrowingTextView
     - Kingfisher
     - MASegmentedControl
     - NVActivityIndicatorView
     - SwiftyContextMenu
 
 SPEC CHECKSUMS:
-  GrowingTextView: 876bf42005b5e4a4fd740597db12caaf41f0fe6c
   Kingfisher: b9c985d864d43515f404f1ef4a8ce7d802ace3ac
   MASegmentedControl: 9b58f9ba3a562a739b63b29e4ca2b9dc4d9c62cb
   NVActivityIndicatorView: 1f6c5687f1171810aa27a3296814dc2d7dec3667
   SwiftyContextMenu: 3cd07fded2bea2e73a98a5b734375dce278d4399
 
-PODFILE CHECKSUM: bb9a31ce1981beab786353a400578ef834d0abd1
+PODFILE CHECKSUM: 4b554e2bfd41e099017258f3652393e7036d4d35
 
 COCOAPODS: 1.15.2
