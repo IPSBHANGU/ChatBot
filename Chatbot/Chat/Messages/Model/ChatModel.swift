@@ -87,12 +87,12 @@ class ChatModel: NSObject {
                                             }
      - returns: Closure Function returns true if no error else gives error as String
      */
-    func sendMessage(conversationID: String, senderID: String?, senderDisplayName: String?, message:String?, completionHandler: @escaping (_ error: String?) -> Void) {
+    func sendMessage(conversationID: String, sender:AuthenticatedUser?, message:String?, completionHandler: @escaping (_ error: String?) -> Void) {
         let messageRef = messagesDatabase.child(conversationID).childByAutoId()
         
         let newMessage = [
-            "senderId": senderID ?? "",
-            "displayName": senderDisplayName ?? "",
+            "senderId": sender?.uid ?? "",
+            "displayName": sender?.displayName ?? "",
             "text": message ?? "",
             "sentDate": Date().timeIntervalSince1970
         ] as [String : Any]
@@ -120,7 +120,7 @@ class ChatModel: NSObject {
                                          var recipientID: String
                                       }
      */
-    func observeMessages(conversationID: String, currentUserID: String, otherUserID: String, completionHandler: @escaping ([Message]) -> Void) {
+    func observeMessages(conversationID: String, currentUserID: String, completionHandler: @escaping ([Message]) -> Void) {
         var messages: [Message] = []
         messagesDatabase.child(conversationID).observe(.childAdded) { snapshot in
             guard let messageData = snapshot.value as? [String: Any] else {
