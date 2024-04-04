@@ -111,7 +111,7 @@ class ChatController: UIViewController {
     }
     
     @IBAction func sendButtonAction(_ sender: Any) {
-        guard let messageText = inputTextView.text, !messageText.isEmpty else {
+        guard let messageText = inputTextView.text, !messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return
         }
         
@@ -121,7 +121,7 @@ class ChatController: UIViewController {
             self.view.layoutIfNeeded()
         }
         
-        inputTextView.frame.size =  inputTextView.sizeThatFits(CGSize(width: inputTextView.frame.width, height: 56))
+        inputTextView.frame.size = inputTextView.sizeThatFits(CGSize(width: inputTextView.frame.width, height: 56))
         
         let newMessage = Message(sender: Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? ""),
                                  messageId: "\(authUser?.uid ?? "")", // Set an appropriate message ID
@@ -134,7 +134,7 @@ class ChatController: UIViewController {
         // Reload the table view to display the new message
         messageTableView.reloadData()
         
-        ChatModel().sendMessage(conversationID: conversationID ?? "", sender: authUser, message: messageText) { error in
+        ChatModel().sendMessage(conversationID: conversationID ?? "", sender: authUser, message: messageText.trimmingCharacters(in: .whitespaces)) { error in
             if let error = error {
                 AlerUser().alertUser(viewController: self, title: "Error", message: error)
             } else {
