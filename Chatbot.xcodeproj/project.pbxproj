@@ -166,16 +166,6 @@
 			path = Controller;
 			sourceTree = "<group>";
 		};
-		DFB570CD2BB69DE800632374 /* Messages */ = {
-			isa = PBXGroup;
-			children = (
-				FB84381F2BACA6CE006CEA58 /* Model */,
-				FB71F0082BA9A02D00A79BE7 /* View */,
-				FB71F0072BA9A02200A79BE7 /* Controller */,
-			);
-			path = Messages;
-			sourceTree = "<group>";
-		};
 		FB1B332A2BA823020061259F = {
 			isa = PBXGroup;
 			children = (
@@ -203,6 +193,8 @@
 				FB8D7FED2BA9793500FF1C21 /* AppDelegates */,
 				FB8D7FEA2BA9791300FF1C21 /* Home */,
 				FB73D47B2BAAF275001B314F /* LoginPrefrences */,
+				FBBFF09E2BBEC1A4008E4DED /* Add Users */,
+				DFB570CA2BB69DB600632374 /* List Users */,
 				FB71F0062BA9A00500A79BE7 /* Chat */,
 				FB2F5F112BB300A50077C2D8 /* GroupChat */,
 				FB8D7FE72BA978BA00FF1C21 /* Resources */,
@@ -265,8 +257,9 @@
 		FB71F0062BA9A00500A79BE7 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				DFB570CA2BB69DB600632374 /* List Users */,
-				DFB570CD2BB69DE800632374 /* Messages */,
+				FB84381F2BACA6CE006CEA58 /* Model */,
+				FB71F0082BA9A02D00A79BE7 /* View */,
+				FB71F0072BA9A02200A79BE7 /* Controller */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -275,7 +268,6 @@
 			isa = PBXGroup;
 			children = (
 				FB73D49B2BAAFF89001B314F /* ChatController.swift */,
-				FB8438272BAEC178006CEA58 /* AddUsersViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -284,7 +276,6 @@
 			isa = PBXGroup;
 			children = (
 				FB73D49C2BAAFF89001B314F /* ChatController.xib */,
-				FB8438282BAEC178006CEA58 /* AddUsersViewController.xib */,
 				FB2F5F142BB302630077C2D8 /* MessageTableViewCell.swift */,
 				FB2F5F152BB302630077C2D8 /* MessageTableViewCell.xib */,
 			);
@@ -469,6 +460,31 @@
 				FB84382B2BAFF1E3006CEA58 /* GroupModel.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		FBBFF09E2BBEC1A4008E4DED /* Add Users */ = {
+			isa = PBXGroup;
+			children = (
+				FBBFF0A02BBEC1B6008E4DED /* View */,
+				FBBFF09F2BBEC1AE008E4DED /* Controller */,
+			);
+			path = "Add Users";
+			sourceTree = "<group>";
+		};
+		FBBFF09F2BBEC1AE008E4DED /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				FB8438272BAEC178006CEA58 /* AddUsersViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		FBBFF0A02BBEC1B6008E4DED /* View */ = {
+			isa = PBXGroup;
+			children = (
+				FB8438282BAEC178006CEA58 /* AddUsersViewController.xib */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		FBFF4CA72BB580F100B35247 /* NSLayoutConstraints+Extenstions */ = {

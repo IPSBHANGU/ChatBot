@@ -217,8 +217,9 @@ class ListChatViewController: UIViewController {
         addUsersView.authUser = authUser
         addUsersView.is_Group = is_Group
         addUsersView.delegate = self
-        let navController = UINavigationController(rootViewController: addUsersView)
-        self.present(navController, animated: true, completion: nil)
+        self.navigationController?.pushViewController(addUsersView, animated: true)
+//        let navController = UINavigationController(rootViewController: addUsersView)
+//        self.present(navController, animated: true, completion: nil)
     }
     
     func setupTableView(){

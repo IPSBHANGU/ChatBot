@@ -49,21 +49,25 @@ class AddUsersViewController: UIViewController {
     }
     
     func setupUI() {
+        let headerHeight: CGFloat = 90
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: headerHeight))
+        
         let backButton = UIButton(type: .custom)
-        backButton.frame = CGRect(x: 24, y: 34, width: 24, height: 24)
+        backButton.frame = CGRect(x: 24, y: 60, width: 24, height: 24)
         backButton.setImage(UIImage(systemName: "arrow.backward"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         backButton.tintColor = .black
-        view.addSubview(backButton)
+        headerView.addSubview(backButton)
         
-        let headerLabel = UILabel(frame: CGRect(x: backButton.frame.maxX + 16, y: backButton.frame.origin.y, width: 136, height: backButton.frame.height))
+        let headerLabel = UILabel(frame: CGRect(x: backButton.frame.origin.x + 30, y: backButton.frame.origin.y, width: 300, height: 30))
         headerLabel.textAlignment = .center
         headerLabel.text = "Add Users"
         headerLabel.font = UIFont(name: "Rubik SemiBold", size: 18)
-        view.addSubview(headerLabel)
+        headerLabel.textColor = UIColorHex().hexStringToUIColor(hex: "#191919")
+        headerView.addSubview(headerLabel)
         
         var usersTableY: CGFloat?
-        var usersTableHeight: CGFloat = view.bounds.height - (usersTableY ?? 0)
+        let usersTableHeight: CGFloat = view.bounds.height - (usersTableY ?? 0)
         
         if is_Group {
             // Add a "Done" button
@@ -72,7 +76,7 @@ class AddUsersViewController: UIViewController {
             doneButton.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
             doneButton.tintColor = .black
             doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
-            view.addSubview(doneButton)
+            headerView.addSubview(doneButton)
             
             // Add a text field for group name
             let groupNameTextFieldY: CGFloat = headerLabel.frame.maxY + 20
@@ -88,6 +92,7 @@ class AddUsersViewController: UIViewController {
             usersTableY = headerLabel.frame.maxY + 20
         }
         
+        view.addSubview(headerView)
         usersTable = UITableView(frame: CGRect(x: 0, y: usersTableY ?? 0, width: view.bounds.width, height: usersTableHeight))
         view.addSubview(usersTable)
     }
@@ -102,20 +107,19 @@ class AddUsersViewController: UIViewController {
     }
     
     @objc func backButtonTapped() {
-        self.dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
     }
     
     @objc func doneButtonTapped() {
-        
-        let conversationID = GroupModel().generateGroupConversationID(userIDs: selectedUsers)
+        let conversationID = GroupModel().generateGroupConversationID(authUserUID: authUser?.uid ?? "")
         
         // Call API to add users to the group
-        GroupModel().connectUsersInGroupChatInDB(conversationID: conversationID, groupName: groupNameTextField.text ?? "") { isSucceeded, error in
+        GroupModel().connectUsersInGroupChatInDB(authUserUID: authUser?.uid ?? "", conversationID: conversationID, groupName: groupNameTextField.text ?? "", userIDs: selectedUsers) { isSucceeded, error in
             if let error = error {
                 AlerUser().alertUser(viewController: self, title: "Error", message: error)
             }
             if isSucceeded {
-                self.dismiss(animated: true, completion: nil)
+                self.navigationController?.popViewController(animated: true)
             }
         }
     }
@@ -178,11 +182,10 @@ extension AddUsersViewController:UITableViewDelegate,UITableViewDataSource {
                     AlerUser().alertUser(viewController: self, title: "Error", message: error)
                 }
                 if isSucceeded {
-                    self.dismiss(animated: true) {
-                        if let delegate = self.delegate {
-                            delegate.didSelectUser(username, userAvtar: avtarURL, userUID: userUID, conversationID: conversationID)
-                        }
+                    if let delegate = self.delegate {
+                        delegate.didSelectUser(username, userAvtar: avtarURL, userUID: userUID, conversationID: conversationID)
                     }
+                    self.navigationController?.popViewController(animated: true)
                 }
             }
         }
