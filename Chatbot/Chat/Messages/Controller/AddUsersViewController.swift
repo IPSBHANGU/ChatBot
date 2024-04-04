@@ -10,9 +10,8 @@ import FirebaseAuth
 import NVActivityIndicatorView
 
 protocol AddUsersDelegate: AnyObject {
-    func didSelectUser()
+    func didSelectUser(_ username:String?, userAvtar:String?, userUID:String, conversationID:String?)
 }
-
 
 class AddUsersViewController: UIViewController {
 
@@ -28,9 +27,8 @@ class AddUsersViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         fetchUsers()
-        // Do any additional setup after loading the view.
+       
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -152,6 +150,8 @@ extension AddUsersViewController:UITableViewDelegate,UITableViewDataSource {
         
         let user = chatUserArray[indexPath.row]
         let userUID = user["uid"] as? String ?? ""
+        let username = user["displayName"] as? String ?? ""
+        let avtarURL = user["photoURL"] as? String ?? ""
         
         if is_Group {
             // Group chat logic
@@ -180,7 +180,7 @@ extension AddUsersViewController:UITableViewDelegate,UITableViewDataSource {
                 if isSucceeded {
                     self.dismiss(animated: true) {
                         if let delegate = self.delegate {
-                            delegate.didSelectUser()
+                            delegate.didSelectUser(username, userAvtar: avtarURL, userUID: userUID, conversationID: conversationID)
                         }
                     }
                 }

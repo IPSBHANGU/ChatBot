@@ -10,78 +10,84 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ChatControllerViewController" customModule="Chatbot" customModuleProvider="target">
             <connections>
-                <outlet property="inputTextField" destination="Ltr-q5-RDi" id="pZL-n3-VH9"/>
+                <outlet property="inputTextView" destination="lxi-GO-K7Q" id="vhQ-38-vTk"/>
+                <outlet property="messageTableView" destination="Zo5-yJ-ec6" id="BDh-HB-GTx"/>
                 <outlet property="sendButton" destination="TNU-Zy-IYu" id="Qr1-61-YWf"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+        <view clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mp6-0m-yNZ">
-                    <rect key="frame" x="24" y="768" width="346" height="84"/>
-                    <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Adg-GL-T8g">
-                            <rect key="frame" x="10" y="0.0" width="336" height="56"/>
-                            <subviews>
-                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Send a message..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ltr-q5-RDi">
-                                    <rect key="frame" x="0.0" y="0.0" width="264" height="56"/>
-                                    <color key="backgroundColor" systemColor="systemGray6Color"/>
-                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                                    <textInputTraits key="textInputTraits"/>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                            <integer key="value" value="28"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                </textField>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TNU-Zy-IYu">
-                                    <rect key="frame" x="280" y="0.0" width="56" height="56"/>
-                                    <color key="backgroundColor" red="0.88627450980392153" green="0.87058823529411766" blue="0.97254901960784312" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="56" id="Qau-3r-QJe"/>
-                                    </constraints>
-                                    <color key="tintColor" red="0.40784313725490196" green="0.23137254901960785" blue="0.84705882352941175" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                    <state key="normal" title="Button"/>
-                                    <buttonConfiguration key="configuration" style="plain" image="bubble.fill" catalog="system"/>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                            <integer key="value" value="28"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                    <connections>
-                                        <action selector="sendButtonAction:" destination="-1" eventType="touchUpInside" id="8bT-Sd-mbm"/>
-                                    </connections>
-                                </button>
-                            </subviews>
-                        </stackView>
-                    </subviews>
+                <tableView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zo5-yJ-ec6">
+                    <rect key="frame" x="0.0" y="100" width="393" height="635"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                </tableView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TNU-Zy-IYu">
+                    <rect key="frame" x="317" y="754" width="53" height="56"/>
+                    <color key="backgroundColor" red="0.88627450980392153" green="0.87058823529411766" blue="0.97254901960784312" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     <constraints>
-                        <constraint firstAttribute="trailing" secondItem="Adg-GL-T8g" secondAttribute="trailing" id="7Sb-KU-PHu"/>
-                        <constraint firstAttribute="height" constant="84" id="9hc-su-2gp"/>
-                        <constraint firstAttribute="bottom" secondItem="Adg-GL-T8g" secondAttribute="bottom" constant="28" id="QOI-az-Y7D"/>
-                        <constraint firstItem="Adg-GL-T8g" firstAttribute="leading" secondItem="mp6-0m-yNZ" secondAttribute="leading" constant="10" id="kcs-fB-mrD"/>
-                        <constraint firstItem="Adg-GL-T8g" firstAttribute="top" secondItem="mp6-0m-yNZ" secondAttribute="top" id="ytV-Fm-B2Y"/>
+                        <constraint firstAttribute="height" constant="56" id="YHV-Rh-Yd8"/>
                     </constraints>
-                </view>
+                    <color key="tintColor" red="0.40784313725490196" green="0.23137254901960785" blue="0.84705882352941175" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" image="bubble.fill" catalog="system"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <integer key="value" value="28"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="sendButtonAction:" destination="-1" eventType="touchUpInside" id="8bT-Sd-mbm"/>
+                    </connections>
+                </button>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="lxi-GO-K7Q" customClass="GrowingTextView" customModule="GrowingTextView">
+                    <rect key="frame" x="24" y="754" width="273" height="56"/>
+                    <color key="backgroundColor" systemColor="systemGray6Color"/>
+                    <color key="textColor" systemColor="labelColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="23"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="minHeight">
+                            <real key="value" value="56"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="maxHeight">
+                            <real key="value" value="240"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="trimWhiteSpaceWhenEndEditing" value="YES"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Enter Text"/>
+                    </userDefinedRuntimeAttributes>
+                </textView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <color key="tintColor" red="0.21568627450980393" green="0.50196078431372548" blue="0.76078431372549016" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="mp6-0m-yNZ" secondAttribute="bottom" id="0nP-Ad-482"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="mp6-0m-yNZ" secondAttribute="trailing" constant="23" id="q8L-nz-5sU"/>
-                <constraint firstItem="mp6-0m-yNZ" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="24" id="sDU-33-0T6"/>
-                <constraint firstAttribute="bottom" secondItem="mp6-0m-yNZ" secondAttribute="bottom" id="vVr-lT-ztb"/>
+                <constraint firstItem="Zo5-yJ-ec6" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="1hJ-Xo-HfV"/>
+                <constraint firstItem="lxi-GO-K7Q" firstAttribute="top" secondItem="Zo5-yJ-ec6" secondAttribute="bottom" constant="19" id="4tR-8I-23d"/>
+                <constraint firstItem="Zo5-yJ-ec6" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="75V-7H-6Gz"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="TNU-Zy-IYu" secondAttribute="trailing" constant="23" id="7fT-Nr-UKB"/>
+                <constraint firstItem="Zo5-yJ-ec6" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="100" id="9xQ-Ac-n2u"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="TNU-Zy-IYu" secondAttribute="bottom" constant="8" id="R1J-gQ-lxz"/>
+                <constraint firstItem="TNU-Zy-IYu" firstAttribute="leading" secondItem="lxi-GO-K7Q" secondAttribute="trailing" constant="20" id="bzr-Rj-nnG"/>
+                <constraint firstItem="lxi-GO-K7Q" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="24" id="cyl-29-wyX"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="lxi-GO-K7Q" secondAttribute="bottom" constant="8" id="eZP-j7-kkx"/>
             </constraints>
             <point key="canvasLocation" x="75.572519083969468" y="19.718309859154932"/>
         </view>
     </objects>
+    <designables>
+        <designable name="lxi-GO-K7Q">
+            <size key="intrinsicContentSize" width="-1" height="30"/>
+        </designable>
+    </designables>
     <resources>
         <image name="bubble.fill" catalog="system" width="128" height="110"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

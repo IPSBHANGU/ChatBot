@@ -115,7 +115,6 @@ class GroupChatController: UIViewController {
                 AlerUser().alertUser(viewController: self, title: "Error", message: error)
             } else {
                 // Clear the input text after sending message
-                print("message sent")
                 self.inputTextField.text = ""
             }
         }

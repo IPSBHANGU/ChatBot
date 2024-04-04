@@ -60,6 +60,7 @@ class ChatModel: NSObject {
      - parameter currentUserID: current Authenticated user UID
      - returns: other user's UID
      */
+    
     func getOtherUserID(conversationID: String, currentUserID: String) -> String? {
         let userIDs = conversationID.components(separatedBy: "_")
         
@@ -87,12 +88,12 @@ class ChatModel: NSObject {
                                             }
      - returns: Closure Function returns true if no error else gives error as String
      */
-    func sendMessage(conversationID: String, senderID: String?, senderDisplayName: String?, message:String?, completionHandler: @escaping (_ error: String?) -> Void) {
+    func sendMessage(conversationID: String, sender: AuthenticatedUser?, message:String?, completionHandler: @escaping (_ error: String?) -> Void) {
         let messageRef = messagesDatabase.child(conversationID).childByAutoId()
         
         let newMessage = [
-            "senderId": senderID ?? "",
-            "displayName": senderDisplayName ?? "",
+            "senderId": sender?.uid ?? "",
+            "displayName": sender?.displayName ?? "",
             "text": message ?? "",
             "sentDate": Date().timeIntervalSince1970
         ] as [String : Any]

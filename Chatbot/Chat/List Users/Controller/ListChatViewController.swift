@@ -28,6 +28,8 @@ class ListChatViewController: UIViewController {
     var isButtonPressed:Bool?
     lazy var warning = UILabel()
     
+    var refreshController : UIRefreshControl!
+    
     // SearchBar
     lazy var searchBar = UISearchBar()
     
@@ -46,9 +48,25 @@ class ListChatViewController: UIViewController {
         if let result = result {
             authUser = AuthenticatedUser(displayName: result.user.displayName, email: result.user.email, photoURL: result.user.photoURL?.absoluteString, uid: result.user.uid)
         }
-        
+        setupRefreshControl()
         setupTableView()
         // Do any additional setup after loading the view.
+    }
+    
+    func setupRefreshControl() {
+        refreshController = UIRefreshControl()
+        refreshController.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        chatTable.refreshControl = refreshController
+    }
+
+    @objc func refreshData() {
+        fetchChatUsers()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.refreshController.endRefreshing()
+            // Reload table view after data fetching
+            self.chatTable.reloadData()
+        }
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -125,7 +143,15 @@ class ListChatViewController: UIViewController {
         let rect = CGRect(x: 24, y: 52, width: 32, height: 32)
         userAvatar.layer.cornerRadius = min(rect.width, rect.height) / 2.0
         userAvatar.frame = rect
+        
         userAvatar.kf.setImage(with: URL(string: authUser?.photoURL ?? ""))
+        
+        if let avatarURL = URL(string: authUser?.photoURL ?? "") {
+            userAvatar.kf.setImage(with: avatarURL, placeholder: UIImage(systemName: "person.circle"))
+        } else {
+            userAvatar.image = UIImage(systemName: "person.circle")
+            userAvatar.tintColor = .black
+        }
         view.addSubview(userAvatar)
         
         editButton.setImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
@@ -336,7 +362,6 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
                             lastMessageText = "Unsupported message type"
                         }
                         cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: lastMessageText, meassageTime: dateString)
-                        print(avtarURL, username, lastMessageText, dateString)
                     }
                 }
             }
@@ -407,8 +432,16 @@ extension ListChatViewController:UISearchBarDelegate {
 }
 
 extension ListChatViewController: AddUsersDelegate {
-    func didSelectUser() {
-        self.fetchData()
+    func didSelectUser(_ username: String?, userAvtar: String?, userUID: String, conversationID: String?) {
+        // Reload the table view
+        chatTable.reloadData()
+        
+        let chatController = ChatController()
+        chatController.authUser = authUser
+        chatController.senderUserName = username
+        chatController.senderPhotoURL = userAvtar
+        chatController.senderUID = userUID
+        chatController.conversationID = conversationID
+        navigationController?.pushViewController(chatController, animated: true)
     }
 }
-

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		127851723A68E91EED2E05F9 /* Pods_Chatbot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB43EAF638778BE7A6AA5789 /* Pods_Chatbot.framework */; };
+		DFA2C3642BBD69D80021EB7A /* ListChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA2C3632BBD69D80021EB7A /* ListChatViewController.swift */; };
 		FB1B33372BA823020061259F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1B33362BA823020061259F /* AppDelegate.swift */; };
 		FB1B33392BA823020061259F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1B33382BA823020061259F /* SceneDelegate.swift */; };
 		FB1B333B2BA823020061259F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1B333A2BA823020061259F /* ViewController.swift */; };
@@ -26,7 +27,6 @@
 		FB50BC9E2BA85ACE00E863AC /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC9D2BA85ACE00E863AC /* FirebaseAppCheck */; };
 		FB71F0052BA9855100A79BE7 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FB71F0042BA9855100A79BE7 /* FirebaseAuth */; };
 		FB71F00B2BA9A04B00A79BE7 /* ListChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB71F00A2BA9A04B00A79BE7 /* ListChatViewController.xib */; };
-		FB71F00C2BA9A04B00A79BE7 /* ListChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB71F0092BA9A04B00A79BE7 /* ListChatViewController.swift */; };
 		FB71F00F2BA9A43100A79BE7 /* ListChatTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB71F00E2BA9A43100A79BE7 /* ListChatTableViewCell.xib */; };
 		FB71F0102BA9A43100A79BE7 /* ListChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB71F00D2BA9A43100A79BE7 /* ListChatTableViewCell.swift */; };
 		FB73D4862BAAF40E001B314F /* LoginPrefrencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB73D4842BAAF40E001B314F /* LoginPrefrencesViewController.swift */; };
@@ -60,6 +60,7 @@
 		08166E130B4FFC752DDB7EBE /* Pods-Chatbot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chatbot.debug.xcconfig"; path = "Target Support Files/Pods-Chatbot/Pods-Chatbot.debug.xcconfig"; sourceTree = "<group>"; };
 		9797A2CC0E510E7FD851914C /* Pods-Chatbot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chatbot.release.xcconfig"; path = "Target Support Files/Pods-Chatbot/Pods-Chatbot.release.xcconfig"; sourceTree = "<group>"; };
 		DB43EAF638778BE7A6AA5789 /* Pods_Chatbot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Chatbot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFA2C3632BBD69D80021EB7A /* ListChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListChatViewController.swift; sourceTree = "<group>"; };
 		FB1B33332BA823020061259F /* Chatbot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chatbot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB1B33362BA823020061259F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB1B33382BA823020061259F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -70,7 +71,6 @@
 		FB1B33442BA823030061259F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB2F5F142BB302630077C2D8 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		FB2F5F152BB302630077C2D8 /* MessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
-		FB71F0092BA9A04B00A79BE7 /* ListChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListChatViewController.swift; sourceTree = "<group>"; };
 		FB71F00A2BA9A04B00A79BE7 /* ListChatViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListChatViewController.xib; sourceTree = "<group>"; };
 		FB71F00D2BA9A43100A79BE7 /* ListChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListChatTableViewCell.swift; sourceTree = "<group>"; };
 		FB71F00E2BA9A43100A79BE7 /* ListChatTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListChatTableViewCell.xib; sourceTree = "<group>"; };
@@ -161,7 +161,7 @@
 		DFB570CC2BB69DC800632374 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				FB71F0092BA9A04B00A79BE7 /* ListChatViewController.swift */,
+				DFA2C3632BBD69D80021EB7A /* ListChatViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -636,11 +636,11 @@
 				FB84382F2BB13479006CEA58 /* GroupChatController.swift in Sources */,
 				FB71F0102BA9A43100A79BE7 /* ListChatTableViewCell.swift in Sources */,
 				FB84382C2BAFF1E3006CEA58 /* GroupModel.swift in Sources */,
+				DFA2C3642BBD69D80021EB7A /* ListChatViewController.swift in Sources */,
 				FB2F5F162BB302630077C2D8 /* MessageTableViewCell.swift in Sources */,
 				FB8438292BAEC178006CEA58 /* AddUsersViewController.swift in Sources */,
 				FB73D49D2BAAFF89001B314F /* ChatController.swift in Sources */,
 				FB1B33392BA823020061259F /* SceneDelegate.swift in Sources */,
-				FB71F00C2BA9A04B00A79BE7 /* ListChatViewController.swift in Sources */,
 				FB8438212BACA6DD006CEA58 /* ChatModel.swift in Sources */,
 				FB73D4862BAAF40E001B314F /* LoginPrefrencesViewController.swift in Sources */,
 			);

@@ -10,6 +10,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoginPrefrencesViewController" customModule="Chatbot" customModuleProvider="target">
             <connections>
+                <outlet property="googleSignInButton" destination="uEX-n9-dwX" id="NYI-b4-wt5"/>
+                <outlet property="orLabel" destination="nuf-Nd-UFb" id="Hfb-JX-nqA"/>
+                <outlet property="signInButton" destination="mTW-Hf-xFv" id="LUa-yi-KTG"/>
+                <outlet property="signUpButton" destination="PBV-bM-Pwx" id="38m-cq-IZm"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -17,14 +21,114 @@
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appIcon" translatesAutoresizingMaskIntoConstraints="NO" id="osE-cV-iy8">
+                    <rect key="frame" x="96.666666666666686" y="100" width="200" height="200"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="200" id="hde-Mc-ve4"/>
+                        <constraint firstAttribute="height" constant="200" id="lTb-6c-th5"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <integer key="value" value="100"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chat App" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DOy-eu-Zt2">
+                    <rect key="frame" x="141.66666666666666" y="320" width="110" height="35"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="35" id="we8-Xy-87b"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="STIXTwoText" family="STIX Two Text" pointSize="27"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mTW-Hf-xFv">
+                    <rect key="frame" x="98.333333333333329" y="691" width="196.33333333333337" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="T3X-19-ci5"/>
+                    </constraints>
+                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="tinted" title="Log In"/>
+                    <connections>
+                        <action selector="loginAction:" destination="-1" eventType="touchUpInside" id="1sV-ZH-wDw"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="OR" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nuf-Nd-UFb">
+                    <rect key="frame" x="184.66666666666666" y="535" width="24" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PBV-bM-Pwx">
+                    <rect key="frame" x="100" y="445" width="193" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="HvJ-B1-Nd6"/>
+                    </constraints>
+                    <color key="tintColor" systemColor="viewFlipsideBackgroundColor"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="tinted" title="Sign Up"/>
+                    <connections>
+                        <action selector="signUpaction:" destination="-1" eventType="touchUpInside" id="ber-pH-6dV"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uEX-n9-dwX">
+                    <rect key="frame" x="98.333333333333329" y="601" width="196.33333333333337" height="40"/>
+                    <color key="backgroundColor" systemColor="systemGray3Color"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="n1n-Ae-qGA"/>
+                    </constraints>
+                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" image="google" title="   Log in with Google"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <integer key="value" value="5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="googleSignInButtonAction:" destination="-1" eventType="touchUpInside" id="SZg-NB-irk"/>
+                    </connections>
+                </button>
+            </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemGray6Color"/>
-            <point key="canvasLocation" x="76" y="20"/>
+            <constraints>
+                <constraint firstItem="nuf-Nd-UFb" firstAttribute="top" secondItem="PBV-bM-Pwx" secondAttribute="bottom" constant="50" id="0IX-oy-ZYG"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="PBV-bM-Pwx" secondAttribute="trailing" constant="100" id="2by-l9-smq"/>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="mTW-Hf-xFv" secondAttribute="bottom" constant="84" id="9aO-V9-hex"/>
+                <constraint firstItem="uEX-n9-dwX" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="E1t-cc-PYj"/>
+                <constraint firstItem="mTW-Hf-xFv" firstAttribute="trailing" secondItem="uEX-n9-dwX" secondAttribute="trailing" id="FTc-zw-4Do"/>
+                <constraint firstItem="DOy-eu-Zt2" firstAttribute="top" secondItem="osE-cV-iy8" secondAttribute="bottom" constant="20" id="K40-iI-jMq"/>
+                <constraint firstItem="mTW-Hf-xFv" firstAttribute="leading" secondItem="uEX-n9-dwX" secondAttribute="leading" id="KWp-zG-ZdI"/>
+                <constraint firstItem="osE-cV-iy8" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="100" id="NTp-eS-DBE"/>
+                <constraint firstItem="uEX-n9-dwX" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="98.329999999999998" id="NfS-5b-3gn"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="uEX-n9-dwX" secondAttribute="trailing" constant="98.329999999999998" id="Ohe-tX-lgg"/>
+                <constraint firstItem="nuf-Nd-UFb" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="RMk-FI-1ha"/>
+                <constraint firstItem="mTW-Hf-xFv" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="WY7-q3-OU4"/>
+                <constraint firstItem="PBV-bM-Pwx" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="eNO-A6-WXY"/>
+                <constraint firstItem="mTW-Hf-xFv" firstAttribute="top" secondItem="uEX-n9-dwX" secondAttribute="bottom" constant="50" id="gAQ-mr-wo3"/>
+                <constraint firstItem="DOy-eu-Zt2" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="gK5-aI-cN7"/>
+                <constraint firstItem="PBV-bM-Pwx" firstAttribute="top" secondItem="DOy-eu-Zt2" secondAttribute="bottom" constant="90" id="mRq-F9-run"/>
+                <constraint firstItem="osE-cV-iy8" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="rc7-wm-P4l"/>
+                <constraint firstItem="uEX-n9-dwX" firstAttribute="top" secondItem="nuf-Nd-UFb" secondAttribute="bottom" constant="45" id="ttt-cV-gDO"/>
+                <constraint firstItem="PBV-bM-Pwx" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="100" id="zyF-iZ-sIo"/>
+            </constraints>
+            <point key="canvasLocation" x="75.572519083969468" y="19.718309859154932"/>
         </view>
     </objects>
     <resources>
+        <image name="appIcon" width="928" height="892"/>
+        <image name="google" width="18" height="18"/>
+        <systemColor name="systemGray3Color">
+            <color red="0.7803921568627451" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="viewFlipsideBackgroundColor">
+            <color red="0.12156862745098039" green="0.12941176470588237" blue="0.14117647058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

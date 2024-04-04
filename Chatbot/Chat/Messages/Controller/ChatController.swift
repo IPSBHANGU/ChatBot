@@ -9,14 +9,16 @@ import UIKit
 import FirebaseAuth
 import Kingfisher
 import FirebaseDatabaseInternal
+import GrowingTextView
 
 class ChatController: UIViewController {
     
     private var messages = [Message]()
     
+    @IBOutlet var heightConstraintTextView: NSLayoutConstraint!
+    @IBOutlet var messageTableView: UITableView!
     @IBOutlet var sendButton: UIButton!
-    @IBOutlet var inputTextField: UITextField!
-   
+    @IBOutlet var inputTextView: GrowingTextView!
     
     var selfSender: SenderType?
     var conversationID: String?
@@ -27,27 +29,28 @@ class ChatController: UIViewController {
     
     var photoUrl:URL?
     
-    lazy var messageTableView = UITableView()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        inputTextField.delegate = self
-        inputTextField.becomeFirstResponder()
-        inputTextField.font = UIFont(name: "Rubik-Regular.ttf", size: 15)
-        inputTextField.placeholder = "Send a message..."
-        inputTextField.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#F4F4F4")
-        
-        inputTextField.borderStyle = .roundedRect
-        inputTextField.layer.cornerRadius = 15
-        inputTextField.layer.masksToBounds = true
-        
+        setInputTF()
         observeMessages()
+        sendButton.isEnabled = false
         sendButton.layer.cornerRadius = sendButton.frame.height / 2
     }
     
     override func viewWillAppear(_ animated: Bool) {
         setupHeaderView()
         setupTableView()
+    }
+    
+    func setInputTF(){
+        inputTextView.isScrollEnabled = false
+        inputTextView.delegate = self
+        inputTextView.becomeFirstResponder()
+        inputTextView.font = UIFont(name: "Rubik-Regular.ttf", size: 25)
+        inputTextView.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#F4F4F4")
+        messageTableView.isUserInteractionEnabled = true
+        inputTextView.layer.cornerRadius = 15
+        inputTextView.layer.masksToBounds = true
     }
     
     func setupHeaderView() {
@@ -62,9 +65,9 @@ class ChatController: UIViewController {
         backButton.tintColor = .black
         headerView.addSubview(backButton)
         
-        let headerLabel = UILabel(frame: CGRect(x: backButton.frame.origin.x + 16, y: backButton.frame.origin.y, width: 136, height: 30))
+        let headerLabel = UILabel(frame: CGRect(x: backButton.frame.origin.x + 30, y: backButton.frame.origin.y, width: 300, height: 30))
         headerLabel.textAlignment = .center
-        headerLabel.text = "Messages"
+        headerLabel.text = "\(senderUserName ?? "")"
         headerLabel.font = UIFont(name: "Rubik SemiBold", size: 18)
         headerLabel.textColor = UIColorHex().hexStringToUIColor(hex: "#191919")
         headerView.addSubview(headerLabel)
@@ -76,11 +79,8 @@ class ChatController: UIViewController {
     }
 
     func setupTableView(){
-        messageTableView.separatorStyle = .none
         messageTableView.delegate = self
         messageTableView.dataSource = self
-        messageTableView.backgroundColor = .white
-        messageTableView.tintColor = .white
         messageTableView.rowHeight = UITableView.automaticDimension
         messageTableView.estimatedRowHeight = 100
         messageTableView.register(UINib(nibName: "MessageTableViewCell", bundle: .main), forCellReuseIdentifier: "messageTableViewCell")
@@ -111,30 +111,38 @@ class ChatController: UIViewController {
     }
     
     @IBAction func sendButtonAction(_ sender: Any) {
-        guard let messageText = inputTextField.text, !messageText.isEmpty else {
-                   return
-               }
-
-               let newMessage = Message(sender: Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? ""),
-                                        messageId: "\(authUser?.uid ?? "")", // Set an appropriate message ID
-                                        sentDate: Date(),
-                                        kind: .text(messageText))
-
-               // Append the new message to the messages array
-               messages.append(newMessage)
-
-               // Reload the table view to display the new message
-               messageTableView.reloadData()
-
-               ChatModel().sendMessage(conversationID: conversationID ?? "", senderID: authUser?.uid ?? "", senderDisplayName: authUser?.displayName ?? "", message: messageText) { error in
-                   if let error = error {
-                       AlerUser().alertUser(viewController: self, title: "Error", message: error)
-                   } else {
-                       // Clear the input text after sending message
-                       self.inputTextField.text = ""
-                   }
-               }
-           }
+        guard let messageText = inputTextView.text, !messageText.isEmpty else {
+            return
+        }
+        
+        self.inputTextView.text = ""
+        
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+        
+        inputTextView.frame.size =  inputTextView.sizeThatFits(CGSize(width: inputTextView.frame.width, height: 56))
+        
+        let newMessage = Message(sender: Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? ""),
+                                 messageId: "\(authUser?.uid ?? "")", // Set an appropriate message ID
+                                 sentDate: Date(),
+                                 kind: .text(messageText))
+        
+        // Append the new message to the messages array
+        messages.append(newMessage)
+        
+        // Reload the table view to display the new message
+        messageTableView.reloadData()
+        
+        ChatModel().sendMessage(conversationID: conversationID ?? "", sender: authUser, message: messageText) { error in
+            if let error = error {
+                AlerUser().alertUser(viewController: self, title: "Error", message: error)
+            } else {
+                // Clear the input text after sending message
+                self.inputTextView.text = ""
+            }
+        }
+    }
 }
 
 extension ChatController: UITableViewDelegate, UITableViewDataSource {
@@ -164,11 +172,12 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
         }
         return cell
     }
-    
 }
  
-extension ChatController : UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-    }
+extension ChatController : GrowingTextViewDelegate {
+    
+    func textViewDidChange(_ textView: UITextView) {
+        sendButton.isEnabled = true
+          
+       }
 }

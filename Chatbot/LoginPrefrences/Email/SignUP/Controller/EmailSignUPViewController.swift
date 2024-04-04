@@ -7,95 +7,35 @@
 
 import UIKit
 import FirebaseAuth
+import NVActivityIndicatorView
 
 class EmailSignUPViewController: UIViewController {
-
-    lazy var emailTextFieldView = UIView()
-    lazy var emailTextField = UITextField()
-    lazy var passwordTextFieldView = UIView()
-    lazy var passwordTextField = UITextField()
-    lazy var profilePhotoImageView = UIImageView()
-    lazy var fullNameTextFieldView = UIView()
-    lazy var fullNameTextField = UITextField()
-    lazy var submitSignUPButton = UIButton(type: .system)
+    
+    @IBOutlet var passwordTextField: UITextField!
+    @IBOutlet var fullNameTextField: UITextField!
+    @IBOutlet var emailTextField: UITextField!
+    @IBOutlet var profilePhotoImageView: UIImageView?
+    @IBOutlet var selectPhotoLabel: UILabel!
+    @IBOutlet var submitButton: UIButton!
+    
+    var activityIndicatorView : NVActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: 170, y: 400, width: 50, height: 50),type: .ballPulseSync , color: .blue )
+        
+        view.addSubview(activityIndicatorView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        setupUI()
-        setupProfilePhotoPicker()
+      setupProfilePhotoPicker()
     }
 
-    func setupUI(){
-        emailTextField.placeholder = "Email Address"
-        passwordTextField.placeholder = "Password"
-        fullNameTextField.placeholder = "Full Name"
-        profilePhotoImageView.image = UIImage(systemName: "person")
-        
-        // Set frames for UI elements
-        let profilePhotoSize: CGFloat = 100
-        profilePhotoImageView.frame = CGRect(x: (view.frame.width - profilePhotoSize) / 2, y: 100, width: profilePhotoSize, height: profilePhotoSize)
-        
-        fullNameTextFieldView.frame = CGRect(x: 24, y: profilePhotoImageView.frame.maxY + 20, width: view.frame.width - 48, height: 40)
-        fullNameTextField.frame = CGRect(x: 2, y: 0, width: fullNameTextFieldView.frame.width, height: fullNameTextFieldView.frame.height)
-        
-        emailTextFieldView.frame = CGRect(x: 24, y: fullNameTextFieldView.frame.maxY + 20, width: view.frame.width - 48, height: 40)
-        emailTextField.frame = CGRect(x: 2, y: 0, width: emailTextFieldView.frame.width, height: emailTextFieldView.frame.height)
-        
-        passwordTextFieldView.frame = CGRect(x: 24, y: emailTextFieldView.frame.maxY + 20, width: view.frame.width - 48, height: 40)
-        passwordTextField.frame = CGRect(x: 2, y: 0, width: passwordTextFieldView.frame.width, height: passwordTextFieldView.frame.height)
-        
-        // Customize UI elements
-        profilePhotoImageView.layer.cornerRadius = profilePhotoImageView.frame.width / 2
-        profilePhotoImageView.layer.borderColor = UIColor.black.cgColor
-        profilePhotoImageView.layer.borderWidth = 2.0
-        profilePhotoImageView.clipsToBounds = true
-        
-        fullNameTextField.tintColor = .black
-        fullNameTextFieldView.layer.cornerRadius = 9.0
-        fullNameTextFieldView.layer.borderColor = UIColor.black.cgColor
-        fullNameTextFieldView.layer.borderWidth = 2.0
-        fullNameTextFieldView.addSubview(fullNameTextField)
-        
-        emailTextField.tintColor = .black
-        emailTextFieldView.layer.cornerRadius = 9.0
-        emailTextFieldView.layer.borderColor = UIColor.black.cgColor
-        emailTextFieldView.layer.borderWidth = 2.0
-        emailTextFieldView.addSubview(emailTextField)
-        
-        passwordTextField.tintColor = .black
-        passwordTextField.isSecureTextEntry = true
-        passwordTextFieldView.layer.cornerRadius = 9.0
-        passwordTextFieldView.layer.borderColor = UIColor.black.cgColor
-        passwordTextFieldView.layer.borderWidth = 2.0
-        passwordTextFieldView.addSubview(passwordTextField)
-        
-        // Add subviews
-        view.addSubview(profilePhotoImageView)
-        view.addSubview(fullNameTextFieldView)
-        view.addSubview(emailTextFieldView)
-        view.addSubview(passwordTextFieldView)
-        
-        // Add submit button
-        submitSignUPButton.setTitle("Submit", for: .normal)
-        submitSignUPButton.addTarget(self, action: #selector(submitSignUPButtonAction), for: .touchUpInside)
-        submitSignUPButton.frame = CGRect(x: 40, y: passwordTextFieldView.frame.maxY + 20, width: view.frame.width - 80, height: 40)
-        submitSignUPButton.tintColor = .black
-        submitSignUPButton.layer.cornerRadius = 9.0
-        submitSignUPButton.layer.borderColor = UIColor.black.cgColor
-        submitSignUPButton.layer.borderWidth = 2.0
-        view.addSubview(submitSignUPButton)
-    }
-    
     func setupProfilePhotoPicker(){
         // Add tap gesture recognizer to profile photo image view
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(profilePhotoTapped))
-        profilePhotoImageView.isUserInteractionEnabled = true
-        profilePhotoImageView.addGestureRecognizer(tapGesture)
+        selectPhotoLabel.isUserInteractionEnabled = true
+        selectPhotoLabel.addGestureRecognizer(tapGesture)
     }
     
     @objc func profilePhotoTapped() {
@@ -105,12 +45,22 @@ class EmailSignUPViewController: UIViewController {
         present(imagePickerController, animated: true, completion: nil)
     }
     
-    @objc func submitSignUPButtonAction(){
+    func resetTextField(){
+        fullNameTextField.text = ""
+        passwordTextField.text = ""
+        emailTextField.text = ""
+        profilePhotoImageView?.image = UIImage(systemName: "person.circle")
+    }
+    
+    @IBAction func submitButtonAction(_ sender: Any) {
+        activityIndicatorView.startAnimating()
         Auth.auth().createUser(withEmail: emailTextField.text ?? "", password: passwordTextField.text ?? "") { result, error in
             if let error = error {
                 AlerUser().alertUser(viewController: self, title: "Error", message: error.localizedDescription)
+                self.activityIndicatorView.stopAnimating()
             } else {
-                LoginModel().uploadUserAvtar(userAvtar: self.profilePhotoImageView.image, currentUser: result?.user) { status in
+                
+                LoginModel().uploadUserAvtar(userAvtar: self.profilePhotoImageView?.image ?? UIImage(systemName: "person.circle") , currentUser: result?.user) { status in
                     switch status {
                     case .failure(let error):
                         AlerUser().alertUser(viewController: self, title: "Error", message: "Error uploading avatar: \(error.localizedDescription)")
@@ -121,18 +71,16 @@ class EmailSignUPViewController: UIViewController {
                                 return
                             }
                             if is_Success == true {
-                                LoginModel().addUsersToDb(user: result?.user, displayName: self.fullNameTextField.text ?? "", photoURL: url) { isSucceeded, error in
+                                LoginModel().addUsersToDb(user: result?.user, displayName: self.fullNameTextField.text ?? "", photoURL: url) { [self] isSucceeded, error in
                                     if let error = error {
                                         AlerUser().alertUser(viewController: self, title: "Error", message: error)
                                         return
                                     } else if isSucceeded {
-                                        /*
-                                         * At this point User is Authenticated
-                                         * move to next View
-                                         */
+                                        resetTextField()
                                         let listChatView = ListChatViewController()
                                         // pass whole result
                                         listChatView.result = result
+                                        activityIndicatorView.stopAnimating()
                                         self.navigationController?.pushViewController(listChatView, animated: true)
                                     }
                                 }
@@ -143,6 +91,10 @@ class EmailSignUPViewController: UIViewController {
             }
         }
     }
+    
+    @IBAction func backButtonAction(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
+    }
 }
 
 extension EmailSignUPViewController:UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
@@ -152,14 +104,12 @@ extension EmailSignUPViewController:UITextFieldDelegate,UIImagePickerControllerD
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[.originalImage] as? UIImage {
-            profilePhotoImageView.image = selectedImage
+            profilePhotoImageView?.image = selectedImage
         }
-        
         dismiss(animated: true, completion: nil)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
-    
 }

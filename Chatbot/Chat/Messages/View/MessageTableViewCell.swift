@@ -36,6 +36,7 @@ class MessageTableViewCell: UITableViewCell {
         messageLable.text = message ?? ""
         messageTime.text = messageStatus ?? ""
         messageLable.font = UIFont(name: "Rubik Regular", size: 14)
+        
         if isCurrentUser {
             bubbleView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMaxYCorner , .layerMinXMaxYCorner ]
             bubbleView.clipsToBounds = true
@@ -49,12 +50,16 @@ class MessageTableViewCell: UITableViewCell {
             messageStatusLable.textColor = .white
             bubbleViewTrailing = bubbleViewTrailing.setRelation(relation: .equal, constant: 60)
             bubbleViewLeading = bubbleViewLeading.setRelation(relation: .greaterThanOrEqual, constant: 80)
-            recieverAvtarView.isHidden = true
-            senderAvtarView.isHidden = false
-            senderAvtarView.kf.setImage(with: URL(string: senderAvtar ?? ""))
+            if let avatarURL = URL(string: senderAvtar ?? "") {
+                senderAvtarView.kf.setImage(with: avatarURL, placeholder: UIImage(systemName: "person.circle"))
+            } else {
+                senderAvtarView.image = UIImage(systemName: "person.circle")
+            }
             senderAvtarView.layer.cornerRadius = senderAvtarView.frame.height / 2
-        } else {
-            bubbleView.layer.maskedCorners = [/*.layerMinXMinYCorner,*/ .layerMaxXMinYCorner , .layerMaxXMaxYCorner , .layerMinXMaxYCorner ]
+        }
+        else
+        {
+            bubbleView.layer.maskedCorners = [ .layerMaxXMinYCorner , .layerMaxXMaxYCorner , .layerMinXMaxYCorner ]
             bubbleView.clipsToBounds = true
             recieverAvtarView?.isHidden = false
             senderAvtarView?.isHidden = true
@@ -67,9 +72,11 @@ class MessageTableViewCell: UITableViewCell {
             messageStatusLable.isHidden = true
             bubbleViewLeading = bubbleViewLeading.setRelation(relation: .equal, constant: 60)
             bubbleViewTrailing = bubbleViewTrailing.setRelation(relation: .greaterThanOrEqual, constant: 80)
-            senderAvtarView.isHidden = true
-            recieverAvtarView.isHidden = false
-            recieverAvtarView.kf.setImage(with: URL(string: senderAvtar ?? ""))
+            if let avatarURL = URL(string: senderAvtar ?? "") {
+                recieverAvtarView.kf.setImage(with: avatarURL, placeholder: UIImage(systemName: "person.circle"))
+            } else {
+                recieverAvtarView.image = UIImage(systemName: "person.circle")
+            }
             recieverAvtarView.layer.cornerRadius = recieverAvtarView.frame.height / 2
         }
     }

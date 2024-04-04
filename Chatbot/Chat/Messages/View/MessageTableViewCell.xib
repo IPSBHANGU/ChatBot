@@ -31,16 +31,16 @@
                         </constraints>
                     </imageView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Eqg-Uc-XP4">
-                        <rect key="frame" x="63" y="20" width="261" height="152"/>
+                        <rect key="frame" x="167" y="20" width="157" height="152"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ilU-ko-Izq">
-                                <rect key="frame" x="16" y="8" width="229" height="112"/>
+                                <rect key="frame" x="16" y="8" width="125" height="112"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JHK-kJ-Hpa">
-                                <rect key="frame" x="120" y="128" width="125" height="16"/>
+                                <rect key="frame" x="16" y="128" width="125" height="16"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sent" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XMq-tZ-5BY">
                                         <rect key="frame" x="0.0" y="0.0" width="33.333333333333336" height="16"/>
@@ -103,15 +103,15 @@
                 </subviews>
                 <constraints>
                     <constraint firstItem="fzX-pN-n7x" firstAttribute="leading" secondItem="Eqg-Uc-XP4" secondAttribute="trailing" constant="8" id="3BO-Ql-A4E"/>
-                    <constraint firstItem="Eqg-Uc-XP4" firstAttribute="leading" secondItem="iGS-Cw-HnK" secondAttribute="trailing" constant="8" id="8Y3-69-W7g"/>
+                    <constraint firstItem="Eqg-Uc-XP4" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iGS-Cw-HnK" secondAttribute="trailing" constant="8" id="8Y3-69-W7g"/>
                     <constraint firstItem="iGS-Cw-HnK" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="23" id="Czu-Uo-0t3"/>
                     <constraint firstAttribute="bottom" secondItem="Eqg-Uc-XP4" secondAttribute="bottom" id="JYo-kO-AqF"/>
                     <constraint firstItem="fzX-pN-n7x" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="TnK-If-V57"/>
-                    <constraint firstAttribute="trailing" secondItem="Eqg-Uc-XP4" secondAttribute="trailing" constant="63" id="YNp-aK-FgO"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Eqg-Uc-XP4" secondAttribute="trailing" constant="63" id="YNp-aK-FgO"/>
                     <constraint firstItem="iGS-Cw-HnK" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="ZYI-kG-ItE"/>
                     <constraint firstItem="Eqg-Uc-XP4" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="a5k-ao-q2s"/>
                     <constraint firstAttribute="trailing" secondItem="fzX-pN-n7x" secondAttribute="trailing" constant="23" id="gfb-yr-b5f"/>
-                    <constraint firstItem="Eqg-Uc-XP4" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="63" id="kVW-xN-fm0"/>
+                    <constraint firstItem="Eqg-Uc-XP4" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="63" id="kVW-xN-fm0"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>

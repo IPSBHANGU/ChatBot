@@ -12,4 +12,5 @@ pod 'Kingfisher', '~> 7.0'
 pod 'NVActivityIndicatorView'
 #pod 'MessageKit'
 pod 'SwiftyContextMenu'
+pod 'GrowingTextView','0.7.2'
 end
