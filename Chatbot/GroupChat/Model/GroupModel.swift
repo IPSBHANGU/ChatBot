@@ -60,6 +60,12 @@ class GroupModel: NSObject {
             return
         }
         
+        // Check if UserIDArray is nil
+        if userIDs.isEmpty {
+            completionHandler(false, "empty member users")
+            return
+        }
+        
         let db = Database.database().reference().child("connectedUsersGroup").child(conversationID)
         
         let groupDetails = [
@@ -143,29 +149,57 @@ class GroupModel: NSObject {
      - returns: result if error returns a string and false else nil string and true
      */
     
-    func fetchConnectedUsersInGroupChatInDB(userId: String, completion: @escaping ([Dictionary<String, Any>]?, Error?) -> Void) {
-        let dbRef = Database.database().reference().child("connectedUsersGroup")
+    func fetchConnectedUsersInGroupChatInDB(authUser: AuthenticatedUser?, completionHandler: @escaping ([[String: Any]]?, String?) -> Void) {
         
-        dbRef.observeSingleEvent(of: .value) { snapshot in
-            var groups: [Dictionary<String, Any>] = []
+        guard let authUserID = authUser?.uid else {
+            completionHandler(nil, "Authenticated user ID is missing")
+            return
+        }
+        
+        let db = Database.database().reference().child("users").child(authUserID).child("connectedGroups")
+        
+        db.observeSingleEvent(of: .value) { snapshot in
+            guard let groupsID = snapshot.value as? [String] else {
+                completionHandler(nil, "No connected groups found")
+                return
+            }
             
-            for child in snapshot.children {
-                if let groupSnapshot = child as? DataSnapshot,
-                   let groupData = groupSnapshot.value as? [String: Any],
-                   let groupName = groupData["groupName"] as? String,
-                   let conversationId = groupData["conversationID"] as? String {
-                    
-                    // Check if the authenticated user's UID is part of the group
-                    if conversationId.contains(userId) {
-                        let group: [String: Any] = ["groupName": groupName, "conversationID": conversationId]
-                        groups.append(group)
+            var groupDetailsArray: [[String: Any]] = []
+            let dispatchGroup = DispatchGroup()
+            
+            for groupID in groupsID {
+                dispatchGroup.enter()
+                let groupDB = Database.database().reference().child("connectedUsersGroup").child(groupID)
+                
+                groupDB.observeSingleEvent(of: .value) { snapshot in
+                    defer {
+                        dispatchGroup.leave()
                     }
+                    
+                    guard let groupData = snapshot.value as? [String:Any] else {
+                        return
+                    }
+                    
+                    let groupDetails:[String: Any] = groupData["groupDetails"] as! [String : Any]
+                    
+                    let groupName = groupDetails["groupName"] as? String ?? ""
+                    let groupAdmin = groupDetails["groupAdmin"] as? String ?? ""
+                    let groupMembers = groupDetails["groupMembers"] as? [String] ?? []
+                    
+                    let groupDetailsDict: [String: Any] = [
+                        "conversationID": groupData["conversationID"] as? String ?? "",
+                        "groupName": groupName,
+                        "groupAdmin": groupAdmin,
+                        "groupMembers": groupMembers
+                    ]
+                    
+                    groupDetailsArray.append(groupDetailsDict)
                 }
             }
             
-            completion(groups, nil)
-        } withCancel: { error in
-            completion(nil, error)
+            dispatchGroup.notify(queue: .main) {
+                completionHandler(groupDetailsArray, nil)
+            }
         }
     }
     
