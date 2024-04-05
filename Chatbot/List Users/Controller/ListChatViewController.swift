@@ -378,8 +378,12 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
                 let group = chatUserArray[indexPath.row]
                 let groupName = group["groupName"] as? String ?? ""
                 let conversationID = group["conversationID"] as? String ?? ""
+                let groupAdmin = group["groupAdmin"] as? String ?? ""
+                let groupMembers = group["groupMembers"] as? [String] ?? []
                 chatController.authUser = authUser
                 chatController.groupName = groupName
+                chatController.groupAdmin = groupAdmin
+                chatController.groupMembers = groupMembers
                 chatController.conversationID = conversationID
                 navigationController?.pushViewController(chatController, animated: true)
             }

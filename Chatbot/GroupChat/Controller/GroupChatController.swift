@@ -19,6 +19,10 @@ class GroupChatController: UIViewController {
     var conversationID: String?
     var groupName: String?
     
+    // group Users
+    var groupAdmin:String?
+    var groupMembers:[String]?
+    
     lazy var messageTableView = UITableView()
     
     @IBOutlet weak var sendButton: UIButton!
@@ -50,12 +54,26 @@ class GroupChatController: UIViewController {
         headerLabel.textAlignment = .center
         headerLabel.text = groupName ?? ""
         headerView.addSubview(headerLabel)
-        
+
         view.addSubview(headerView)
+        
+        headerLabel.isUserInteractionEnabled = true
+    
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTouch))
+        headerLabel.addGestureRecognizer(tapGesture)
         
         messageTableView.frame = CGRect(x: 0, y: headerView.frame.maxY, width: view.frame.width, height: view.frame.height - 190 )
         view.addSubview(messageTableView)
     }
+
+    @objc func onTouch(){
+        let groupDetailController = GroupDetailsController()
+        groupDetailController.admin = groupAdmin
+        groupDetailController.members = groupMembers!
+        groupDetailController.groupName = groupName 
+        navigationController?.pushViewController(groupDetailController, animated: true)
+    }
+
 
     func setupTableView(){
         messageTableView.separatorStyle = .none

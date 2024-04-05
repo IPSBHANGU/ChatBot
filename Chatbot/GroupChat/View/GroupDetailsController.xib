@@ -11,6 +11,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GroupDetailsController" customModule="Chatbot" customModuleProvider="target">
             <connections>
                 <outlet property="adminNameLabel" destination="zfh-sB-FRd" id="gVf-s9-6ct"/>
+                <outlet property="groupNameLabel" destination="NYG-KA-SNq" id="fd0-2D-7KK"/>
                 <outlet property="memberTableView" destination="m9i-hh-szA" id="Vh0-2G-RMu"/>
                 <outlet property="profileImageView" destination="qp9-fj-4US" id="GMT-fm-Khg"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -35,9 +36,13 @@
                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <state key="normal" title="Button"/>
                     <buttonConfiguration key="configuration" style="plain" image="arrow.backward" catalog="system"/>
+                    <connections>
+                        <action selector="backButtonAction:" destination="-1" eventType="touchUpInside" id="gvc-Ih-Ruy"/>
+                    </connections>
                 </button>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qp9-fj-4US">
-                    <rect key="frame" x="111" y="133" width="150" height="150"/>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.3.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="qp9-fj-4US">
+                    <rect key="frame" x="111" y="134.66666666666666" width="150" height="147.99999999999997"/>
+                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="150" id="HlK-Qx-zmh"/>
                         <constraint firstAttribute="height" constant="150" id="tyh-Kc-vgd"/>
@@ -96,6 +101,7 @@
     </objects>
     <resources>
         <image name="arrow.backward" catalog="system" width="128" height="95"/>
+        <image name="person.3.fill" catalog="system" width="128" height="66"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
