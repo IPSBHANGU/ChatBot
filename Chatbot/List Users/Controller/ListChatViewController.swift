@@ -114,10 +114,10 @@ class ListChatViewController: UIViewController {
     }
     
     func fetchGroups(){
-        GroupModel().fetchConnectedUsersInGroupChatInDB(userId: authUser?.uid ?? "") { group, error in
+        GroupModel().fetchConnectedUsersInGroupChatInDB(authUser: authUser) { group, error in
             self.activityIndicatorView.startAnimating()
             if let error = error {
-                AlerUser().alertUser(viewController: self, title: "Error", message: error.localizedDescription)
+                AlerUser().alertUser(viewController: self, title: "Error", message: error)
             }
             self.chatUserArray = group
             self.filteredChatUserArray = self.chatUserArray
@@ -316,28 +316,29 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
                 let user = chatUserArray[indexPath.row]
                 let groupName = user["groupName"] as? String ?? ""
                 let conversationID = user["conversationID"] as? String ?? ""
+                cell.setCellData(userImage: nil, username: groupName, userRecentMeassage: "", meassageTime: "")
                 
-                // Get the last message text
-                GroupModel().observeGroupMessages(conversationID: conversationID, currentUserID: authUser?.uid ?? "") { messages in
-                    if let lastMessage = messages.last {
-                        let formatter = DateFormatter()
-                        formatter.dateFormat = "h:mm a"
-                        let dateString = formatter.string(from: lastMessage.sentDate)
-                        
-                        let lastMessageText: String
-                        switch lastMessage.kind {
-                        case .text(let text):
-                            lastMessageText = text
-                        default:
-                            lastMessageText = "Unsupported message type"
-                        }
-                        
-                        // make my life more complex, use group avatar as latest msg by user's svtar
-                        let photoURL = lastMessage.senderAvtar
-                        
-                        cell.setCellData(userImage: photoURL, username: groupName, userRecentMeassage: lastMessageText, meassageTime: dateString)
-                    }
-                }
+//                // Get the last message text
+//                GroupModel().observeGroupMessages(conversationID: conversationID, currentUserID: authUser?.uid ?? "") { messages in
+//                    if let lastMessage = messages.last {
+//                        let formatter = DateFormatter()
+//                        formatter.dateFormat = "h:mm a"
+//                        let dateString = formatter.string(from: lastMessage.sentDate)
+//                        
+//                        let lastMessageText: String
+//                        switch lastMessage.kind {
+//                        case .text(let text):
+//                            lastMessageText = text
+//                        default:
+//                            lastMessageText = "Unsupported message type"
+//                        }
+//                        
+//                        // make my life more complex, use group avatar as latest msg by user's svtar
+//                        let photoURL = lastMessage.senderAvtar
+//                        
+//                        cell.setCellData(userImage: photoURL, username: groupName, userRecentMeassage: lastMessageText, meassageTime: dateString)
+//                    }
+//                }
             }
         } else {
             if let chatUserArray = filteredChatUserArray, indexPath.row < chatUserArray.count {

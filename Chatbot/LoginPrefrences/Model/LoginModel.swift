@@ -172,7 +172,7 @@ class LoginModel: NSObject {
                     }
                     
                     guard let userDetails = userData else {
-                        completionHandler(nil, "No Data")
+                        //completionHandler(nil, "No Data")
                         return
                     }
                     
