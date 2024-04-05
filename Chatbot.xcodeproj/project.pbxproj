@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		127851723A68E91EED2E05F9 /* Pods_Chatbot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB43EAF638778BE7A6AA5789 /* Pods_Chatbot.framework */; };
+		DF78D9F72BC00D19002EDD28 /* GroupDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF78D9F52BC00D19002EDD28 /* GroupDetailsController.swift */; };
+		DF78D9F82BC00D19002EDD28 /* GroupDetailsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF78D9F62BC00D19002EDD28 /* GroupDetailsController.xib */; };
+		DF78D9FB2BC0142D002EDD28 /* GroupDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF78D9F92BC0142D002EDD28 /* GroupDetailsCell.swift */; };
+		DF78D9FC2BC0142D002EDD28 /* GroupDetailsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF78D9FA2BC0142D002EDD28 /* GroupDetailsCell.xib */; };
 		DFA2C3642BBD69D80021EB7A /* ListChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA2C3632BBD69D80021EB7A /* ListChatViewController.swift */; };
 		FB1B33372BA823020061259F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1B33362BA823020061259F /* AppDelegate.swift */; };
 		FB1B33392BA823020061259F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1B33382BA823020061259F /* SceneDelegate.swift */; };
@@ -60,6 +64,10 @@
 		08166E130B4FFC752DDB7EBE /* Pods-Chatbot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chatbot.debug.xcconfig"; path = "Target Support Files/Pods-Chatbot/Pods-Chatbot.debug.xcconfig"; sourceTree = "<group>"; };
 		9797A2CC0E510E7FD851914C /* Pods-Chatbot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chatbot.release.xcconfig"; path = "Target Support Files/Pods-Chatbot/Pods-Chatbot.release.xcconfig"; sourceTree = "<group>"; };
 		DB43EAF638778BE7A6AA5789 /* Pods_Chatbot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Chatbot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DF78D9F52BC00D19002EDD28 /* GroupDetailsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailsController.swift; sourceTree = "<group>"; };
+		DF78D9F62BC00D19002EDD28 /* GroupDetailsController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupDetailsController.xib; sourceTree = "<group>"; };
+		DF78D9F92BC0142D002EDD28 /* GroupDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailsCell.swift; sourceTree = "<group>"; };
+		DF78D9FA2BC0142D002EDD28 /* GroupDetailsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupDetailsCell.xib; sourceTree = "<group>"; };
 		DFA2C3632BBD69D80021EB7A /* ListChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListChatViewController.swift; sourceTree = "<group>"; };
 		FB1B33332BA823020061259F /* Chatbot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chatbot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB1B33362BA823020061259F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -217,6 +225,7 @@
 			isa = PBXGroup;
 			children = (
 				FB84382D2BB13479006CEA58 /* GroupChatController.swift */,
+				DF78D9F52BC00D19002EDD28 /* GroupDetailsController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -225,6 +234,9 @@
 			isa = PBXGroup;
 			children = (
 				FB84382E2BB13479006CEA58 /* GroupChatController.xib */,
+				DF78D9F62BC00D19002EDD28 /* GroupDetailsController.xib */,
+				DF78D9F92BC0142D002EDD28 /* GroupDetailsCell.swift */,
+				DF78D9FA2BC0142D002EDD28 /* GroupDetailsCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -575,9 +587,11 @@
 			files = (
 				FB71F00B2BA9A04B00A79BE7 /* ListChatViewController.xib in Resources */,
 				FBCE7B352BB671890059F2D5 /* Rubik-Regular.ttf in Resources */,
+				DF78D9F82BC00D19002EDD28 /* GroupDetailsController.xib in Resources */,
 				FB73D4982BAAF738001B314F /* EmailSignINViewController.xib in Resources */,
 				FB2F5F172BB302630077C2D8 /* MessageTableViewCell.xib in Resources */,
 				FB1B33402BA823030061259F /* Assets.xcassets in Resources */,
+				DF78D9FC2BC0142D002EDD28 /* GroupDetailsCell.xib in Resources */,
 				FB73D4942BAAF604001B314F /* EmailSignUPViewController.xib in Resources */,
 				FB71F00F2BA9A43100A79BE7 /* ListChatTableViewCell.xib in Resources */,
 				FB8438302BB13479006CEA58 /* GroupChatController.xib in Resources */,
@@ -654,7 +668,9 @@
 				FB84382C2BAFF1E3006CEA58 /* GroupModel.swift in Sources */,
 				DFA2C3642BBD69D80021EB7A /* ListChatViewController.swift in Sources */,
 				FB2F5F162BB302630077C2D8 /* MessageTableViewCell.swift in Sources */,
+				DF78D9F72BC00D19002EDD28 /* GroupDetailsController.swift in Sources */,
 				FB8438292BAEC178006CEA58 /* AddUsersViewController.swift in Sources */,
+				DF78D9FB2BC0142D002EDD28 /* GroupDetailsCell.swift in Sources */,
 				FB73D49D2BAAFF89001B314F /* ChatController.swift in Sources */,
 				FB1B33392BA823020061259F /* SceneDelegate.swift in Sources */,
 				FB8438212BACA6DD006CEA58 /* ChatModel.swift in Sources */,
