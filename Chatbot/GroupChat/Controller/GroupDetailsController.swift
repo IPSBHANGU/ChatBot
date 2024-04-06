@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class GroupDetailsController: UIViewController {
     
@@ -17,31 +18,68 @@ class GroupDetailsController: UIViewController {
     var admin : String?
     var groupName : String?
     var members : [String] = []
+    var membersDetails:[[String:Any]]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        memberTableView.delegate = self
-        memberTableView.dataSource = self
-        adminNameLabel.text = admin
+        fetchUsers()
+        setupTableView()
+        setGroupAdmin()
         groupNameLabel.text = groupName
     }
     
     @IBAction func backButtonAction(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
+    
+    func fetchUsers(){
+        GroupModel().fetchGroupUsersDetails(members: members) { users, error in
+            if let error = error {
+                AlerUser().alertUser(viewController: self, title: "Error", message: error)
+                return
+            }
+            self.membersDetails = users
+            self.memberTableView.reloadData()
+        }
+    }
+    
+    func setupTableView(){
+        memberTableView.delegate = self
+        memberTableView.dataSource = self
+        memberTableView.register(UINib(nibName: "GroupDetailsCell", bundle: .main), forCellReuseIdentifier: "groupCell")
+    }
+    
+    func setGroupAdmin(){
+        LoginModel().fetchUserDetails(userID: admin ?? "") { user, error in
+            if let error = error {
+                AlerUser().alertUser(viewController: self, title: "Error", message: error.localizedDescription)
+            }
+            
+            self.adminNameLabel.text = user?.displayName ?? ""
+
+            /**
+             CHANGE WHEN YOU HAVE UIIMAGEVIEW
+             UIIMAGEVIEW.kf.setImage(with: URL(string: user?.photoURL ?? ""))
+             */
+        }
+    }
 }
 
 extension GroupDetailsController : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return members.count
+        return membersDetails?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let user = members[indexPath.row]
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "groupCell") as? GroupDetailsCell else {
             return UITableViewCell()
         }
-        cell.setCellData(name: user , image: UIImage(systemName: "person"))
+        if let groupUserArray = membersDetails, indexPath.row < membersDetails?.count ?? 0 {
+            let user = groupUserArray[indexPath.row]
+            let username = user["displayName"] as? String ?? ""
+            let avtarURL = user["photoURL"] as? String ?? ""
+            cell.setCellData(name: username , image: avtarURL)
+        }
         return cell
     }
 }

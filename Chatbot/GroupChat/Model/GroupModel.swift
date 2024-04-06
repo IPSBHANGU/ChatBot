@@ -276,4 +276,33 @@ class GroupModel: NSObject {
             completionHandler(messages)
         }
     }
+    
+    func fetchGroupUsersDetails(members:[String], completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
+        var userDetailsArray: [[String: Any]] = []
+        let dispatchGroup = DispatchGroup()
+        
+        for member in members {
+            dispatchGroup.enter()
+            LoginModel().fetchUserDetails(userID: member) { user, error in
+                defer {
+                    dispatchGroup.leave()
+                }
+                
+                guard let userDetails = user else {
+                    return
+                }
+                
+                let userDetailsDict: [String: Any] = [
+                    "displayName": userDetails.displayName ?? "",
+                    "email": userDetails.email ?? "",
+                    "photoURL": userDetails.photoURL ?? "",
+                    "uid": userDetails.uid ?? "",
+                ]
+                userDetailsArray.append(userDetailsDict)
+            }
+        }
+        dispatchGroup.notify(queue: .main) {
+            completionHandler(userDetailsArray, nil)
+        }
+    }
 }

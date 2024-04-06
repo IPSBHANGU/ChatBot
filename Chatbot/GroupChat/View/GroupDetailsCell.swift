@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class GroupDetailsCell: UITableViewCell {
     
@@ -23,9 +24,9 @@ class GroupDetailsCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func setCellData(name: String?, image: UIImage?){
+    func setCellData(name: String?, image: String?){
         nameLabel.text = name ?? ""
-        profileAvatar.image = image
+        profileAvatar.kf.setImage(with: URL(string: image ?? ""))
     }
     
 }
