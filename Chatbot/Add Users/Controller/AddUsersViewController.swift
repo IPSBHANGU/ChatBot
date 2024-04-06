@@ -62,7 +62,7 @@ class AddUsersViewController: UIViewController {
         let headerLabel = UILabel(frame: CGRect(x: backButton.frame.origin.x + 30, y: backButton.frame.origin.y, width: 300, height: 30))
         headerLabel.textAlignment = .center
         headerLabel.text = "Add Users"
-        headerLabel.font = UIFont(name: "Rubik SemiBold", size: 18)
+        headerLabel.font = UIFont(name: "Rubik-SemiBold", size: 18)
         headerLabel.textColor = UIColorHex().hexStringToUIColor(hex: "#191919")
         headerView.addSubview(headerLabel)
         

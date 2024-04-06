@@ -152,6 +152,9 @@ class ListChatViewController: UIViewController {
             userAvatar.image = UIImage(systemName: "person.circle")
             userAvatar.tintColor = .black
         }
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(avtarOnTouch))
+        userAvatar.isUserInteractionEnabled = true
+        userAvatar.addGestureRecognizer(tapGesture)
         view.addSubview(userAvatar)
         
         editButton.setImage(UIImage(systemName: "slider.horizontal.3"), for: .normal)
@@ -176,18 +179,6 @@ class ListChatViewController: UIViewController {
         view.addSubview(editButton)
 
         chatType.frame = CGRect(x: 24, y: 112, width: 184, height: 32)
-        chatType.addTarget(self, action: #selector(chatSelectorType(_:)), for: .valueChanged)
-        chatType.itemsWithText = true
-        chatType.fillEqually = true
-        chatType.bottomLineThumbView = true
-        chatType.setSegmentedWith(items: ["Chats", "Groups"])
-        chatType.padding = -4
-        chatType.textColor = .gray
-        chatType.titlesFont = UIFont(name: "Rubik-Regular", size: 20)
-        chatType.selectedTextColor = .black
-        chatType.thumbViewColor = UIColorHex().hexStringToUIColor(hex: "#5AD7FF")
-        chatType.segmentedBackGroundColor = .systemGray6
-        chatType.selectedSegmentIndex = 0
         view.addSubview(chatType)
         
         chatTable.frame = CGRect(x: 0, y: 180, width: view.frame.width, height: view.frame.height + 32)
@@ -273,6 +264,7 @@ class ListChatViewController: UIViewController {
         switch chatType.selectedSegmentIndex
         {
         case 0:
+            chatType.selectedSegmentIndex = 0
             is_Group = false
             chatUserArray?.removeAll()
             filteredChatUserArray?.removeAll()
@@ -284,6 +276,7 @@ class ListChatViewController: UIViewController {
             chatTable.reloadData()
             
         case 1:
+            chatType.selectedSegmentIndex = 1
             is_Group = true
             showActivityIndicatorView()
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
@@ -297,7 +290,12 @@ class ListChatViewController: UIViewController {
         default:
             break;
         }
-        // MARK: TO-DO Change with database CallBack
+    }
+    
+    @objc func avtarOnTouch(){
+        let userDetailController = UserDetailController()
+        userDetailController.userUID = authUser?.uid
+        navigationController?.pushViewController(userDetailController, animated: true)
     }
 }
 

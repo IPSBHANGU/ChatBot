@@ -35,7 +35,7 @@ class MessageTableViewCell: UITableViewCell {
         bubbleView.layer.cornerRadius = 20
         messageLable.text = message ?? ""
         messageTime.text = messageStatus ?? ""
-        messageLable.font = UIFont(name: "Rubik Regular", size: 14)
+        messageLable.font = UIFont(name: "Rubik-Regular", size: 14)
         
         if isCurrentUser {
             bubbleView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMaxYCorner , .layerMinXMaxYCorner ]

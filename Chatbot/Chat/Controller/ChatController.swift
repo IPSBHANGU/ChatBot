@@ -68,8 +68,11 @@ class ChatController: UIViewController {
         let headerLabel = UILabel(frame: CGRect(x: backButton.frame.origin.x + 30, y: backButton.frame.origin.y, width: 300, height: 30))
         headerLabel.textAlignment = .center
         headerLabel.text = "\(senderUserName ?? "")"
-        headerLabel.font = UIFont(name: "Rubik SemiBold", size: 18)
+        headerLabel.font = UIFont(name: "Rubik-SemiBold", size: 18)
         headerLabel.textColor = UIColorHex().hexStringToUIColor(hex: "#191919")
+        headerLabel.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTouch))
+        headerLabel.addGestureRecognizer(tapGesture)
         headerView.addSubview(headerLabel)
         
         view.addSubview(headerView)
@@ -142,6 +145,12 @@ class ChatController: UIViewController {
                 self.inputTextView.text = ""
             }
         }
+    }
+    
+    @objc func onTouch(){
+        let userDetailController = UserDetailController()
+        userDetailController.userUID = senderUID
+        navigationController?.pushViewController(userDetailController, animated: true)
     }
 }
 

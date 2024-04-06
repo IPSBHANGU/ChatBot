@@ -15,6 +15,7 @@ struct AuthenticatedUser: Codable {
     var displayName: String?
     var email: String?
     var photoURL: String?
+    var registeredDate: Date?
     var uid: String?
 }
 
@@ -39,7 +40,12 @@ class LoginModel: NSObject {
                 return
             }
             
-            let user = AuthenticatedUser(displayName: displayName, email: email, photoURL: photoURL, uid: uid)
+            var registeredDate: Date?
+            if let timestamp = userData["registeredDate"] as? TimeInterval {
+                registeredDate = Date(timeIntervalSince1970: timestamp)
+            }
+            
+            let user = AuthenticatedUser(displayName: displayName, email: email, photoURL: photoURL, registeredDate: registeredDate, uid: uid)
             completion(user, nil)
         }
     }
