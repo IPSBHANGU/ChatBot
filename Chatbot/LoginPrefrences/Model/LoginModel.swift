@@ -19,6 +19,28 @@ struct AuthenticatedUser: Codable {
     var uid: String?
 }
 
+/**
+ - Note: Handle Error Senerios with more Explaintory Case
+ */
+
+enum ErrorCode: Int {
+    case missingUserId = 1001
+    case userAlreadyExists = 1002
+    case databaseError = 1003
+    
+    var description: String {
+        switch self {
+        case .missingUserId:
+            return "User ID is missing"
+        case .userAlreadyExists:
+            return "User already exists in the database"
+        case .databaseError:
+            return "Database error occurred"
+        }
+    }
+}
+
+
 class LoginModel: NSObject {
     
     let usersDatabase = Database.database().reference().child("users")
@@ -50,7 +72,13 @@ class LoginModel: NSObject {
         }
     }
     
-    func addUsersToDb(user:User?, displayName:String? = nil, photoURL:String? = nil, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
+    func addUsersToDb(user:User?, displayName:String? = nil, photoURL:String? = nil, completionHandler: @escaping (_ isSucceeded: Bool, _ error: ErrorCode?) -> ()) {
+        
+        guard let userId = user?.uid else {
+            completionHandler(false, .missingUserId)
+            return
+        }
+        
         var displayName = displayName
         var photoURL = photoURL
         
@@ -63,19 +91,26 @@ class LoginModel: NSObject {
         }
         
         let db = usersDatabase.child(user?.uid ?? "")
-        let newUser = [
-            "uid": user?.uid ?? "",
-            "displayName": displayName ?? "",
-            "email": user?.email ?? "",
-            "photoURL": photoURL ?? "",
-            "registeredDate": Date().timeIntervalSince1970,
-        ] as [String : Any]
         
-        db.setValue(newUser) { (error, _) in
-            if let error = error {
-                completionHandler(false, error.localizedDescription)
+        db.observeSingleEvent(of: .value) { (snapshot) in
+            if snapshot.exists() {
+                completionHandler(false, .userAlreadyExists)
             } else {
-                completionHandler(true, nil)
+                let newUser = [
+                    "uid": user?.uid ?? "",
+                    "displayName": displayName ?? "",
+                    "email": user?.email ?? "",
+                    "photoURL": photoURL ?? "",
+                    "registeredDate": Date().timeIntervalSince1970,
+                ] as [String : Any]
+                
+                db.setValue(newUser) { (error, _) in
+                    if let error = error {
+                        completionHandler(false, .databaseError)
+                    } else {
+                        completionHandler(true, nil)
+                    }
+                }
             }
         }
     }

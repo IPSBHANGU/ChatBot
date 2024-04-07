@@ -73,8 +73,16 @@ class EmailSignUPViewController: UIViewController {
                             if is_Success == true {
                                 LoginModel().addUsersToDb(user: result?.user, displayName: self.fullNameTextField.text ?? "", photoURL: url) { [self] isSucceeded, error in
                                     if let error = error {
-                                        AlerUser().alertUser(viewController: self, title: "Error", message: error)
-                                        return
+                                        switch error {
+                                        case .userAlreadyExists:
+                                            let listChatView = ListChatViewController()
+                                            listChatView.result = result
+                                            self.navigationController?.pushViewController(listChatView, animated: true)
+                                        case .missingUserId:
+                                            AlerUser().alertUser(viewController: self, title: "Error", message: "\(error)")
+                                        case .databaseError:
+                                            AlerUser().alertUser(viewController: self, title: "Error", message: "\(error)")
+                                        }
                                     } else if isSucceeded {
                                         resetTextField()
                                         let listChatView = ListChatViewController()
