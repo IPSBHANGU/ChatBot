@@ -86,6 +86,63 @@ class GroupChatController: UIViewController {
         messageTableView.rowHeight = UITableView.automaticDimension
         messageTableView.estimatedRowHeight = 100
         messageTableView.register(UINib(nibName: "MessageTableViewCell", bundle: .main), forCellReuseIdentifier: "messageTableViewCell")
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        messageTableView.addGestureRecognizer(longPressGesture)
+    }
+    
+    @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        if gestureRecognizer.state == .began {
+            let touchPoint = gestureRecognizer.location(in: messageTableView)
+            if let indexPath = messageTableView.indexPathForRow(at: touchPoint) {
+                // A cell was long-pressed, perform your action here
+                handleCellLongPress(at: indexPath)
+            }
+        }
+    }
+
+    func handleCellLongPress(at indexPath: IndexPath) {
+        let selectedMessage = messages[indexPath.row]
+
+        var messageString:String = ""
+        let messageText = selectedMessage.kind
+        switch messageText {
+        case .text(let text):
+            messageString = text
+        }
+
+        let copyAction = UIAlertAction(title: "Copy", style: .default) { (action) in
+            UIPasteboard.general.string = messageString
+        }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+
+        var messageActions:[UIAlertAction] = [copyAction, cancelAction]
+
+        if authUser?.uid == selectedMessage.sender.senderId {
+            let deleteAction = UIAlertAction(title: "Delete Message", style: .destructive) { _ in
+                self.deleteMessage(at: indexPath)
+            }
+
+            messageActions.append(deleteAction)
+        }
+
+        AlerUser().alertUser(viewController: self, title: messageString, message: "Message Options", actions: messageActions)
+    }
+
+    func deleteMessage(at indexPath: IndexPath) {
+        // Update database
+        GroupModel().removeChildNodeFromConversation(conversationId: conversationID ?? "", messageId: messages[indexPath.row].messageId) { isSucceeded, error in
+            if let error = error {
+                AlerUser().alertUser(viewController: self, title: "Error", message: error)
+            }
+            if isSucceeded {
+                // Remove the message from messages array
+                self.messages.remove(at: indexPath.row)
+
+                // Update the table view to reflect the changes
+                self.messageTableView.deleteRows(at: [indexPath], with: .automatic)
+            }
+        }
     }
     
     @objc func backButtonTapped() {
