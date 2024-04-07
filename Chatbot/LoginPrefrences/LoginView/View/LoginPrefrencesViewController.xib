@@ -11,9 +11,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoginPrefrencesViewController" customModule="Chatbot" customModuleProvider="target">
             <connections>
                 <outlet property="googleSignInButton" destination="uEX-n9-dwX" id="NYI-b4-wt5"/>
-                <outlet property="orLabel" destination="nuf-Nd-UFb" id="Hfb-JX-nqA"/>
+                <outlet property="orLabel" destination="nuf-Nd-UFb" id="rpz-5P-T2c"/>
                 <outlet property="signInButton" destination="mTW-Hf-xFv" id="LUa-yi-KTG"/>
                 <outlet property="signUpButton" destination="PBV-bM-Pwx" id="38m-cq-IZm"/>
+                <outlet property="titleLable" destination="DOy-eu-Zt2" id="RUv-t5-nAZ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -122,10 +123,10 @@
         <image name="appIcon" width="928" height="892"/>
         <image name="google" width="18" height="18"/>
         <systemColor name="systemGray3Color">
-            <color red="0.7803921568627451" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.78039215689999997" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="viewFlipsideBackgroundColor">
             <color red="0.12156862745098039" green="0.12941176470588237" blue="0.14117647058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -12,6 +12,7 @@ import GoogleSignIn
 
 class LoginPrefrencesViewController: UIViewController {
     
+    @IBOutlet weak var titleLable: UILabel!
     @IBOutlet var orLabel: UILabel!
     @IBOutlet var signInButton: UIButton!
     @IBOutlet var googleSignInButton: UIButton!
@@ -22,6 +23,12 @@ class LoginPrefrencesViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        setupFonts()
+    }
+    
+    func setupFonts(){
+        titleLable.text = "ChatApp"
+        titleLable.font = UIFont(name: "Gill Sans", size: 30)
     }
     
     @IBAction func signUpaction(_ sender: Any) {

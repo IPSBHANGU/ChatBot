@@ -93,7 +93,6 @@ class ListChatViewController: UIViewController {
                 AlerUser().alertUser(viewController: self, title: "Error", message: error)
                 return
             }
-            
             self.chatUserArray?.removeAll()
             self.filteredChatUserArray?.removeAll()
             self.chatUserArray = users
@@ -179,6 +178,18 @@ class ListChatViewController: UIViewController {
         view.addSubview(editButton)
 
         chatType.frame = CGRect(x: 24, y: 112, width: 184, height: 32)
+        chatType.addTarget(self, action: #selector(chatSelectorType(_:)), for: .valueChanged)
+        chatType.itemsWithText = true
+        chatType.fillEqually = true
+        chatType.bottomLineThumbView = true
+        chatType.setSegmentedWith(items: ["Chats", "Groups"])
+        chatType.padding = -4
+        chatType.textColor = .gray
+        chatType.titlesFont = UIFont(name: "Rubik-Regular", size: 20)
+        chatType.selectedTextColor = .black
+        chatType.thumbViewColor = UIColorHex().hexStringToUIColor(hex: "#5AD7FF")
+        chatType.segmentedBackGroundColor = .systemGray6
+        chatType.selectedSegmentIndex = 0
         view.addSubview(chatType)
         
         chatTable.frame = CGRect(x: 0, y: 180, width: view.frame.width, height: view.frame.height + 32)
