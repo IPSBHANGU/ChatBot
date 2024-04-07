@@ -370,8 +370,6 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
                         switch lastMessage.kind {
                         case .text(let text):
                             lastMessageText = text
-                        default:
-                            lastMessageText = "Unsupported message type"
                         }
                         cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: lastMessageText, meassageTime: dateString)
                     }
