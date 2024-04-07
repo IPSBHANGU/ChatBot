@@ -14,15 +14,17 @@ class AlerUser:NSObject {
      title as String for title of alert
      message as String for alert meassage
      view as UIViewController
-     Optional arguement to pass custom UIAlertAction usefull if need to add any function at alert action
+     Optional arguement to pass custom UIAlertAction Array usefull if need to add any function at alert action
      */
-    func alertUser(viewController: UIViewController, title: String, message: String, action: UIAlertAction? = nil) {
+    func alertUser(viewController: UIViewController, title: String, message: String, actions: [UIAlertAction]? = nil) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        alert.view.tintColor = .blue
+        alert.view.tintColor = .black
         
-        if let action = action {
-            alert.addAction(action)
+        if let actions = actions {
+            for action in actions {
+                alert.addAction(action)
+            }
         } else {
             let defaultAction = UIAlertAction(title: "Okay", style: .default)
             alert.addAction(defaultAction)
@@ -30,5 +32,6 @@ class AlerUser:NSObject {
         
         viewController.present(alert, animated: true)
     }
+
 
 }

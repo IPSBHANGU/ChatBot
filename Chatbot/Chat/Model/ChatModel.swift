@@ -186,4 +186,18 @@ class ChatModel: NSObject {
             }
         }
     }
+    
+    // Function to remove a specific message from a conversation
+    func removeChildNodeFromConversation(conversationId: String, messageId: String, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
+        
+        let messageIdRef = messagesDatabase.child(conversationId).child(messageId)
+        
+        messageIdRef.removeValue { error, _ in
+            if let error = error {
+                completionHandler(false, error.localizedDescription)
+            } else {
+                completionHandler(true, nil)
+            }
+        }
+    }
 }
