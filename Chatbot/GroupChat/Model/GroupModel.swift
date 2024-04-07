@@ -8,6 +8,8 @@
 import Foundation
 import FirebaseDatabaseInternal
 import FirebaseAuth
+import UIKit
+import FirebaseStorage
 
 struct GroupMessage: MessageType {
     var sender: SenderType
@@ -35,6 +37,51 @@ class GroupModel: NSObject {
         return conversationID
     }
 
+    // Function to upload image to Firebase Storage
+    func uploadGroupAvtar(groupAvtar: UIImage?, conversationID: String?, completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard let imageData = groupAvtar?.jpegData(compressionQuality: 0.5) else {
+            completion(.failure("Error: Unable to convert image to data" as! Error))
+            return
+        }
+        
+        guard let conversationID = conversationID else {
+            completion(.failure("Error: group conversation ID is nil" as! Error))
+            return
+        }
+
+        let storageRef = Storage.storage().reference().child("group_avtar").child("\(conversationID).jpg")
+
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpeg"
+
+        storageRef.putData(imageData, metadata: metadata) { (metadata, error) in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(true))
+            }
+        }
+    }
+    
+    // Function to download image to Firebase Storage
+    func downloadGroupAvtarURL(conversationID: String?, completionHandler: @escaping (Bool?, String?) -> Void) {
+        guard let conversationID = conversationID else {
+            completionHandler(false, "Error: conversation ID is nil")
+            return
+        }
+        
+        let storageRef = Storage.storage().reference().child("group_avtar").child("\(conversationID).jpg")
+        
+        storageRef.downloadURL { (url, error) in
+            if let error = error {
+                completionHandler(false, "Error getting download URL: \(error.localizedDescription)")
+                return
+            }
+            
+            completionHandler(true, url?.absoluteString)
+        }
+    }
+    
     /**
      func connectUsersInGroupChatInDB(conversationID:String?, groupName:String?,  completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ())
      - Note: Used to generate groups with users
@@ -42,7 +89,7 @@ class GroupModel: NSObject {
      - parameter groupName: expects String format and used for Naming Groups
      - returns: result if error returns a string and false else nil string and true
      */
-    func connectUsersInGroupChatInDB(authUserUID:String?, conversationID:String?, groupName:String?, userIDs: [String],  completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
+    func connectUsersInGroupChatInDB(authUserUID:String?, conversationID:String?, groupName:String?, groupAvtar:UIImage?, userIDs: [String],  completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
         // Check if groupName is nil or empty
         guard let authUserUID = authUserUID, !authUserUID.isEmpty else {
             return
@@ -51,6 +98,12 @@ class GroupModel: NSObject {
         // Check if groupName is nil or empty
         guard let groupName = groupName, !groupName.isEmpty else {
             completionHandler(false, "Group name cannot be empty")
+            return
+        }
+        
+        // Check if groupAvtar is nil
+        guard let groupAvtar = groupAvtar else {
+            completionHandler(false, "Group photo cannot be nil")
             return
         }
         
@@ -66,73 +119,89 @@ class GroupModel: NSObject {
             return
         }
         
-        let db = Database.database().reference().child("connectedUsersGroup").child(conversationID)
-        
-        let groupDetails = [
-            "groupName": groupName,
-            "groupAdmin": authUserUID,
-            "groupMembers": userIDs
-        ] as [String : Any]
-        
-        let newConnectedGroup = [
-            "conversationID": conversationID,
-            "groupDetails" : groupDetails
-        ] as [String : Any]
-        
-        db.setValue(newConnectedGroup) { (error, _) in
-            if let error = error {
-                completionHandler(false, error.localizedDescription)
-            } else {
-                // Update users for group ConversationID
-                let usersRef = Database.database().reference().child("users")
-                
-                // Update Admin User
-                usersRef.child(authUserUID).observeSingleEvent(of: .value) { adminUserSnapshot in
-                    guard var adminUserData = adminUserSnapshot.value as? [String: Any] else {
-                        completionHandler(false, "Failed to get adminUserData")
-                        return
-                    }
-                    
-                    var connectedGroups = adminUserData["connectedGroups"] as? [String] ?? []
-                    connectedGroups.append(conversationID)
-                    
-                    adminUserData["connectedGroups"] = connectedGroups
-                    
-                    usersRef.child(authUserUID).setValue(adminUserData) { (error, _) in
-                        if let error = error {
-                            completionHandler(false, error.localizedDescription)
-                        } else {
-                            // Update otherUsers
-                            let dispatchGroup = DispatchGroup()
-                            
-                            for userID in userIDs {
-                                dispatchGroup.enter()
+        uploadGroupAvtar(groupAvtar: groupAvtar, conversationID: conversationID) { status in
+            switch status {
+            case .failure(let error):
+                completionHandler(false, "Error uploading avatar: \(error.localizedDescription)")
+            case .success(_):
+                self.downloadGroupAvtarURL(conversationID: conversationID) { is_Success, url in
+                    if is_Success == true {
+                        guard let groupURL = url else {
+                            completionHandler(false, "Failed to get groupAvtar from Database")
+                            return
+                        }
+                        let db = Database.database().reference().child("connectedUsersGroup").child(conversationID)
+                        
+                        let groupDetails = [
+                            "groupName": groupName,
+                            "groupAvtar": groupURL,
+                            "groupAdmin": authUserUID,
+                            "groupMembers": userIDs
+                        ] as [String : Any]
+                        
+                        let newConnectedGroup = [
+                            "conversationID": conversationID,
+                            "groupDetails" : groupDetails
+                        ] as [String : Any]
+                        
+                        db.setValue(newConnectedGroup) { (error, _) in
+                            if let error = error {
+                                completionHandler(false, error.localizedDescription)
+                            } else {
+                                // Update users for group ConversationID
+                                let usersRef = Database.database().reference().child("users")
                                 
-                                usersRef.child(userID).observeSingleEvent(of: .value) { otherUserSnapshot in
-                                    defer {
-                                        dispatchGroup.leave()
-                                    }
-                                    
-                                    guard var otherUserID = otherUserSnapshot.value as? [String: Any] else {
-                                        completionHandler(false, "Failed to get otherUserData")
+                                // Update Admin User
+                                usersRef.child(authUserUID).observeSingleEvent(of: .value) { adminUserSnapshot in
+                                    guard var adminUserData = adminUserSnapshot.value as? [String: Any] else {
+                                        completionHandler(false, "Failed to get adminUserData")
                                         return
                                     }
                                     
-                                    var connectedGroups = otherUserID["connectedGroups"] as? [String] ?? []
+                                    var connectedGroups = adminUserData["connectedGroups"] as? [String] ?? []
                                     connectedGroups.append(conversationID)
                                     
-                                    otherUserID["connectedGroups"] = connectedGroups
+                                    adminUserData["connectedGroups"] = connectedGroups
                                     
-                                    usersRef.child(userID).setValue(otherUserID) { (error, _) in
+                                    usersRef.child(authUserUID).setValue(adminUserData) { (error, _) in
                                         if let error = error {
                                             completionHandler(false, error.localizedDescription)
+                                        } else {
+                                            // Update otherUsers
+                                            let dispatchGroup = DispatchGroup()
+                                            
+                                            for userID in userIDs {
+                                                dispatchGroup.enter()
+                                                
+                                                usersRef.child(userID).observeSingleEvent(of: .value) { otherUserSnapshot in
+                                                    defer {
+                                                        dispatchGroup.leave()
+                                                    }
+                                                    
+                                                    guard var otherUserID = otherUserSnapshot.value as? [String: Any] else {
+                                                        completionHandler(false, "Failed to get otherUserData")
+                                                        return
+                                                    }
+                                                    
+                                                    var connectedGroups = otherUserID["connectedGroups"] as? [String] ?? []
+                                                    connectedGroups.append(conversationID)
+                                                    
+                                                    otherUserID["connectedGroups"] = connectedGroups
+                                                    
+                                                    usersRef.child(userID).setValue(otherUserID) { (error, _) in
+                                                        if let error = error {
+                                                            completionHandler(false, error.localizedDescription)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            
+                                            dispatchGroup.notify(queue: .main) {
+                                                completionHandler(true, nil)
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            
-                            dispatchGroup.notify(queue: .main) {
-                                completionHandler(true, nil)
                             }
                         }
                     }
@@ -184,11 +253,13 @@ class GroupModel: NSObject {
                     
                     let groupName = groupDetails["groupName"] as? String ?? ""
                     let groupAdmin = groupDetails["groupAdmin"] as? String ?? ""
+                    let groupAvtar = groupDetails["groupAvtar"] as? String ?? ""
                     let groupMembers = groupDetails["groupMembers"] as? [String] ?? []
                     
                     let groupDetailsDict: [String: Any] = [
                         "conversationID": groupData["conversationID"] as? String ?? "",
                         "groupName": groupName,
+                        "groupAvtar": groupAvtar,
                         "groupAdmin": groupAdmin,
                         "groupMembers": groupMembers
                     ]

@@ -21,6 +21,7 @@ class GroupChatController: UIViewController {
     
     // group Users
     var groupAdmin:String?
+    var groupAvtar:String?
     var groupMembers:[String]?
     
     lazy var messageTableView = UITableView()
@@ -69,6 +70,7 @@ class GroupChatController: UIViewController {
     @objc func onTouch(){
         let groupDetailController = GroupDetailsController()
         groupDetailController.admin = groupAdmin
+        groupDetailController.groupAvtar = groupAvtar
         groupDetailController.members = groupMembers!
         groupDetailController.groupName = groupName 
         navigationController?.pushViewController(groupDetailController, animated: true)

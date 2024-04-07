@@ -17,6 +17,7 @@ class GroupDetailsController: UIViewController {
     
     var admin : String?
     var groupName : String?
+    var groupAvtar : String?
     var members : [String] = []
     var membersDetails:[[String:Any]]?
     
@@ -25,11 +26,16 @@ class GroupDetailsController: UIViewController {
         fetchUsers()
         setupTableView()
         setGroupAdmin()
-        groupNameLabel.text = groupName
+        setupGroupDetails()
     }
     
     @IBAction func backButtonAction(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    func setupGroupDetails(){
+        groupNameLabel.text = groupName
+        profileImageView.kf.setImage(with: URL(string: groupAvtar ?? ""))
     }
     
     func fetchUsers(){

@@ -324,8 +324,9 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
             if let chatUserArray = filteredChatUserArray, indexPath.row < chatUserArray.count {
                 let user = chatUserArray[indexPath.row]
                 let groupName = user["groupName"] as? String ?? ""
+                let groupAvtar = user["groupAvtar"] as? String ?? ""
                 let conversationID = user["conversationID"] as? String ?? ""
-                cell.setCellData(userImage: nil, username: groupName, userRecentMeassage: "", meassageTime: "")
+                cell.setCellData(userImage: groupAvtar, username: groupName, userRecentMeassage: "", meassageTime: "")
                 
 //                // Get the last message text
 //                GroupModel().observeGroupMessages(conversationID: conversationID, currentUserID: authUser?.uid ?? "") { messages in
@@ -388,10 +389,12 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
                 let groupName = group["groupName"] as? String ?? ""
                 let conversationID = group["conversationID"] as? String ?? ""
                 let groupAdmin = group["groupAdmin"] as? String ?? ""
+                let groupAvtar = group["groupAvtar"] as? String ?? ""
                 let groupMembers = group["groupMembers"] as? [String] ?? []
                 chatController.authUser = authUser
                 chatController.groupName = groupName
                 chatController.groupAdmin = groupAdmin
+                chatController.groupAvtar = groupAvtar
                 chatController.groupMembers = groupMembers
                 chatController.conversationID = conversationID
                 navigationController?.pushViewController(chatController, animated: true)

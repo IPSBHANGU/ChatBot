@@ -17,6 +17,7 @@ class AddUsersViewController: UIViewController {
 
     lazy var usersTable = UITableView()
     lazy var groupNameTextField = UITextField()
+    lazy var groupImageView = UIImageView()
     
     var authUser:AuthenticatedUser?
     var chatUserArray:[[String:Any]]?
@@ -34,6 +35,10 @@ class AddUsersViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         setupUI()
         setupTableView()
+        
+        if is_Group {
+            setupGroupPhotoPicker()
+        }
     }
 
     func fetchUsers(){
@@ -61,7 +66,6 @@ class AddUsersViewController: UIViewController {
         
         let headerLabel = UILabel(frame: CGRect(x: backButton.frame.origin.x + 30, y: backButton.frame.origin.y, width: 300, height: 30))
         headerLabel.textAlignment = .center
-        headerLabel.text = "Add Users"
         headerLabel.font = UIFont(name: "Rubik-SemiBold", size: 18)
         headerLabel.textColor = UIColorHex().hexStringToUIColor(hex: "#191919")
         headerView.addSubview(headerLabel)
@@ -70,6 +74,7 @@ class AddUsersViewController: UIViewController {
         let usersTableHeight: CGFloat = view.bounds.height - (usersTableY ?? 0)
         
         if is_Group {
+            headerLabel.text = "Add Group"
             // Add a "Done" button
             let doneButton = UIButton(type: .system)
             doneButton.frame = CGRect(x: view.frame.width - 46, y: headerLabel.frame.origin.y, width: 24, height: headerLabel.frame.height)
@@ -78,8 +83,17 @@ class AddUsersViewController: UIViewController {
             doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
             headerView.addSubview(doneButton)
             
+            // Group Image
+            groupImageView.contentMode = .scaleAspectFit
+            groupImageView.clipsToBounds = true
+            groupImageView.frame = CGRect(x: (view.frame.width - 120) / 2, y: headerView.frame.maxY + 40, width: 120, height: 120)
+            groupImageView.layer.cornerRadius = 60
+            groupImageView.image = UIImage(systemName: "person.3.sequence.fill")
+            groupImageView.tintColor = .black
+            view.addSubview(groupImageView)
+            
             // Add a text field for group name
-            let groupNameTextFieldY: CGFloat = headerLabel.frame.maxY + 20
+            let groupNameTextFieldY: CGFloat = groupImageView.frame.maxY + 20
             let groupNameTextFieldHeight: CGFloat = 40
             groupNameTextField = UITextField(frame: CGRect(x: 15, y: groupNameTextFieldY, width: view.bounds.width - 30, height: groupNameTextFieldHeight))
             groupNameTextField.placeholder = "Enter Group Name"
@@ -89,6 +103,7 @@ class AddUsersViewController: UIViewController {
             
             usersTableY = groupNameTextField.frame.maxY + 20
         } else {
+            headerLabel.text = "Add Users"
             usersTableY = headerLabel.frame.maxY + 20
         }
         
@@ -96,7 +111,6 @@ class AddUsersViewController: UIViewController {
         usersTable = UITableView(frame: CGRect(x: 0, y: usersTableY ?? 0, width: view.bounds.width, height: usersTableHeight))
         view.addSubview(usersTable)
     }
-
 
     func setupTableView(){
         usersTable.delegate = self
@@ -114,7 +128,7 @@ class AddUsersViewController: UIViewController {
         let conversationID = GroupModel().generateGroupConversationID(authUserUID: authUser?.uid ?? "")
         
         // Call API to add users to the group
-        GroupModel().connectUsersInGroupChatInDB(authUserUID: authUser?.uid ?? "", conversationID: conversationID, groupName: groupNameTextField.text ?? "", userIDs: selectedUsers) { isSucceeded, error in
+        GroupModel().connectUsersInGroupChatInDB(authUserUID: authUser?.uid ?? "", conversationID: conversationID, groupName: groupNameTextField.text ?? "", groupAvtar: groupImageView.image, userIDs: selectedUsers) { isSucceeded, error in
             if let error = error {
                 AlerUser().alertUser(viewController: self, title: "Error", message: error)
             }
@@ -122,6 +136,20 @@ class AddUsersViewController: UIViewController {
                 self.navigationController?.popViewController(animated: true)
             }
         }
+    }
+    
+    func setupGroupPhotoPicker(){
+        // Add tap gesture recognizer to profile photo image view
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(groupPhotoTapped))
+        groupImageView.isUserInteractionEnabled = true
+        groupImageView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func groupPhotoTapped() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .photoLibrary
+        present(imagePickerController, animated: true, completion: nil)
     }
 }
 
@@ -189,5 +217,23 @@ extension AddUsersViewController:UITableViewDelegate,UITableViewDataSource {
                 }
             }
         }
+    }
+}
+
+extension AddUsersViewController:UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let selectedImage = info[.originalImage] as? UIImage {
+            groupImageView.image = selectedImage
+        }
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
 }
