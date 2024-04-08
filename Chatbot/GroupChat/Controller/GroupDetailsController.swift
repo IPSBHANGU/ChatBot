@@ -11,8 +11,8 @@ import Kingfisher
 class GroupDetailsController: UIViewController {
     
     @IBOutlet var groupNameLabel: UILabel!
+    @IBOutlet weak var membersLable: UILabel!
     @IBOutlet var memberTableView: UITableView!
-    @IBOutlet var adminNameLabel: UILabel!
     @IBOutlet var profileImageView: UIImageView!
     
     var admin : String?
@@ -23,6 +23,7 @@ class GroupDetailsController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        fixUI()
         fetchUsers()
         setupTableView()
         setGroupAdmin()
@@ -31,6 +32,12 @@ class GroupDetailsController: UIViewController {
     
     @IBAction func backButtonAction(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    func fixUI(){
+        profileImageView.clipsToBounds = true
+        profileImageView.layer.cornerRadius = 75
+        membersLable.font = UIFont(name: "Rubik-SemiBold", size: 20)
     }
     
     func setupGroupDetails(){
@@ -45,13 +52,13 @@ class GroupDetailsController: UIViewController {
                 return
             }
             self.membersDetails = users
-            self.memberTableView.reloadData()
         }
     }
     
     func setupTableView(){
         memberTableView.delegate = self
         memberTableView.dataSource = self
+        memberTableView.separatorStyle = .none
         memberTableView.register(UINib(nibName: "GroupDetailsCell", bundle: .main), forCellReuseIdentifier: "groupCell")
     }
     
@@ -61,12 +68,15 @@ class GroupDetailsController: UIViewController {
                 AlerUser().alertUser(viewController: self, title: "Error", message: error.localizedDescription)
             }
             
-            self.adminNameLabel.text = user?.displayName ?? ""
-
-            /**
-             CHANGE WHEN YOU HAVE UIIMAGEVIEW
-             UIIMAGEVIEW.kf.setImage(with: URL(string: user?.photoURL ?? ""))
-             */
+            let adminUserDetailsDict: [String: Any] = [
+                "displayName": user?.displayName ?? "",
+                "email": user?.email ?? "",
+                "photoURL": user?.photoURL ?? "",
+                "uid": user?.uid ?? "",
+            ]
+            
+            self.membersDetails?.insert(adminUserDetailsDict, at: 0)
+            self.memberTableView.reloadData()
         }
     }
 }
@@ -84,8 +94,18 @@ extension GroupDetailsController : UITableViewDelegate , UITableViewDataSource {
             let user = groupUserArray[indexPath.row]
             let username = user["displayName"] as? String ?? ""
             let avtarURL = user["photoURL"] as? String ?? ""
-            cell.setCellData(name: username , image: avtarURL)
+            let userUID = user["uid"] as? String ?? ""
+            
+            if userUID == admin {
+                cell.setCellData(name: username, image: avtarURL, isGroupAdmin: true)
+            } else {
+                cell.setCellData(name: username , image: avtarURL)
+            }
         }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
     }
 }

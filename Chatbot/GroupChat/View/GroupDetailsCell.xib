@@ -4,44 +4,56 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="groupCell" id="KGk-i7-Jjw" customClass="GroupDetailsCell" customModule="Chatbot" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.3.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="QUd-MQ-CCt">
-                        <rect key="frame" x="16" y="9.6666666666666643" width="30" height="27"/>
+                        <rect key="frame" x="16" y="16.666666666666664" width="30" height="28"/>
                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="30" id="fCw-UH-81j"/>
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EqV-1Q-Fna">
-                        <rect key="frame" x="68" y="12" width="227" height="21"/>
+                        <rect key="frame" x="68" y="20" width="41.333333333333343" height="20"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group Admin" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B5j-E0-ikj">
+                        <rect key="frame" x="230.33333333333334" y="20" width="73.666666666666657" height="20"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" red="0.0" green="0.42745098039215684" blue="0.35686274509803922" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="EqV-1Q-Fna" secondAttribute="trailing" constant="25" id="7xx-93-X0s"/>
+                    <constraint firstAttribute="bottom" secondItem="EqV-1Q-Fna" secondAttribute="bottom" constant="20" id="1Tb-bp-JAU"/>
+                    <constraint firstItem="B5j-E0-ikj" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="3yF-dW-PHx"/>
+                    <constraint firstItem="B5j-E0-ikj" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="EqV-1Q-Fna" secondAttribute="trailing" constant="20" id="7Ck-Zt-lTb"/>
                     <constraint firstItem="EqV-1Q-Fna" firstAttribute="leading" secondItem="QUd-MQ-CCt" secondAttribute="trailing" constant="22" id="KHf-Zl-O4Y"/>
-                    <constraint firstAttribute="bottom" secondItem="EqV-1Q-Fna" secondAttribute="bottom" constant="11" id="Ode-Iz-5GB"/>
                     <constraint firstItem="QUd-MQ-CCt" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="f6L-hn-7Gl"/>
-                    <constraint firstItem="QUd-MQ-CCt" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="jny-3B-0l7"/>
-                    <constraint firstItem="EqV-1Q-Fna" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="12" id="k7G-x6-DOK"/>
-                    <constraint firstAttribute="bottom" secondItem="QUd-MQ-CCt" secondAttribute="bottom" constant="7" id="zOG-Xz-W8y"/>
+                    <constraint firstItem="QUd-MQ-CCt" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="jny-3B-0l7"/>
+                    <constraint firstItem="EqV-1Q-Fna" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="k7G-x6-DOK"/>
+                    <constraint firstAttribute="bottom" secondItem="B5j-E0-ikj" secondAttribute="bottom" constant="20" id="l6Q-jb-xTd"/>
+                    <constraint firstAttribute="trailing" secondItem="B5j-E0-ikj" secondAttribute="trailing" constant="16" id="orN-ga-ewe"/>
+                    <constraint firstAttribute="bottom" secondItem="QUd-MQ-CCt" secondAttribute="bottom" constant="15" id="zOG-Xz-W8y"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <color key="backgroundColor" systemColor="systemGray6Color"/>
             <connections>
+                <outlet property="groupAdminLable" destination="B5j-E0-ikj" id="ual-yY-FLY"/>
                 <outlet property="nameLabel" destination="EqV-1Q-Fna" id="f3G-FJ-GFW"/>
                 <outlet property="profileAvatar" destination="QUd-MQ-CCt" id="Djp-Lv-eAY"/>
             </connections>
@@ -50,5 +62,8 @@
     </objects>
     <resources>
         <image name="person.3.fill" catalog="system" width="128" height="66"/>
+        <systemColor name="systemGray6Color">
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
     </resources>
 </document>

@@ -56,7 +56,6 @@ class UserDetailController: UIViewController {
 
     func setupHeaderView() {
         headerView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 90)
-        headerView.backgroundColor = .white
         
         backButton.frame = CGRect(x: 24, y: 60, width: 24, height: 24)
         backButton.setImage(UIImage(systemName: "arrow.backward"), for: .normal)
