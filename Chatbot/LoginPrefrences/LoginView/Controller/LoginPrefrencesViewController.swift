@@ -67,9 +67,7 @@ class LoginPrefrencesViewController: UIViewController {
                                     let listChatView = ListChatViewController()
                                     listChatView.result = result
                                     self.navigationController?.pushViewController(listChatView, animated: true)
-                                case .missingUserId:
-                                    AlerUser().alertUser(viewController: self, title: "Error", message: "\(error)")
-                                case .databaseError:
+                                default:
                                     AlerUser().alertUser(viewController: self, title: "Error", message: "\(error)")
                                 }
                             } else if isSucceeded {

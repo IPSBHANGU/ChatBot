@@ -21,6 +21,13 @@ struct Sender: SenderType {
 
 public enum MessageKind {
     case text(String)
+    
+    var decode:String {
+        switch self {
+        case .text(let text):
+            return text
+        }
+    }
 }
 
 public protocol MessageType {
@@ -121,7 +128,7 @@ class ChatModel: NSObject {
                                          var recipientID: String
                                       }
      */
-    func observeMessages(conversationID: String, currentUserID: String, otherUserID: String, completionHandler: @escaping ([Message]?, _ error: ErrorCode?) -> Void) {
+    func observeMessages(conversationID: String, completionHandler: @escaping ([Message]?, _ error: ErrorCode?) -> Void) {
         var messages: [Message] = []
         messagesDatabase.child(conversationID).observe(.childAdded) { snapshot in
             guard let messageData = snapshot.value as? [String: Any] else {
@@ -147,47 +154,124 @@ class ChatModel: NSObject {
         }
     }
     
-    func updateLastMessage(authUserUID: String?, otherUserUID: String?, message: String, sentDate: Date, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
-            
-        guard let authUserUID = authUserUID, let otherUserUID = otherUserUID else {
-            completionHandler(false, "authUserUID or otherUserUID is nil")
+    func checkConversation(conversationID: String, completionHandler: @escaping (_ isSucceeded: Bool, _ error: ErrorCode?) -> Void) {
+        messagesDatabase.child(conversationID).observeSingleEvent(of: .value) { snapshot in
+            guard snapshot.exists() else {
+                completionHandler(false, .noConversation)
+                return
+            }
+            completionHandler(true, nil)
+        }
+        
+    }
+
+    /**
+     Updates the list of connected users for the specified authenticated user.
+
+     This function fetches connected users from the `LoginModel` using the provided `authUserUID`. It processes each user to gather additional details such as conversation information and last message details before invoking the completion handler.
+
+     - Parameters:
+       - authUserUID: The authenticated user for whom connected users are being updated.
+       - completionHandler: A closure to be called when the update operation completes. It provides an array of user details dictionaries and an optional error message in case of failure.
+         - Parameter users: An array of dictionaries containing details of connected users.
+         - Parameter error: An optional error message indicating the reason for failure, if any.
+     */
+    func updateConnectedUser(authUserUID: AuthenticatedUser?, completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
+        guard let authUser = authUserUID else {
+            completionHandler(nil, "Authenticated user is nil")
             return
         }
         
-        let usersRef = Database.database().reference().child("users")
+        LoginModel().fetchConnectedUsers(authUser: authUser) { users, error in
+            if let error = error {
+                completionHandler(nil, "Failed to fetch connected users: \(error)")
+                return
+            }
+            
+            guard let users = users else {
+                completionHandler(nil, "No users returned")
+                return
+            }
+            
+            self.processUsers(users: users, index: 0, userArray: [], completionHandler: completionHandler)
+        }
+    }
+
+    /**
+     Recursively processes a list of users to gather additional details like conversation and last message information.
+
+     This function iteratively processes each user in the given `users` array, retrieves conversation and message details asynchronously, and constructs user details dictionaries with the gathered information.
+
+     - Parameters:
+       - users: An array of dictionaries representing users to be processed.
+       - index: The current index of the user being processed.
+       - userArray: An array containing dictionaries of user details accumulated during processing.
+       - completionHandler: A closure to be called when user processing completes for all users or encounters an error.
+         - Parameter userArray: An array of dictionaries containing details of processed users.
+         - Parameter error: An optional error message indicating the reason for failure, if any.
+     */
+    private func processUsers(users: [Dictionary<String, Any>], index: Int, userArray: [[String: Any]], completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
+        if index >= users.count {
+            completionHandler(userArray, nil)
+            return
+        }
         
-        // Update authUser's connected users
-        usersRef.child(authUserUID).observeSingleEvent(of: .value) { authUserSnapshot  in
-            guard let authUserData = authUserSnapshot.value as? [String: Any] else {
-                completionHandler(false, "Failed to get authUserData")
-                return
-            }
-            
-            guard let conversationIDDict = authUserData["conversationID"] as? [String: Any],
-                  let conversationID = conversationIDDict["conversationID"] as? String else {
-                completionHandler(false, "Failed to convert conversationID")
-                return
-            }
-            
-            let modifiedConversationID = conversationID.replacingOccurrences(of: "conversationID:", with: "").trimmingCharacters(in: .whitespaces)
-            
-            var connectedUsers = authUserData["connectedUsers"] as? [String: [String:String]] ?? [:]
-            connectedUsers[otherUserUID] = [
-                "conversationID": modifiedConversationID,
-                "lastMessage": message,
-                "lastMessageDate": "\(sentDate)"
-            ]
-            
-            usersRef.child(authUserUID).child("connectedUsers").setValue(connectedUsers) { (error, _) in
-                if let error = error {
-                    completionHandler(false, error.localizedDescription)
-                } else {
-                    completionHandler(true, nil)
+        let user = users[index]
+        
+        self.checkConversation(conversationID: user["conversationID"] as? String ?? "") { isSucceeded, error in
+            if let error = error {
+                switch error {
+                case .noConversation:
+                    let userDetailsDict: [String: Any] = [
+                        "displayName": user["displayName"] as? String ?? "",
+                        "email": user["email"] as? String ?? "",
+                        "photoURL": user["photoURL"] as? String ?? "",
+                        "uid": user["uid"] as? String ?? "",
+                        "conversationID": user["conversationID"] as? String ?? ""
+                    ]
+                    var updatedUserArray = userArray
+                    updatedUserArray.append(userDetailsDict)
+                    
+                    self.processUsers(users: users, index: index + 1, userArray: updatedUserArray, completionHandler: completionHandler)
+                    
+                default:
+                    completionHandler(nil, error.description)
+                }
+            } else if isSucceeded {
+                self.observeMessages(conversationID: user["conversationID"] as? String ?? "") { messages, observeError in
+                    if let observeError = observeError {
+                        completionHandler(nil, "Error observing messages: \(observeError)")
+                        return
+                    }
+                    
+                    if let lastMessage = messages?.last {
+                        let formatter = DateFormatter()
+                        formatter.dateFormat = "h:mm a"
+                        let dateString = formatter.string(from: lastMessage.sentDate)
+                        
+                        let userDetailsDict: [String: Any] = [
+                            "displayName": user["displayName"] as? String ?? "",
+                            "email": user["email"] as? String ?? "",
+                            "photoURL": user["photoURL"] as? String ?? "",
+                            "uid": user["uid"] as? String ?? "",
+                            "conversationID": user["conversationID"] as? String ?? "",
+                            "lastMessage": lastMessage.kind,
+                            "lastMessageTime": dateString,
+                            "lastMessageSender": lastMessage.sender
+                        ]
+                        
+                        var updatedUserArray = userArray
+                        updatedUserArray.append(userDetailsDict)
+                        
+                        self.processUsers(users: users, index: index + 1, userArray: updatedUserArray, completionHandler: completionHandler)
+                    } else {
+                        self.processUsers(users: users, index: index + 1, userArray: userArray, completionHandler: completionHandler)
+                    }
                 }
             }
         }
     }
-    
+
     // Function to remove a specific message from a conversation
     func removeChildNodeFromConversation(conversationId: String, messageId: String, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> ()) {
         

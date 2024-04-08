@@ -96,13 +96,16 @@ class ChatController: UIViewController {
     }
     
     func observeMessages() {
-        ChatModel().observeMessages(conversationID: conversationID ?? "", currentUserID: self.authUser?.uid ?? "", otherUserID: self.senderUID ?? "") { message in
-            
+        ChatModel().observeMessages(conversationID: conversationID ?? "") { message,error  in
+            if let error = error {
+                AlerUser().alertUser(viewController: self, title: "Error", message: "\(error)")
+                return
+            }
             // empty message array every time
             self.messages.removeAll()
             
             // Append the new message to the messages array
-            self.messages.append(contentsOf: message)
+            self.messages.append(contentsOf: message!)
             
             // Reload the messages collection view to display the new message
             self.messageTableView.reloadData()

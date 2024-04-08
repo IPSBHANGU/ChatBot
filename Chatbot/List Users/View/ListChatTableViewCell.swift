@@ -31,7 +31,7 @@ class ListChatTableViewCell: UITableViewCell {
         nameLabel.text = username ?? ""
         nameLabel.font = UIFont(name: "Rubik-SemiBold", size: 15)
         nameLabel.textColor = UIColorHex().hexStringToUIColor(hex: "#191919")
-        messageLabel.text = userRecentMeassage ?? ""
+        messageLabel.text = userRecentMeassage ?? "Tap to start chat"
         messageLabel.font = UIFont(name: "Rubik-Regular", size: 14)
         messageLabel.textColor = UIColorHex().hexStringToUIColor(hex: "#A2A2A2")
         timingLabel.text = meassageTime ?? ""
