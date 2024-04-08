@@ -321,10 +321,11 @@ class GroupModel: NSObject {
                                          var recipientID: String
                                       }
      */
-    func observeGroupMessages(conversationID: String, currentUserID: String, completionHandler: @escaping ([GroupMessage]) -> Void) {
+    func observeGroupMessages(conversationID: String, completionHandler: @escaping ([GroupMessage]?, _ error: ErrorCode?) -> Void) {
         var messages: [GroupMessage] = []
         messagesDatabase.child(conversationID).observe(.childAdded) { snapshot in
             guard let messageData = snapshot.value as? [String: Any] else {
+                completionHandler(nil, .noMessage)
                 return
             }
             
@@ -344,7 +345,7 @@ class GroupModel: NSObject {
                 senderAvtar: photoURL
             )
             messages.append(message)
-            completionHandler(messages)
+            completionHandler(messages, nil)
         }
     }
     
@@ -390,4 +391,118 @@ class GroupModel: NSObject {
              }
          }
      }
+    
+    func checkConversation(conversationID: String, completionHandler: @escaping (_ isSucceeded: Bool, _ error: ErrorCode?) -> Void) {
+        messagesDatabase.child(conversationID).observeSingleEvent(of: .value) { snapshot in
+            guard snapshot.exists() else {
+                completionHandler(false, .noConversation)
+                return
+            }
+            completionHandler(true, nil)
+        }
+
+    }
+    
+    /**
+      Updates the list of connected groups for the specified authenticated user.
+      This function fetches connected groups from the `fetchConnectedUsersInGroupChatInDB` using the provided `authUserUID`. It processes each user to gather additional details such as conversation information and last message details before invoking the completion handler.
+      - Parameters:
+        - authUserUID: The authenticated user for whom connected users are being updated.
+        - completionHandler: A closure to be called when the update operation completes. It provides an array of group details dictionaries and an optional error message in case of failure.
+          - Parameter groups: An array of dictionaries containing details of connected groups.
+          - Parameter error: An optional error message indicating the reason for failure, if any.
+      */
+     func updateConnectedGroup(authUserUID: AuthenticatedUser?, completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
+         guard let authUser = authUserUID else {
+             completionHandler(nil, "Authenticated user is nil")
+             return
+         }
+
+         self.fetchConnectedUsersInGroupChatInDB(authUser: authUser, completionHandler: { groups, error in
+             if let error = error {
+                 completionHandler(nil, "Failed to fetch connected users: \(error)")
+                 return
+             }
+
+             guard let groups = groups else {
+                 completionHandler(nil, "No groups")
+                 return
+             }
+
+             self.processGroups(groups: groups, index: 0, groupArray: [], completionHandler: completionHandler)
+         })
+     }
+                                                 
+    /**
+     Recursively processes a list of groups to gather additional details like conversation and last message information.
+     This function iteratively processes each group in the given `groups` array, retrieves conversation and message details asynchronously, and constructs group details dictionaries with the gathered information.
+     - Parameters:
+       - groups: An array of dictionaries representing groups to be processed.
+       - index: The current index of the user being processed.
+       - groupArray: An array containing dictionaries of group details accumulated during processing.
+       - completionHandler: A closure to be called when user processing completes for all groups or encounters an error.
+         - Parameter userArray: An array of dictionaries containing details of processed users.
+         - Parameter error: An optional error message indicating the reason for failure, if any.
+     */
+    private func processGroups(groups: [Dictionary<String, Any>], index: Int, groupArray: [[String: Any]], completionHandler: @escaping ([Dictionary<String, Any>]?, String?) -> Void) {
+        if index >= groups.count {
+            completionHandler(groupArray, nil)
+            return
+        }
+
+        let group = groups[index]
+
+        self.checkConversation(conversationID: group["conversationID"] as? String ?? "") { isSucceeded, error in
+            if let error = error {
+                switch error {
+                case .noConversation:
+                    let groupDetailsDict: [String: Any] = [
+                        "conversationID": group["conversationID"] as? String ?? "",
+                        "groupName": group["groupName"] as? String ?? "",
+                        "groupAdmin": group["groupAdmin"] as? String ?? "",
+                        "groupAvtar": group["groupAvtar"] as? String ?? "",
+                        "groupMembers": group["groupMembers"] as? [String] ?? []
+                    ]
+                    var updatedGroupArray = groupArray
+                    updatedGroupArray.append(groupDetailsDict)
+
+                    self.processGroups(groups: groups, index: index + 1, groupArray: updatedGroupArray, completionHandler: completionHandler)
+
+                default:
+                    completionHandler(nil, error.description)
+                }
+            } else if isSucceeded {
+                self.observeGroupMessages(conversationID: group["conversationID"] as? String ?? "", completionHandler: { messages, observeError in
+                    if let observeError = observeError {
+                        completionHandler(nil, "Error observing messages: \(observeError)")
+                        return
+                    }
+
+                    if let lastMessage = messages?.last {
+                        let formatter = DateFormatter()
+                        formatter.dateFormat = "h:mm a"
+                        let dateString = formatter.string(from: lastMessage.sentDate)
+
+                        let groupDetailsDict: [String: Any] = [
+                            "conversationID": group["conversationID"] as? String ?? "",
+                            "groupName": group["groupName"] as? String ?? "",
+                            "groupAdmin": group["groupAdmin"] as? String ?? "",
+                            "groupAvtar": group["groupAvtar"] as? String ?? "",
+                            "groupMembers": group["groupMembers"] as? [String] ?? [],
+                            "lastMessage": lastMessage.kind,
+                            "lastMessageTime": dateString,
+                            "lastMessageSender": lastMessage.sender
+                        ]
+
+                        var updatedGroupArray = groupArray
+                        updatedGroupArray.append(groupDetailsDict)
+
+                        self.processGroups(groups: groups, index: index + 1, groupArray: updatedGroupArray, completionHandler: completionHandler)
+                    } else {
+                        self.processGroups(groups: groups, index: index + 1, groupArray: groupArray, completionHandler: completionHandler)
+                    }
+                })
+            }
+        }
+    }
 }

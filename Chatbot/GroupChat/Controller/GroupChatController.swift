@@ -150,13 +150,16 @@ class GroupChatController: UIViewController {
     }
     
     func observeMessages() {
-        GroupModel().observeGroupMessages(conversationID: conversationID ?? "", currentUserID: self.authUser?.uid ?? "") { message in
+        GroupModel().observeGroupMessages(conversationID: conversationID ?? "") { message,error  in
             
+            if let error = error {
+                print(error)
+            }
             // empty message array every time
             self.messages.removeAll()
             
             // Append the new message to the messages array
-            self.messages.append(contentsOf: message)
+            self.messages.append(contentsOf: message!)
             
             // Reload the messages collection view to display the new message
             self.messageTableView.reloadData()

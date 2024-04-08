@@ -113,7 +113,7 @@ class ListChatViewController: UIViewController {
     }
     
     func fetchGroups(){
-        GroupModel().fetchConnectedUsersInGroupChatInDB(authUser: authUser) { group, error in
+        GroupModel().updateConnectedGroup(authUserUID: authUser) { group, error in
             self.activityIndicatorView.startAnimating()
             if let error = error {
                 AlerUser().alertUser(viewController: self, title: "Error", message: error)
@@ -325,30 +325,10 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
                 let user = chatUserArray[indexPath.row]
                 let groupName = user["groupName"] as? String ?? ""
                 let groupAvtar = user["groupAvtar"] as? String ?? ""
-                let conversationID = user["conversationID"] as? String ?? ""
-                cell.setCellData(userImage: groupAvtar, username: groupName, userRecentMeassage: "", meassageTime: "")
+                let lastMessage = user["lastMessage"] as? MessageKind
+                let lastMessageTime = user["lastMessageTime"] as? String ?? ""
                 
-//                // Get the last message text
-//                GroupModel().observeGroupMessages(conversationID: conversationID, currentUserID: authUser?.uid ?? "") { messages in
-//                    if let lastMessage = messages.last {
-//                        let formatter = DateFormatter()
-//                        formatter.dateFormat = "h:mm a"
-//                        let dateString = formatter.string(from: lastMessage.sentDate)
-//                        
-//                        let lastMessageText: String
-//                        switch lastMessage.kind {
-//                        case .text(let text):
-//                            lastMessageText = text
-//                        default:
-//                            lastMessageText = "Unsupported message type"
-//                        }
-//                        
-//                        // make my life more complex, use group avatar as latest msg by user's svtar
-//                        let photoURL = lastMessage.senderAvtar
-//                        
-//                        cell.setCellData(userImage: photoURL, username: groupName, userRecentMeassage: lastMessageText, meassageTime: dateString)
-//                    }
-//                }
+                cell.setCellData(userImage: groupAvtar, username: groupName, userRecentMeassage: lastMessage?.decode, meassageTime: lastMessageTime)
             }
         } else {
             if let chatUserArray = filteredChatUserArray, indexPath.row < chatUserArray.count {
