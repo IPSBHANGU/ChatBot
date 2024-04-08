@@ -27,6 +27,7 @@ enum ErrorCode: Int {
     case missingUserId = 1001
     case userAlreadyExists = 1002
     case databaseError = 1003
+    case noMessage = 1004
     
     var description: String {
         switch self {
@@ -36,6 +37,8 @@ enum ErrorCode: Int {
             return "User already exists in the database"
         case .databaseError:
             return "Database error occurred"
+        case .noMessage:
+            return "No Message Found"
         }
     }
 }

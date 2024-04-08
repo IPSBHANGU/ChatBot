@@ -360,8 +360,21 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
                 let conversationID = ChatModel().generateConversationID(user1ID: authUser?.uid ?? "", user2ID: senderUID)
                 
                 // Get the last message text
-                ChatModel().observeMessages(conversationID: conversationID, currentUserID: self.authUser?.uid ?? "", otherUserID: senderUID) { messages in
-                    if let lastMessage = messages.last {
+                ChatModel().observeMessages(conversationID: conversationID, currentUserID: self.authUser?.uid ?? "", otherUserID: senderUID) { messages,error  in
+                    if let error = error {
+                        switch error {
+                        case .noMessage:
+                            cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: "Tap to start Chat", meassageTime: "")
+                            
+                        case .missingUserId:
+                            <#code#>
+                        case .userAlreadyExists:
+                            <#code#>
+                        case .databaseError:
+                            <#code#>
+                        }
+                    }
+                    if let lastMessage = messages?.last {
                         let formatter = DateFormatter()
                         formatter.dateFormat = "h:mm a"
                         let dateString = formatter.string(from: lastMessage.sentDate)

@@ -121,10 +121,11 @@ class ChatModel: NSObject {
                                          var recipientID: String
                                       }
      */
-    func observeMessages(conversationID: String, currentUserID: String, otherUserID: String, completionHandler: @escaping ([Message]) -> Void) {
+    func observeMessages(conversationID: String, currentUserID: String, otherUserID: String, completionHandler: @escaping ([Message]?, _ error: ErrorCode?) -> Void) {
         var messages: [Message] = []
         messagesDatabase.child(conversationID).observe(.childAdded) { snapshot in
             guard let messageData = snapshot.value as? [String: Any] else {
+                completionHandler(nil, .noMessage)
                 return
             }
             
@@ -142,7 +143,7 @@ class ChatModel: NSObject {
                 kind: .text(text)
             )
             messages.append(message)
-            completionHandler(messages)
+            completionHandler(messages, nil)
         }
     }
     
