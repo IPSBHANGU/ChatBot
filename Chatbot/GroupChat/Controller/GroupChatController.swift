@@ -35,6 +35,9 @@ class GroupChatController: UIViewController {
         inputTextField.becomeFirstResponder()
         
         observeMessages()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         setupHeaderView()
         setupTableView()
     }
