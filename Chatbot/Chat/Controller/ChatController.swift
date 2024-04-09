@@ -98,7 +98,7 @@ class ChatController: UIViewController {
     func observeMessages() {
         ChatModel().observeMessages(conversationID: conversationID ?? "") { message,error  in
             if let error = error {
-                AlerUser().alertUser(viewController: self, title: "Error", message: "\(error)")
+                //AlerUser().alertUser(viewController: self, title: "Error", message: "\(error)")
                 return
             }
             // empty message array every time

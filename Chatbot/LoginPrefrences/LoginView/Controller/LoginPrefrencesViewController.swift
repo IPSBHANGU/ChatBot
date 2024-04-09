@@ -24,11 +24,29 @@ class LoginPrefrencesViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         setupFonts()
+        setupUI()
     }
     
     func setupFonts(){
         titleLable.text = "ChatApp"
         titleLable.font = UIFont(name: "Gill Sans", size: 30)
+    }
+    
+    func setupUI(){
+        signUpButton.layer.borderColor = UIColor.black.cgColor
+        signUpButton.layer.borderWidth = 1.0
+        signUpButton.layer.cornerRadius = 5
+        signUpButton.backgroundColor = .systemGray6
+        
+        googleSignInButton.layer.borderColor = UIColor.black.cgColor
+        googleSignInButton.layer.borderWidth = 1.0
+        googleSignInButton.layer.cornerRadius = 5
+        googleSignInButton.backgroundColor = .systemGray6
+        
+        signInButton.layer.borderColor = UIColor.black.cgColor
+        signInButton.layer.borderWidth = 1.0
+        signInButton.layer.cornerRadius = 5
+        signInButton.backgroundColor = .systemGray6
     }
     
     @IBAction func signUpaction(_ sender: Any) {

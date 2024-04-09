@@ -10,7 +10,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GroupChatController" customModule="Chatbot" customModuleProvider="target">
             <connections>
-                <outlet property="inputTextField" destination="VuC-IJ-sUv" id="GdX-wF-jE8"/>
+                <outlet property="inputTextView" destination="A5e-Ua-cYb" id="bQv-ld-t3S"/>
                 <outlet property="sendButton" destination="1td-Ff-V3o" id="rvs-6n-xk9"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -20,71 +20,61 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nn4-tU-5GT">
-                    <rect key="frame" x="24" y="768" width="346" height="84"/>
-                    <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="KDu-kD-ol0">
-                            <rect key="frame" x="10" y="0.0" width="336" height="56"/>
-                            <subviews>
-                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Send a message..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VuC-IJ-sUv">
-                                    <rect key="frame" x="0.0" y="0.0" width="264" height="56"/>
-                                    <color key="backgroundColor" systemColor="systemGray6Color"/>
-                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                                    <textInputTraits key="textInputTraits"/>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                            <integer key="value" value="28"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                </textField>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1td-Ff-V3o">
-                                    <rect key="frame" x="280" y="0.0" width="56" height="56"/>
-                                    <color key="backgroundColor" red="0.8862745098" green="0.87058823529999996" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="56" id="ZEI-gl-o4B"/>
-                                    </constraints>
-                                    <color key="tintColor" red="0.40784313729999999" green="0.23137254900000001" blue="0.84705882349999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                    <state key="normal" title="Button"/>
-                                    <buttonConfiguration key="configuration" style="plain" image="bubble.fill" catalog="system"/>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                            <integer key="value" value="28"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                    <connections>
-                                        <action selector="sendButtonAction:" destination="-1" eventType="touchUpInside" id="1Uu-Ws-K02"/>
-                                    </connections>
-                                </button>
-                            </subviews>
-                        </stackView>
-                    </subviews>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1td-Ff-V3o">
+                    <rect key="frame" x="314" y="754" width="56" height="56"/>
+                    <color key="backgroundColor" red="0.8862745098" green="0.87058823529999996" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     <constraints>
-                        <constraint firstAttribute="trailing" secondItem="KDu-kD-ol0" secondAttribute="trailing" id="8E9-m8-A2Q"/>
-                        <constraint firstItem="KDu-kD-ol0" firstAttribute="leading" secondItem="nn4-tU-5GT" secondAttribute="leading" constant="10" id="FNu-0P-H6P"/>
-                        <constraint firstAttribute="bottom" secondItem="KDu-kD-ol0" secondAttribute="bottom" constant="28" id="aXe-J0-scq"/>
-                        <constraint firstAttribute="height" constant="84" id="afA-5t-Wq9"/>
-                        <constraint firstItem="KDu-kD-ol0" firstAttribute="top" secondItem="nn4-tU-5GT" secondAttribute="top" id="cee-j5-aNe"/>
+                        <constraint firstAttribute="height" constant="56" id="RVU-6f-Mzf"/>
+                        <constraint firstAttribute="width" constant="56" id="ZEI-gl-o4B"/>
                     </constraints>
-                </view>
+                    <color key="tintColor" red="0.40784313729999999" green="0.23137254900000001" blue="0.84705882349999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" image="bubble.fill" catalog="system"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <integer key="value" value="28"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="sendButtonAction:" destination="-1" eventType="touchUpInside" id="1Uu-Ws-K02"/>
+                    </connections>
+                </button>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="A5e-Ua-cYb" customClass="GrowingTextView" customModule="GrowingTextView">
+                    <rect key="frame" x="24" y="780" width="270" height="30"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="textColor" systemColor="labelColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="minHeight">
+                            <real key="value" value="56"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="maxHeight">
+                            <real key="value" value="240"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Enter Text"/>
+                    </userDefinedRuntimeAttributes>
+                </textView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
-                <constraint firstItem="nn4-tU-5GT" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="24" id="Cfp-qn-dWm"/>
-                <constraint firstAttribute="bottom" secondItem="nn4-tU-5GT" secondAttribute="bottom" id="KXj-n0-xBY"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="nn4-tU-5GT" secondAttribute="trailing" constant="23" id="OSE-hp-O3Z"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="A5e-Ua-cYb" secondAttribute="bottom" constant="8" id="5cJ-Zs-aQX"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="1td-Ff-V3o" secondAttribute="trailing" constant="23" id="JTu-nJ-VZm"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="1td-Ff-V3o" secondAttribute="bottom" constant="8" id="bu2-7W-HI5"/>
+                <constraint firstItem="A5e-Ua-cYb" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="24" id="pLD-oO-krK"/>
+                <constraint firstItem="1td-Ff-V3o" firstAttribute="leading" secondItem="A5e-Ua-cYb" secondAttribute="trailing" constant="20" id="r4P-BY-RfT"/>
             </constraints>
             <point key="canvasLocation" x="84" y="21"/>
         </view>
     </objects>
     <resources>
         <image name="bubble.fill" catalog="system" width="128" height="110"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGray6Color">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

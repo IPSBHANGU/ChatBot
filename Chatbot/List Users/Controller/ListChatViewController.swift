@@ -90,7 +90,7 @@ class ListChatViewController: UIViewController {
         ChatModel().updateConnectedUser(authUserUID: authUser) { users, error in
             self.activityIndicatorView.startAnimating()
             if let error = error {
-                AlerUser().alertUser(viewController: self, title: "Error", message: error)
+                //AlerUser().alertUser(viewController: self, title: "Error", message: error)
                 return
             }
             self.chatUserArray?.removeAll()
@@ -116,7 +116,7 @@ class ListChatViewController: UIViewController {
         GroupModel().updateConnectedGroup(authUserUID: authUser) { group, error in
             self.activityIndicatorView.startAnimating()
             if let error = error {
-                AlerUser().alertUser(viewController: self, title: "Error", message: error)
+                //AlerUser().alertUser(viewController: self, title: "Error", message: error)
             }
             self.chatUserArray = group
             self.filteredChatUserArray = self.chatUserArray

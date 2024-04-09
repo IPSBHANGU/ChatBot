@@ -9,6 +9,7 @@ import UIKit
 import FirebaseAuth
 import Kingfisher
 import FirebaseDatabaseInternal
+import GrowingTextView
 
 class GroupChatController: UIViewController {
     
@@ -27,19 +28,29 @@ class GroupChatController: UIViewController {
     lazy var messageTableView = UITableView()
     
     @IBOutlet weak var sendButton: UIButton!
-    @IBOutlet weak var inputTextField: UITextField!
+    @IBOutlet weak var inputTextView: GrowingTextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        inputTextField.delegate = self
-        inputTextField.becomeFirstResponder()
-        
+
+        setInputTF()
         observeMessages()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         setupHeaderView()
         setupTableView()
+    }
+    
+    func setInputTF(){
+        inputTextView.isScrollEnabled = false
+        inputTextView.delegate = self
+        inputTextView.becomeFirstResponder()
+        inputTextView.font = UIFont(name: "Rubik-Regular.ttf", size: 25)
+        inputTextView.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#F4F4F4")
+        messageTableView.isUserInteractionEnabled = true
+        inputTextView.layer.cornerRadius = 15
+        inputTextView.layer.masksToBounds = true
     }
     
     func setupHeaderView() {
@@ -177,9 +188,13 @@ class GroupChatController: UIViewController {
     
     
     @IBAction func sendButtonAction(_ sender: Any) {
-        guard let messageText = inputTextField.text, !messageText.isEmpty else {
+        guard let messageText = inputTextView.text, !messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return
         }
+        
+        self.inputTextView.text = ""
+        
+        inputTextView.frame.size = inputTextView.sizeThatFits(CGSize(width: inputTextView.frame.width, height: 56))
         
         let newMessage = GroupMessage(sender: Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? ""),
                                  messageId: "\(authUser?.uid ?? "")", // Set an appropriate message ID
@@ -198,7 +213,7 @@ class GroupChatController: UIViewController {
                 AlerUser().alertUser(viewController: self, title: "Error", message: error)
             } else {
                 // Clear the input text after sending message
-                self.inputTextField.text = ""
+                self.inputTextView.text = ""
             }
         }
     }
@@ -234,8 +249,9 @@ extension GroupChatController:UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension GroupChatController : UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-    }
+extension GroupChatController : GrowingTextViewDelegate {
+    
+    func textViewDidChange(_ textView: UITextView) {
+        sendButton.isEnabled = true
+       }
 }
