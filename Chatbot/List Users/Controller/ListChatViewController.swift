@@ -328,7 +328,7 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
                 let lastMessage = user["lastMessage"] as? MessageKind
                 let lastMessageTime = user["lastMessageTime"] as? String ?? ""
                 
-                cell.setCellData(userImage: groupAvtar, username: groupName, userRecentMeassage: lastMessage?.decode, meassageTime: lastMessageTime)
+                cell.setCellData(userImage: groupAvtar, username: groupName, userRecentMeassage: lastMessage?.decode, meassageTime: lastMessageTime, messageReadState: true)
             }
         } else {
             if let chatUserArray = filteredChatUserArray, indexPath.row < chatUserArray.count {
@@ -338,8 +338,9 @@ extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
                 let avtarURL = user["photoURL"] as? String ?? ""
                 let lastMessage = user["lastMessage"] as? MessageKind
                 let lastMessageTime = user["lastMessageTime"] as? String ?? ""
+                let state = user["state"] as? Bool ?? true
                 
-                cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: lastMessage?.decode, meassageTime: lastMessageTime)
+                cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: lastMessage?.decode, meassageTime: lastMessageTime, messageReadState: state)
             }
         }
         return cell

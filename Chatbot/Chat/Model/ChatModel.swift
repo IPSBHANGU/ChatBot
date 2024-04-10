@@ -6,12 +6,14 @@
 //
 
 import FirebaseDatabaseInternal
+import FirebaseAuth
 
 struct Message: MessageType {
     var sender: SenderType
     var messageId: String
     var sentDate: Date
     var kind: MessageKind
+    var state: Bool
 }
 
 struct Sender: SenderType {
@@ -102,7 +104,8 @@ class ChatModel: NSObject {
             "senderId": sender?.uid ?? "",
             "displayName": sender?.displayName ?? "",
             "text": message ?? "",
-            "sentDate": Date().timeIntervalSince1970
+            "sentDate": Date().timeIntervalSince1970,
+            "state": false
         ] as [String : Any]
         
         messageRef.setValue(newMessage) { (error, _) in
@@ -141,13 +144,15 @@ class ChatModel: NSObject {
             let displayName = messageData["displayName"] as? String ?? ""
             let text = messageData["text"] as? String ?? ""
             let sentDate = messageData["sentDate"] as? TimeInterval ?? 0
+            let state = messageData["state"] as? Bool ?? true
             
             // Create a Message object
             let message = Message(
                 sender: Sender(senderId: senderId, displayName: displayName),
                 messageId: snapshot.key,
                 sentDate: Date(timeIntervalSince1970: sentDate),
-                kind: .text(text)
+                kind: .text(text),
+                state: state
             )
             messages.append(message)
             completionHandler(messages, nil)
@@ -249,21 +254,41 @@ class ChatModel: NSObject {
                         formatter.dateFormat = "h:mm a"
                         let dateString = formatter.string(from: lastMessage.sentDate)
                         
-                        let userDetailsDict: [String: Any] = [
-                            "displayName": user["displayName"] as? String ?? "",
-                            "email": user["email"] as? String ?? "",
-                            "photoURL": user["photoURL"] as? String ?? "",
-                            "uid": user["uid"] as? String ?? "",
-                            "conversationID": user["conversationID"] as? String ?? "",
-                            "lastMessage": lastMessage.kind,
-                            "lastMessageTime": dateString,
-                            "lastMessageSender": lastMessage.sender
-                        ]
-                        
-                        var updatedUserArray = userArray
-                        updatedUserArray.append(userDetailsDict)
-                        
-                        self.processUsers(users: users, index: index + 1, userArray: updatedUserArray, completionHandler: completionHandler)
+                        if Auth.auth().currentUser?.uid != lastMessage.sender.senderId {
+                            
+                            let userDetailsDict: [String: Any] = [
+                                "displayName": user["displayName"] as? String ?? "",
+                                "email": user["email"] as? String ?? "",
+                                "photoURL": user["photoURL"] as? String ?? "",
+                                "uid": user["uid"] as? String ?? "",
+                                "conversationID": user["conversationID"] as? String ?? "",
+                                "state": lastMessage.state,
+                                "lastMessage": lastMessage.kind,
+                                "lastMessageTime": dateString,
+                                "lastMessageSender": lastMessage.sender
+                            ]
+                            
+                            var updatedUserArray = userArray
+                            updatedUserArray.append(userDetailsDict)
+                            
+                            self.processUsers(users: users, index: index + 1, userArray: updatedUserArray, completionHandler: completionHandler)
+                        } else {
+                            let userDetailsDict: [String: Any] = [
+                                "displayName": user["displayName"] as? String ?? "",
+                                "email": user["email"] as? String ?? "",
+                                "photoURL": user["photoURL"] as? String ?? "",
+                                "uid": user["uid"] as? String ?? "",
+                                "conversationID": user["conversationID"] as? String ?? "",
+                                "lastMessage": lastMessage.kind,
+                                "lastMessageTime": dateString,
+                                "lastMessageSender": lastMessage.sender
+                            ]
+                            
+                            var updatedUserArray = userArray
+                            updatedUserArray.append(userDetailsDict)
+                            
+                            self.processUsers(users: users, index: index + 1, userArray: updatedUserArray, completionHandler: completionHandler)
+                        }
                     } else {
                         self.processUsers(users: users, index: index + 1, userArray: userArray, completionHandler: completionHandler)
                     }
@@ -285,4 +310,38 @@ class ChatModel: NSObject {
             }
         }
     }
+    
+    func markMessagesRead(conversationId: String, messages: [Message], index: Int, completionHandler: @escaping (_ isSucceeded: Bool, _ error: ErrorCode?) -> ()) {
+        guard let currentUserUID = Auth.auth().currentUser?.uid else {
+            completionHandler(false, .missingUserId)
+            return
+        }
+
+        guard index < messages.count else {
+            // All messages have been processed
+            completionHandler(true, nil)
+            return
+        }
+
+        let message = messages[index]
+        let messageId = message.messageId
+        let senderId = message.sender.senderId
+
+        // Check if the message sender is not the current user
+        if senderId != currentUserUID {
+            let messageIdRef = messagesDatabase.child(conversationId).child(messageId)
+            messageIdRef.updateChildValues(["state": true]) { error, databaseRef in
+                if let error = error {
+                    completionHandler(false, .databaseError)
+                } else {
+                    // Move to the next message
+                    self.markMessagesRead(conversationId: conversationId, messages: messages, index: index + 1, completionHandler: completionHandler)
+                }
+            }
+        } else {
+            // Skip marking this message as read (not by current user)
+            self.markMessagesRead(conversationId: conversationId, messages: messages, index: index + 1, completionHandler: completionHandler)
+        }
+    }
+
 }

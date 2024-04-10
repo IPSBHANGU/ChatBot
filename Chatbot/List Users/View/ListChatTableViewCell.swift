@@ -14,6 +14,7 @@ class ListChatTableViewCell: UITableViewCell {
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var messageLabel: UILabel!
     @IBOutlet var timingLabel: UILabel!
+    @IBOutlet weak var newMessageStatus: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -26,7 +27,7 @@ class ListChatTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func setCellData(userImage:String?, username:String?, userRecentMeassage:String?, meassageTime:String?) {
+    func setCellData(userImage:String?, username:String?, userRecentMeassage:String?, meassageTime:String?, messageReadState:Bool?) {
         profileImageView.kf.setImage(with: URL(string: userImage ?? ""))
         nameLabel.text = username ?? ""
         nameLabel.font = UIFont(name: "Rubik-SemiBold", size: 15)
@@ -36,7 +37,14 @@ class ListChatTableViewCell: UITableViewCell {
         messageLabel.textColor = UIColorHex().hexStringToUIColor(hex: "#A2A2A2")
         timingLabel.text = meassageTime ?? ""
         timingLabel.font = UIFont(name: "Rubik-Regular", size: 13)
-        timingLabel.textColor = UIColorHex().hexStringToUIColor(hex: "#A2A2A2")
+        if messageReadState == false {
+            timingLabel.textColor = .black
+            timingLabel.font = UIFont(name: "Rubik-SemiBold", size: 12)
+        } else {
+            timingLabel.textColor = UIColorHex().hexStringToUIColor(hex: "#A2A2A2")
+        }
+        newMessageStatus.isHidden = messageReadState ?? true
+        newMessageStatus.layer.cornerRadius = 5
     }
     
 }

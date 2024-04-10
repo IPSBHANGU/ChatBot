@@ -30,7 +30,7 @@ class MessageTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    func setCellData(message: String?, messageStatus:String?, senderAvtar:String?, isCurrentUser: Bool) {
+    func setCellData(message: String?, messageStatus:String?, senderAvtar:String?, isCurrentUser: Bool, messageReadStatus:Bool = true) {
         messageLable.numberOfLines = 0
         bubbleView.layer.cornerRadius = 20
         messageLable.text = message ?? ""
@@ -46,6 +46,9 @@ class MessageTableViewCell: UITableViewCell {
             messageLable.textColor = .white
             messageTime.textColor = UIColorHex().hexStringToUIColor(hex: "#9BBFE0")
             messageSepratorDotView.isHidden = false
+            if messageReadStatus == true {
+                messageStatusLable.text = "Read"
+            }
             messageStatusLable.isHidden = false
             messageStatusLable.textColor = .white
             bubbleViewTrailing = bubbleViewTrailing.setRelation(relation: .equal, constant: 60)
@@ -55,7 +58,7 @@ class MessageTableViewCell: UITableViewCell {
             } else {
                 senderAvtarView.image = UIImage(systemName: "person.circle")
             }
-            senderAvtarView.layer.cornerRadius = senderAvtarView.frame.height / 2
+            senderAvtarView.layer.cornerRadius = 16
         }
         else
         {
@@ -77,7 +80,7 @@ class MessageTableViewCell: UITableViewCell {
             } else {
                 recieverAvtarView.image = UIImage(systemName: "person.circle")
             }
-            recieverAvtarView.layer.cornerRadius = recieverAvtarView.frame.height / 2
+            recieverAvtarView.layer.cornerRadius = 16
         }
     }
 }
