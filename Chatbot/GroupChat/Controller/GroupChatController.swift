@@ -255,6 +255,10 @@ extension GroupChatController:UITableViewDelegate, UITableViewDataSource {
         }
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        false
+    }
 }
 
 extension GroupChatController : GrowingTextViewDelegate {
