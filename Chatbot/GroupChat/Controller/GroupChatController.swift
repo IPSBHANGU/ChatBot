@@ -30,6 +30,10 @@ class GroupChatController: UIViewController {
     @IBOutlet weak var sendButton: UIButton!
     @IBOutlet weak var inputTextView: GrowingTextView!
     
+    // MessageActions
+    var editMessageAction:Bool = false
+    var currentMessage:GroupMessage?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -133,16 +137,29 @@ class GroupChatController: UIViewController {
         var messageActions:[UIAlertAction] = [copyAction, cancelAction]
 
         if authUser?.uid == selectedMessage.sender.senderId {
+            let editAction = UIAlertAction(title: "Edit Message", style: .default) { _ in
+                self.updateMessage(at: indexPath)
+            }
+            
             let deleteAction = UIAlertAction(title: "Delete Message", style: .destructive) { _ in
                 self.deleteMessage(at: indexPath)
             }
 
+            messageActions.append(editAction)
             messageActions.append(deleteAction)
         }
 
         AlerUser().alertUser(viewController: self, title: messageString, message: "Message Options", actions: messageActions)
     }
 
+    
+    func updateMessage(at indexPath: IndexPath) {
+        editMessageAction = true
+        currentMessage = messages[indexPath.row]
+        inputTextView.placeholder = messages[indexPath.row].kind.decode
+        sendButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
+    }
+    
     func deleteMessage(at indexPath: IndexPath) {
         // Update database
         GroupModel().removeChildNodeFromConversation(conversationId: conversationID ?? "", messageId: messages[indexPath.row].messageId) { isSucceeded, error in
@@ -206,24 +223,38 @@ class GroupChatController: UIViewController {
         
         inputTextView.frame.size = inputTextView.sizeThatFits(CGSize(width: inputTextView.frame.width, height: 56))
         
-        let newMessage = GroupMessage(sender: Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? ""),
-                                 messageId: "\(authUser?.uid ?? "")", // Set an appropriate message ID
-                                 sentDate: Date(),
-                                      kind: .text(messageText), senderAvtar: authUser?.photoURL ?? "", state: false)
-
-        // Append the new message to the messages array
-        messages.append(newMessage)
-
-        // Reload the table view to display the new message
-        messageTableView.reloadData()
-
-
-        GroupModel().sendGroupMessage(conversationID: conversationID ?? "", sender: authUser, message: messageText) { error in
-            if let error = error {
-                AlerUser().alertUser(viewController: self, title: "Error", message: error)
-            } else {
-                // Clear the input text after sending message
-                self.inputTextView.text = ""
+        if editMessageAction == false {
+            let newMessage = GroupMessage(sender: Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? ""),
+                                          messageId: "\(authUser?.uid ?? "")", // Set an appropriate message ID
+                                          sentDate: Date(),
+                                          kind: .text(messageText), senderAvtar: authUser?.photoURL ?? "", state: false)
+            
+            // Append the new message to the messages array
+            messages.append(newMessage)
+            
+            // Reload the table view to display the new message
+            messageTableView.reloadData()
+            
+            
+            GroupModel().sendGroupMessage(conversationID: conversationID ?? "", sender: authUser, message: messageText) { error in
+                if let error = error {
+                    AlerUser().alertUser(viewController: self, title: "Error", message: error)
+                } else {
+                    // Clear the input text after sending message
+                    self.inputTextView.text = ""
+                }
+            }
+        } else {
+            GroupModel().editChildNodeFromConversation(conversationId: conversationID ?? "", message: currentMessage!, updatedMessageText: messageText) { isSucceeded, error in
+                if let error = error {
+                    AlerUser().alertUser(viewController: self, title: "Error", message: error)
+                }
+                
+                if isSucceeded {
+                    self.editMessageAction = false
+                    self.sendButton.setImage(UIImage(systemName: "bubble.fill"), for: .normal)
+                    self.observeMessages()
+                }
             }
         }
     }

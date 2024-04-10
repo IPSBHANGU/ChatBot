@@ -29,6 +29,10 @@ class ChatController: UIViewController {
     
     var photoUrl:URL?
     
+    // MessageActions
+    var editMessageAction:Bool = false
+    var currentMessage:Message?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setInputTF()
@@ -141,23 +145,38 @@ class ChatController: UIViewController {
         
         inputTextView.frame.size = inputTextView.sizeThatFits(CGSize(width: inputTextView.frame.width, height: 56))
         
-        let newMessage = Message(sender: Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? ""),
-                                 messageId: "\(authUser?.uid ?? "")", // Set an appropriate message ID
-                                 sentDate: Date(),
-                                 kind: .text(messageText), state: false)
-        
-        // Append the new message to the messages array
-        messages.append(newMessage)
-        
-        // Reload the table view to display the new message
-        messageTableView.reloadData()
-        
-        ChatModel().sendMessage(conversationID: conversationID ?? "", sender: authUser, message: messageText.trimmingCharacters(in: .whitespaces)) { error in
-            if let error = error {
-                AlerUser().alertUser(viewController: self, title: "Error", message: error)
-            } else {
-                // Clear the input text after sending message
-                self.inputTextView.text = ""
+        if editMessageAction == false {
+            
+            let newMessage = Message(sender: Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? ""),
+                                     messageId: "\(authUser?.uid ?? "")", // Set an appropriate message ID
+                                     sentDate: Date(),
+                                     kind: .text(messageText), state: false)
+            
+            // Append the new message to the messages array
+            messages.append(newMessage)
+            
+            // Reload the table view to display the new message
+            messageTableView.reloadData()
+            
+            ChatModel().sendMessage(conversationID: conversationID ?? "", sender: authUser, message: messageText.trimmingCharacters(in: .whitespaces)) { error in
+                if let error = error {
+                    AlerUser().alertUser(viewController: self, title: "Error", message: error)
+                } else {
+                    // Clear the input text after sending message
+                    self.inputTextView.text = ""
+                }
+            }
+        } else {
+            ChatModel().editChildNodeFromConversation(conversationId: conversationID ?? "", message: currentMessage!, updatedMessageText: messageText) { isSucceeded, error in
+                if let error = error {
+                    AlerUser().alertUser(viewController: self, title: "Error", message: error)
+                }
+                
+                if isSucceeded {
+                    self.editMessageAction = false
+                    self.sendButton.setImage(UIImage(systemName: "bubble.fill"), for: .normal)
+                    self.observeMessages()
+                }
             }
         }
     }
@@ -197,14 +216,26 @@ class ChatController: UIViewController {
         var messageActions:[UIAlertAction] = [copyAction, cancelAction]
         
         if authUser?.uid == selectedMessage.sender.senderId {
+            let editAction = UIAlertAction(title: "Edit Message", style: .default) { _ in
+                self.updateMessage(at: indexPath)
+            }
+            
             let deleteAction = UIAlertAction(title: "Delete Message", style: .destructive) { _ in
                 self.deleteMessage(at: indexPath)
             }
             
+            messageActions.append(editAction)
             messageActions.append(deleteAction)
         }
         
         AlerUser().alertUser(viewController: self, title: messageString, message: "Message Options", actions: messageActions)
+    }
+    
+    func updateMessage(at indexPath: IndexPath) {
+        editMessageAction = true
+        currentMessage = messages[indexPath.row]
+        inputTextView.placeholder = messages[indexPath.row].kind.decode
+        sendButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
     }
 
     func deleteMessage(at indexPath: IndexPath) {
