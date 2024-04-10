@@ -169,7 +169,7 @@ extension AddUsersViewController:UITableViewDelegate,UITableViewDataSource {
             let username = user["displayName"] as? String ?? ""
             let avtarURL = user["photoURL"] as? String ?? ""
             
-            cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: nil, meassageTime: nil, messageReadState: false)
+            cell.setCellData(userImage: avtarURL, username: username, userRecentMeassage: nil, meassageTime: nil, messageReadState: true)
         }
         
         return cell
