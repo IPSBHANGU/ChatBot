@@ -17,6 +17,7 @@ struct GroupMessage: MessageType {
     var sentDate: Date
     var kind: MessageKind
     var senderAvtar: String
+    var state: Bool
 }
 
 class GroupModel: NSObject {
@@ -296,7 +297,8 @@ class GroupModel: NSObject {
             "displayName": sender?.displayName ?? "",
             "text": message ?? "",
             "sentDate": Date().timeIntervalSince1970,
-            "photoURL": sender?.photoURL ?? ""
+            "photoURL": sender?.photoURL ?? "",
+            "state": false
         ] as [String : Any]
         
         messageRef.setValue(newMessage) { (error, _) in
@@ -335,6 +337,7 @@ class GroupModel: NSObject {
             let photoURL = messageData["photoURL"] as? String ?? ""
             let text = messageData["text"] as? String ?? ""
             let sentDate = messageData["sentDate"] as? TimeInterval ?? 0
+            let state = messageData["state"] as? Bool ?? true
             
             // Create a Message object
             let message = GroupMessage(
@@ -342,7 +345,8 @@ class GroupModel: NSObject {
                 messageId: snapshot.key,
                 sentDate: Date(timeIntervalSince1970: sentDate),
                 kind: .text(text),
-                senderAvtar: photoURL
+                senderAvtar: photoURL,
+                state: state
             )
             messages.append(message)
             completionHandler(messages, nil)
@@ -483,21 +487,40 @@ class GroupModel: NSObject {
                         formatter.dateFormat = "h:mm a"
                         let dateString = formatter.string(from: lastMessage.sentDate)
 
-                        let groupDetailsDict: [String: Any] = [
-                            "conversationID": group["conversationID"] as? String ?? "",
-                            "groupName": group["groupName"] as? String ?? "",
-                            "groupAdmin": group["groupAdmin"] as? String ?? "",
-                            "groupAvtar": group["groupAvtar"] as? String ?? "",
-                            "groupMembers": group["groupMembers"] as? [String] ?? [],
-                            "lastMessage": lastMessage.kind,
-                            "lastMessageTime": dateString,
-                            "lastMessageSender": lastMessage.sender
-                        ]
-
-                        var updatedGroupArray = groupArray
-                        updatedGroupArray.append(groupDetailsDict)
-
-                        self.processGroups(groups: groups, index: index + 1, groupArray: updatedGroupArray, completionHandler: completionHandler)
+                        if Auth.auth().currentUser?.uid != lastMessage.sender.senderId {
+                            let groupDetailsDict: [String: Any] = [
+                                "conversationID": group["conversationID"] as? String ?? "",
+                                "groupName": group["groupName"] as? String ?? "",
+                                "groupAdmin": group["groupAdmin"] as? String ?? "",
+                                "groupAvtar": group["groupAvtar"] as? String ?? "",
+                                "groupMembers": group["groupMembers"] as? [String] ?? [],
+                                "state": lastMessage.state,
+                                "lastMessage": lastMessage.kind,
+                                "lastMessageTime": dateString,
+                                "lastMessageSender": lastMessage.sender
+                            ]
+                            
+                            var updatedGroupArray = groupArray
+                            updatedGroupArray.append(groupDetailsDict)
+                            
+                            self.processGroups(groups: groups, index: index + 1, groupArray: updatedGroupArray, completionHandler: completionHandler)
+                        } else {
+                            let groupDetailsDict: [String: Any] = [
+                                "conversationID": group["conversationID"] as? String ?? "",
+                                "groupName": group["groupName"] as? String ?? "",
+                                "groupAdmin": group["groupAdmin"] as? String ?? "",
+                                "groupAvtar": group["groupAvtar"] as? String ?? "",
+                                "groupMembers": group["groupMembers"] as? [String] ?? [],
+                                "lastMessage": lastMessage.kind,
+                                "lastMessageTime": dateString,
+                                "lastMessageSender": lastMessage.sender
+                            ]
+                            
+                            var updatedGroupArray = groupArray
+                            updatedGroupArray.append(groupDetailsDict)
+                            
+                            self.processGroups(groups: groups, index: index + 1, groupArray: updatedGroupArray, completionHandler: completionHandler)
+                        }
                     } else {
                         self.processGroups(groups: groups, index: index + 1, groupArray: groupArray, completionHandler: completionHandler)
                     }
@@ -505,4 +528,37 @@ class GroupModel: NSObject {
             }
         }
     }
+    
+    func markMessagesRead(conversationId: String, messages: [GroupMessage], index: Int, completionHandler: @escaping (_ isSucceeded: Bool, _ error: ErrorCode?) -> ()) {
+            guard let currentUserUID = Auth.auth().currentUser?.uid else {
+                completionHandler(false, .missingUserId)
+                return
+            }
+
+            guard index < messages.count else {
+                // All messages have been processed
+                completionHandler(true, nil)
+                return
+            }
+
+            let message = messages[index]
+            let messageId = message.messageId
+            let senderId = message.sender.senderId
+
+            // Check if the message sender is not the current user
+            if senderId != currentUserUID {
+                let messageIdRef = messagesDatabase.child(conversationId).child(messageId)
+                messageIdRef.updateChildValues(["state": true]) { error, databaseRef in
+                    if let error = error {
+                        completionHandler(false, .databaseError)
+                    } else {
+                        // Move to the next message
+                        self.markMessagesRead(conversationId: conversationId, messages: messages, index: index + 1, completionHandler: completionHandler)
+                    }
+                }
+            } else {
+                // Skip marking this message as read (not by current user)
+                self.markMessagesRead(conversationId: conversationId, messages: messages, index: index + 1, completionHandler: completionHandler)
+            }
+        }
 }

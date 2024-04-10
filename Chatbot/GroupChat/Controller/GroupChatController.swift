@@ -43,7 +43,7 @@ class GroupChatController: UIViewController {
     }
     
     func setInputTF(){
-        inputTextView.isScrollEnabled = false
+        inputTextView.isScrollEnabled = true
         inputTextView.delegate = self
         inputTextView.becomeFirstResponder()
         inputTextView.font = UIFont(name: "Rubik-Regular.ttf", size: 25)
@@ -178,6 +178,16 @@ class GroupChatController: UIViewController {
             // Reload the messages collection view to display the new message
             self.messageTableView.reloadData()
             
+            GroupModel().markMessagesRead(conversationId: self.conversationID ?? "", messages: self.messages, index: 0) { isSucceeded, error in
+                if let error = error {
+                    AlerUser().alertUser(viewController: self, title: "Error", message: "Error while marking message as read error \(error.description)")
+                }
+
+                if isSucceeded {
+                    self.messageTableView.reloadData()
+                }
+            }
+            
             // Scroll to the last message
             DispatchQueue.main.async {
                 let indexPath = IndexPath(row: self.messages.count-1, section: 0)
@@ -199,7 +209,7 @@ class GroupChatController: UIViewController {
         let newMessage = GroupMessage(sender: Sender(senderId: authUser?.uid ?? "", displayName: authUser?.displayName ?? ""),
                                  messageId: "\(authUser?.uid ?? "")", // Set an appropriate message ID
                                  sentDate: Date(),
-                                      kind: .text(messageText), senderAvtar: authUser?.photoURL ?? "")
+                                      kind: .text(messageText), senderAvtar: authUser?.photoURL ?? "", state: false)
 
         // Append the new message to the messages array
         messages.append(newMessage)
@@ -238,12 +248,10 @@ extension GroupChatController:UITableViewDelegate, UITableViewDataSource {
         dateFormatter.dateFormat = "h:mm a"
 
         let photoURL = message.senderAvtar
-        if case let .text(text) = message.kind {
-            if message.sender.senderId == authUser.uid {
-                cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL, isCurrentUser: true)
-            } else {
-                cell.setCellData(message: text, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: photoURL, isCurrentUser: false)
-            }
+        if message.sender.senderId == authUser.uid {
+            cell.setCellData(message: message.kind.decode, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL, isCurrentUser: true, messageReadStatus: message.state)
+        } else {
+            cell.setCellData(message: message.kind.decode, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: photoURL, isCurrentUser: false)
         }
         return cell
     }
