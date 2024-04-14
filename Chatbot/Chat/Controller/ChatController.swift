@@ -20,7 +20,6 @@ class ChatController: UIViewController {
     @IBOutlet var sendButton: UIButton!
     @IBOutlet var inputTextView: GrowingTextView!
     
-    var selfSender: SenderType?
     var conversationID: String?
     var senderUserName: String?
     var senderPhotoURL: String?
