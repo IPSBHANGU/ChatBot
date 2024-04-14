@@ -22,18 +22,19 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zo5-yJ-ec6">
-                    <rect key="frame" x="0.0" y="100" width="393" height="661"/>
+                    <rect key="frame" x="0.0" y="100" width="393" height="635"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TNU-Zy-IYu">
                     <rect key="frame" x="317" y="754" width="53" height="56"/>
                     <color key="backgroundColor" red="0.88627450980392153" green="0.87058823529411766" blue="0.97254901960784312" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     <constraints>
+                        <constraint firstAttribute="width" constant="53" id="1ec-R7-LHi"/>
                         <constraint firstAttribute="height" constant="56" id="YHV-Rh-Yd8"/>
                     </constraints>
                     <color key="tintColor" red="0.40784313725490196" green="0.23137254901960785" blue="0.84705882352941175" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     <state key="normal" title="Button"/>
-                    <buttonConfiguration key="configuration" style="plain" image="bubble.fill" catalog="system"/>
+                    <buttonConfiguration key="configuration" style="plain" image="mic.fill" catalog="system"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                             <integer key="value" value="28"/>
@@ -44,7 +45,7 @@
                     </connections>
                 </button>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="lxi-GO-K7Q" customClass="GrowingTextView" customModule="GrowingTextView">
-                    <rect key="frame" x="24" y="780" width="273" height="30"/>
+                    <rect key="frame" x="24" y="754" width="273" height="56"/>
                     <color key="backgroundColor" systemColor="systemGray6Color"/>
                     <color key="textColor" systemColor="labelColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="23"/>
@@ -78,8 +79,13 @@
             <point key="canvasLocation" x="75.572519083969468" y="19.718309859154932"/>
         </view>
     </objects>
+    <designables>
+        <designable name="lxi-GO-K7Q">
+            <size key="intrinsicContentSize" width="-1" height="30"/>
+        </designable>
+    </designables>
     <resources>
-        <image name="bubble.fill" catalog="system" width="128" height="110"/>
+        <image name="mic.fill" catalog="system" width="110" height="128"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

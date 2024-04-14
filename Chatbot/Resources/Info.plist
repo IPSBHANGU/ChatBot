@@ -37,5 +37,7 @@
 			</array>
 		</dict>
 	</dict>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>This app requires use of microphone</string>
 </dict>
 </plist>

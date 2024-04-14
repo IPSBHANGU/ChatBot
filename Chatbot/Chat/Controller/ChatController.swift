@@ -10,6 +10,7 @@ import FirebaseAuth
 import Kingfisher
 import FirebaseDatabaseInternal
 import GrowingTextView
+import NVActivityIndicatorView
 
 class ChatController: UIViewController {
     
@@ -32,17 +33,23 @@ class ChatController: UIViewController {
     var editMessageAction:Bool = false
     var currentMessage:Message?
     
+    // Audio Record
+    var audioRecorderView: AudioRecorderView!
+    var activityIndicator: NVActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setInputTF()
         observeMessages()
-        sendButton.isEnabled = false
         sendButton.layer.cornerRadius = sendButton.frame.height / 2
+        setupRecordView()
+        setupAudioRecord()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         setupHeaderView()
         setupTableView()
+        setupActivityIndicator()
     }
     
     func setInputTF(){
@@ -89,7 +96,8 @@ class ChatController: UIViewController {
         messageTableView.dataSource = self
         messageTableView.rowHeight = UITableView.automaticDimension
         messageTableView.estimatedRowHeight = 100
-        messageTableView.register(UINib(nibName: "MessageTableViewCell", bundle: .main), forCellReuseIdentifier: "messageTableViewCell")
+        messageTableView.register(UINib(nibName: "AudioMessageTableViewCell", bundle: nil), forCellReuseIdentifier: "audioMessageTableViewCell")
+        messageTableView.register(UINib(nibName: "MessageTableViewCell", bundle: nil), forCellReuseIdentifier: "messageTableViewCell")
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
         messageTableView.addGestureRecognizer(longPressGesture)
     }
@@ -199,15 +207,8 @@ class ChatController: UIViewController {
     func handleCellLongPress(at indexPath: IndexPath) {
         let selectedMessage = messages[indexPath.row]
         
-        var messageString:String = ""
-        let messageText = selectedMessage.kind
-        switch messageText {
-        case .text(let text):
-            messageString = text
-        }
-        
         let copyAction = UIAlertAction(title: "Copy", style: .default) { (action) in
-            UIPasteboard.general.string = messageString
+            UIPasteboard.general.string = selectedMessage.kind.decode
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -227,7 +228,7 @@ class ChatController: UIViewController {
             messageActions.append(deleteAction)
         }
         
-        AlerUser().alertUser(viewController: self, title: messageString, message: "Message Options", actions: messageActions)
+        AlerUser().alertUser(viewController: self, title: selectedMessage.kind.decode, message: "Message Options", actions: messageActions)
     }
     
     func updateMessage(at indexPath: IndexPath) {
@@ -252,33 +253,108 @@ class ChatController: UIViewController {
             }
         }
     }
+    
+    func setupRecordView(){
+        audioRecorderView = AudioRecorderView(frame: CGRect(x: 24, y: messageTableView.frame.maxY + 19, width: 270, height: 60))
+        audioRecorderView.view = self
+        audioRecorderView.conversationID = conversationID
+        audioRecorderView.sender = authUser
+        audioRecorderView.layer.cornerRadius = 15
+        audioRecorderView.layer.masksToBounds = true
+        audioRecorderView.isHidden = true
+        audioRecorderView.backgroundColor = .systemGray6
+        view.addSubview(audioRecorderView)
+    }
+    
+    func setupAudioRecord(){
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleSendButtonLongPress(_:)))
+        sendButton.addGestureRecognizer(longPressGesture)
+    }
+    
+    func setupActivityIndicator(){
+        activityIndicator = NVActivityIndicatorView(frame: CGRect(x: inputTextView.frame.midX, y: messageTableView.frame.maxY + 19, width: 50, height: 50), type: .ballRotateChase, color: .gray, padding: nil)
+        
+        // Center the activity indicator in the view
+        activityIndicator.center = view.center
+        view.addSubview(activityIndicator)
+    }
+    
+    @objc func handleSendButtonLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        switch gestureRecognizer.state {
+        case .began:
+            // Hide input text view and show record view
+            inputTextView.isHidden = true
+            audioRecorderView.isHidden = false
+            audioRecorderView.startRecording()
+
+        case .changed:
+            guard gestureRecognizer.view != nil else { return }
+            let location = gestureRecognizer.location(in: gestureRecognizer.view)
+            let percentage = Float(location.x / gestureRecognizer.view!.bounds.width)
+
+        case .ended, .cancelled, .failed:
+            // Show input text view and hide record view
+            audioRecorderView.stopRecording()
+            activityIndicator.startAnimating()
+            sendButton.isEnabled = false
+            audioRecorderView.result = { success, error in
+                if success {
+                    self.inputTextView.isHidden = false
+                    self.audioRecorderView.isHidden = true
+                    self.sendButton.isEnabled = true
+                    DispatchQueue.main.async {
+                        self.activityIndicator.stopAnimating()
+                    }
+                }
+            }
+
+        default:
+            break
+        }
+    }
 }
 
 extension ChatController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        messages.count
+        return messages.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let message = messages[indexPath.row]
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "messageTableViewCell", for: indexPath) as? MessageTableViewCell else {
-            return UITableViewCell()
-        }
-
+        
         guard let authUser = authUser else{
             return UITableViewCell()
         }
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "h:mm a"
-
         
-        if message.sender.senderId == authUser.uid {
-            cell.setCellData(message: message.kind.decode, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL, isCurrentUser: true, messageReadStatus: message.state)
+        if case .audio(let url) = message.kind {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "audioMessageTableViewCell", for: indexPath) as? AudioMessageTableViewCell else {
+                return UITableViewCell()
+            }
+            
+            if let audioURL = URL(string: message.kind.getURL) {
+                if message.sender.senderId == authUser.uid {
+                    cell.setCellData(audioURL: audioURL, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvatarURL: authUser.photoURL, isCurrentUser: true, messageReadStatus: message.state, view: self)
+                } else {
+                    cell.setCellData(audioURL: audioURL, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvatarURL: senderPhotoURL, isCurrentUser: false, view: self)
+                }
+            }
+            return cell
         } else {
-            cell.setCellData(message: message.kind.decode, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: senderPhotoURL, isCurrentUser: false)
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "messageTableViewCell", for: indexPath) as? MessageTableViewCell else {
+                return UITableViewCell()
+            }
+            
+            if message.sender.senderId == authUser.uid {
+                cell.setCellData(message: message.kind.decode, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL, isCurrentUser: true, messageReadStatus: message.state)
+            } else {
+                cell.setCellData(message: message.kind.decode, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: senderPhotoURL, isCurrentUser: false)
+            }
+            
+            return cell
         }
-        return cell
     }
     
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
@@ -289,7 +365,12 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
 extension ChatController : GrowingTextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
-        sendButton.isEnabled = true
-          
-       }
+        let textIsEmpty = textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        
+        if textIsEmpty {
+            sendButton.setImage(UIImage(systemName: "mic.fill"), for: .normal)
+        } else {
+            sendButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
+        }
+    }
 }

@@ -121,15 +121,8 @@ class GroupChatController: UIViewController {
     func handleCellLongPress(at indexPath: IndexPath) {
         let selectedMessage = messages[indexPath.row]
 
-        var messageString:String = ""
-        let messageText = selectedMessage.kind
-        switch messageText {
-        case .text(let text):
-            messageString = text
-        }
-
         let copyAction = UIAlertAction(title: "Copy", style: .default) { (action) in
-            UIPasteboard.general.string = messageString
+            UIPasteboard.general.string = selectedMessage.kind.decode
         }
 
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -149,7 +142,7 @@ class GroupChatController: UIViewController {
             messageActions.append(deleteAction)
         }
 
-        AlerUser().alertUser(viewController: self, title: messageString, message: "Message Options", actions: messageActions)
+        AlerUser().alertUser(viewController: self, title: selectedMessage.kind.decode, message: "Message Options", actions: messageActions)
     }
 
     

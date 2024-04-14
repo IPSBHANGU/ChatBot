@@ -29,6 +29,7 @@ enum ErrorCode: Int {
     case databaseError = 1003
     case noMessage = 1004
     case noConversation = 1005
+    case invalidData = 1006
     
     var description: String {
         switch self {
@@ -42,6 +43,8 @@ enum ErrorCode: Int {
             return "No Message Found"
         case .noConversation:
             return "No Message Found"
+        case .invalidData:
+            return "Invalid Data Format from Database"
         }
     }
 }

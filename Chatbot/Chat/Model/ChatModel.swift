@@ -7,6 +7,7 @@
 
 import FirebaseDatabaseInternal
 import FirebaseAuth
+import FirebaseStorage
 
 struct Message: MessageType {
     var sender: SenderType
@@ -23,12 +24,29 @@ struct Sender: SenderType {
 
 public enum MessageKind {
     case text(String)
+    case audio(url: URL)
     
     var decode:String {
         switch self {
         case .text(let text):
             return text
+        case .audio(_):
+            return "Audio Message"
         }
+    }
+    
+    var isAudio: Bool {
+        if case .audio = self {
+            return true
+        }
+        return false
+    }
+    
+    var getURL:String {
+        if case .audio(let url) = self {
+            return url.absoluteString
+        }
+        return "Not Audio Message"
     }
 }
 
@@ -85,29 +103,44 @@ class ChatModel: NSObject {
     }
     
     /**
-     func sendMessage(conversationID: String, message: Message, completionHandler: @escaping (_ isSucceeded: Bool, _ error: String?) -> Void)
-     - Note: Used to Send Meassages based on unique conversationID
-     - parameter conversationID: Expected String, use ChatModel().generateConversationID
-     - parameter message: Message format of type struct Message: MessageType {
-                                              var sender: SenderType
-                                              var messageId: String
-                                              var sentDate: Date
-                                              var kind: MessageKind
-                                              var recipientID: String
-                                            }
-     - returns: Closure Function returns true if no error else gives error as String
+     Sends a message to a specific conversation.
+
+     - Note: This function creates a new message in the specified conversation identified by `conversationID`.
+
+     - Parameters:
+       - conversationID: The unique ID of the conversation where the message will be sent.
+       - sender: The authenticated user who is sending the message.
+       - message: The text content of the message to be sent. Pass `nil` if the message content is empty or if sending a non-text message.
+       - completionHandler: A completion handler called after attempting to send the message. If an error occurs during the send operation, the `error` parameter will contain a descriptive error message. If the operation is successful, `error` will be `nil`.
+
+     - Important: This function assumes that `messagesDatabase` is a reference to the Firebase Realtime Database node where messages are stored.
+
+     - Example:
+       ```swift
+       let conversationID = "unique_conversation_id"
+       let currentUser = AuthenticatedUser.current
+       let messageText = "Hello, world!"
+
+       ChatModel().sendMessage(conversationID: conversationID, sender: currentUser, message: messageText) { error in
+           if let error = error {
+               AlerUser().alertUser(viewController: self, title: "Error", message: "Message sending failed: \(error)")
+           } else {
+               foo().ActionDone
+           }
+       }
      */
-    func sendMessage(conversationID: String, sender: AuthenticatedUser?, message:String?, completionHandler: @escaping (_ error: String?) -> Void) {
+    func sendMessage(conversationID: String, sender: AuthenticatedUser?, message: String?, completionHandler: @escaping (_ error: String?) -> Void) {
         let messageRef = messagesDatabase.child(conversationID).childByAutoId()
-        
-        let newMessage = [
+
+        let newMessage: [String: Any] = [
             "senderId": sender?.uid ?? "",
             "displayName": sender?.displayName ?? "",
-            "text": message ?? "",
+            "kind": "text", // Represent the message kind as a string
+            "message": message ?? "",
             "sentDate": Date().timeIntervalSince1970,
             "state": false
-        ] as [String : Any]
-        
+        ]
+
         messageRef.setValue(newMessage) { (error, _) in
             if let error = error {
                 completionHandler(error.localizedDescription)
@@ -118,47 +151,191 @@ class ChatModel: NSObject {
     }
     
     /**
-     func observeMessages(conversationID: String, currentUserID: String, otherUserID: String, completionHandler: @escaping ([Message]) -> Void)
-     - Note: Used to Fetch Meassages based on unique conversationID
-     - parameter conversationID: Expected String, use ChatModel().generateConversationID
-     - parameter currentUserID: Authenticated User UID
-     - parameter otherUserID: Other User UID
-     - returns: returns meassage in format of struct Message: MessageType {
-                                         var sender: SenderType
-                                         var messageId: String
-                                         var sentDate: Date
-                                         var kind: MessageKind
-                                         var recipientID: String
-                                      }
+     Sends an audio message to a specific conversation.
+
+     - Note: This function sends an audio message to the conversation identified by `conversationID`.
+
+     - Parameters:
+       - conversationID: The unique ID of the conversation where the audio message will be sent.
+       - sender: The authenticated user who is sending the audio message.
+       - audioURL: The URL of the audio file to be sent as a message.
+       - duration: The duration of the audio message in seconds.
+       - completion: A closure that is called after attempting to send the audio message. If an error occurs during the send operation, the `error` parameter will contain an `ErrorCode` describing the error. If the operation is successful, `error` will be `nil`.
+
+     - Important: This function assumes that `messagesDatabase` is a reference to the Firebase Realtime Database node where messages are stored.
+
+     - Possible Error Codes:
+       - `.databaseError`: An error occurred while saving the message data to the database.
+
+     - Example:
+       ```swift
+       let conversationID = "unique_conversation_id"
+       let currentUser = AuthenticatedUser.current
+       let audioURL = URL(fileURLWithPath: "path_to_audio_file")
+       let duration = 30.0
+
+       sendAudioMessage(conversationID: conversationID, sender: currentUser, audioURL: audioURL, duration: duration) { error in
+           if let error = error {
+               AlerUser().alertUser(viewController: self, title: "Error", message: "Message sending failed: \(error)")
+           } else {
+               print("Audio message sent successfully!")
+           }
+       }
      */
-    func observeMessages(conversationID: String, completionHandler: @escaping ([Message]?, _ error: ErrorCode?) -> Void) {
+
+    func sendAudioMessage(conversationID: String, sender: AuthenticatedUser?, audioURL: URL, completion: @escaping (ErrorCode?) -> Void) {
+        let messageRef = messagesDatabase.child(conversationID).childByAutoId()
+        let storageReference = Storage.storage().reference().child("audioMessages")
+        let audioRef = storageReference.child("\(conversationID)_\(Date().timeIntervalSince1970 ).m4a")
+            
+        // Start the file upload
+        audioRef.putFile(from: audioURL, metadata: nil) { metadata, error in
+            if let error = error {
+                completion(.databaseError)
+            } else {
+                audioRef.downloadURL { url, error in
+                    if let downloadURL = url {
+                        let newMessage: [String: Any] = [
+                            "senderId": sender?.uid ?? "",
+                            "displayName": sender?.displayName ?? "",
+                            "kind": "audio", // Represent the message kind as a string
+                            "audioURL": downloadURL.absoluteString,
+                            "sentDate": Date().timeIntervalSince1970,
+                            "state": false
+                        ]
+
+                        messageRef.setValue(newMessage) { error, _ in
+                            if let error = error {
+                                completion(.databaseError)
+                            } else {
+                                completion(nil)
+                            }
+                        }
+                    } else {
+                        completion(.databaseError)
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+     Observes messages in a specific conversation identified by `conversationID`.
+
+     - Note: This function listens for new child nodes (messages) added under the specified conversation in the Firebase Realtime Database.
+
+     - Parameters:
+       - conversationID: The unique ID of the conversation to observe.
+       - completionHandler: A closure that is called when new messages are observed. The closure takes two parameters:
+            - `messages`: An array of `Message` objects representing the observed messages. This array may be empty if no messages are found.
+            - `error`: An `ErrorCode` indicating any error that occurred during observation, or `nil` if observation was successful.
+
+     - Important: This function assumes that `messagesDatabase` is a reference to the Firebase Realtime Database node where messages are stored.
+
+     - Possible Error Codes:
+       - `.noMessage`: No valid message data was found in the observed snapshot.
+       - `.invalidData`: The observed message data contains invalid or unsupported format.
+
+     - Example:
+       ```swift
+       let conversationID = "unique_conversation_id"
+
+       observeMessages(conversationID: conversationID) { messages, error in
+           if let error = error {
+               AlerUser().alertUser(viewController: self, title: "Error", message: "Error observing messages: \(error)")
+           } else {
+               if let messages = messages {
+                   for message in messages {
+                       print("New message: \(message.sender.displayName): \(message.content)")
+                   }
+               } else {
+                   print("No messages observed.")
+               }
+           }
+       }
+    */
+    func observeMessages(conversationID: String, completionHandler: @escaping ([Message]?, ErrorCode?) -> Void) {
         var messages: [Message] = []
-        messagesDatabase.child(conversationID).observe(.childAdded) { snapshot in
+        messagesDatabase.child(conversationID).observe(.childAdded) { snapshot  in
             guard let messageData = snapshot.value as? [String: Any] else {
                 completionHandler(nil, .noMessage)
                 return
             }
             
-            // Parse message data
+            // Extract message details from snapshot data
             let senderId = messageData["senderId"] as? String ?? ""
             let displayName = messageData["displayName"] as? String ?? ""
-            let text = messageData["text"] as? String ?? ""
+            let kindString = messageData["kind"] as? String ?? ""
             let sentDate = messageData["sentDate"] as? TimeInterval ?? 0
             let state = messageData["state"] as? Bool ?? true
+            
+            // Parse message kind based on the stored type (text or audio)
+            var messageKind: MessageKind
+            if kindString == "text" {
+                let text = messageData["message"] as? String ?? ""
+                messageKind = .text(text)
+            } else if kindString == "audio" {
+                let audioURLString = messageData["audioURL"] as? String ?? ""
+                // Convert audioURL back to URL
+                if let audioURL = URL(string: audioURLString) {
+                    messageKind = .audio(url: audioURL)
+                } else {
+                    // Handle invalid audioURL
+                    completionHandler(nil, .invalidData)
+                    return
+                }
+            } else {
+                // Handle unsupported message kind
+                completionHandler(nil, .invalidData)
+                return
+            }
             
             // Create a Message object
             let message = Message(
                 sender: Sender(senderId: senderId, displayName: displayName),
                 messageId: snapshot.key,
                 sentDate: Date(timeIntervalSince1970: sentDate),
-                kind: .text(text),
+                kind: messageKind,
                 state: state
             )
+            
             messages.append(message)
             completionHandler(messages, nil)
         }
     }
     
+    /**
+     Checks the existence of a conversation identified by `conversationID`.
+
+     - Note: This function checks whether a conversation with the specified `conversationID` exists in the Database.
+
+     - Parameters:
+       - conversationID: The unique ID of the conversation to check.
+       - completionHandler: A closure that is called after checking the conversation existence. The closure takes two parameters:
+            - `isSucceeded`: A boolean value indicating whether the conversation exists (`true`) or not (`false`).
+            - `error`: An `ErrorCode` describing any error that occurred during the check, or `nil` if the check was successful.
+
+     - Important: This function assumes that `messagesDatabase` is a reference to the Firebase Realtime Database node where conversation data is stored.
+
+     - Possible Error Codes:
+       - `.noConversation`: The conversation with the specified `conversationID` does not exist.
+
+     - Example:
+       ```swift
+       let conversationID = "unique_conversation_id"
+
+       checkConversation(conversationID: conversationID) { exists, error in
+           if let error = error {
+               print("Error checking conversation: \(error)")
+           } else {
+               if exists {
+                   print("Conversation exists.")
+               } else {
+                   print("Conversation does not exist.")
+               }
+           }
+       }
+     */
     func checkConversation(conversationID: String, completionHandler: @escaping (_ isSucceeded: Bool, _ error: ErrorCode?) -> Void) {
         messagesDatabase.child(conversationID).observeSingleEvent(of: .value) { snapshot in
             guard snapshot.exists() else {
@@ -357,5 +534,4 @@ class ChatModel: NSObject {
             self.markMessagesRead(conversationId: conversationId, messages: messages, index: index + 1, completionHandler: completionHandler)
         }
     }
-
 }

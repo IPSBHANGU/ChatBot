@@ -29,6 +29,7 @@
 		FB50BC9A2BA85ACE00E863AC /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC992BA85ACE00E863AC /* FirebaseAnalyticsSwift */; };
 		FB50BC9C2BA85ACE00E863AC /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC9B2BA85ACE00E863AC /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		FB50BC9E2BA85ACE00E863AC /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC9D2BA85ACE00E863AC /* FirebaseAppCheck */; };
+		FB5B348A2BCBAEF60092FDD2 /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5B34892BCBAEF60092FDD2 /* WaveformView.swift */; };
 		FB71F0052BA9855100A79BE7 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FB71F0042BA9855100A79BE7 /* FirebaseAuth */; };
 		FB71F00B2BA9A04B00A79BE7 /* ListChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB71F00A2BA9A04B00A79BE7 /* ListChatViewController.xib */; };
 		FB71F00F2BA9A43100A79BE7 /* ListChatTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB71F00E2BA9A43100A79BE7 /* ListChatTableViewCell.xib */; };
@@ -55,10 +56,13 @@
 		FB84382F2BB13479006CEA58 /* GroupChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB84382D2BB13479006CEA58 /* GroupChatController.swift */; };
 		FB8438302BB13479006CEA58 /* GroupChatController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB84382E2BB13479006CEA58 /* GroupChatController.xib */; };
 		FB8D7FE32BA9783D00FF1C21 /* UIColorHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8D7FE22BA9783D00FF1C21 /* UIColorHex.swift */; };
+		FBBD14622BCBA22E003ED4F2 /* AudioMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBD14602BCBA22E003ED4F2 /* AudioMessageTableViewCell.swift */; };
+		FBBD14632BCBA22E003ED4F2 /* AudioMessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBBD14612BCBA22E003ED4F2 /* AudioMessageTableViewCell.xib */; };
 		FBBFF0AA2BC1E1BB008E4DED /* UserDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBFF0A82BC1E1BB008E4DED /* UserDetailController.swift */; };
 		FBBFF0AB2BC1E1BB008E4DED /* UserDetailController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBBFF0A92BC1E1BB008E4DED /* UserDetailController.xib */; };
 		FBCE7B352BB671890059F2D5 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FBCE7B342BB671890059F2D5 /* Rubik-Regular.ttf */; };
 		FBCE7B372BB672700059F2D5 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FBCE7B362BB672700059F2D5 /* Rubik-SemiBold.ttf */; };
+		FBCF63F62BCC54E700C4AAEF /* AudioRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCF63F52BCC54E700C4AAEF /* AudioRecorderView.swift */; };
 		FBFF4CA62BB57EA100B35247 /* NSLayoutContraint+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBFF4CA52BB57EA100B35247 /* NSLayoutContraint+Custom.swift */; };
 /* End PBXBuildFile section */
 
@@ -81,6 +85,7 @@
 		FB1B33442BA823030061259F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB2F5F142BB302630077C2D8 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		FB2F5F152BB302630077C2D8 /* MessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
+		FB5B34892BCBAEF60092FDD2 /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		FB71F00A2BA9A04B00A79BE7 /* ListChatViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListChatViewController.xib; sourceTree = "<group>"; };
 		FB71F00D2BA9A43100A79BE7 /* ListChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListChatTableViewCell.swift; sourceTree = "<group>"; };
 		FB71F00E2BA9A43100A79BE7 /* ListChatTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListChatTableViewCell.xib; sourceTree = "<group>"; };
@@ -103,10 +108,13 @@
 		FB84382D2BB13479006CEA58 /* GroupChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChatController.swift; sourceTree = "<group>"; };
 		FB84382E2BB13479006CEA58 /* GroupChatController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GroupChatController.xib; sourceTree = "<group>"; };
 		FB8D7FE22BA9783D00FF1C21 /* UIColorHex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorHex.swift; sourceTree = "<group>"; };
+		FBBD14602BCBA22E003ED4F2 /* AudioMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMessageTableViewCell.swift; sourceTree = "<group>"; };
+		FBBD14612BCBA22E003ED4F2 /* AudioMessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AudioMessageTableViewCell.xib; sourceTree = "<group>"; };
 		FBBFF0A82BC1E1BB008E4DED /* UserDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailController.swift; sourceTree = "<group>"; };
 		FBBFF0A92BC1E1BB008E4DED /* UserDetailController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserDetailController.xib; sourceTree = "<group>"; };
 		FBCE7B342BB671890059F2D5 /* Rubik-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-Regular.ttf"; sourceTree = "<group>"; };
 		FBCE7B362BB672700059F2D5 /* Rubik-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-SemiBold.ttf"; sourceTree = "<group>"; };
+		FBCF63F52BCC54E700C4AAEF /* AudioRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorderView.swift; sourceTree = "<group>"; };
 		FBFF4CA52BB57EA100B35247 /* NSLayoutContraint+Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutContraint+Custom.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -295,6 +303,8 @@
 				FB73D49C2BAAFF89001B314F /* ChatController.xib */,
 				FB2F5F142BB302630077C2D8 /* MessageTableViewCell.swift */,
 				FB2F5F152BB302630077C2D8 /* MessageTableViewCell.xib */,
+				FBBD14602BCBA22E003ED4F2 /* AudioMessageTableViewCell.swift */,
+				FBBD14612BCBA22E003ED4F2 /* AudioMessageTableViewCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -391,6 +401,8 @@
 				FBFF4CA72BB580F100B35247 /* NSLayoutConstraints+Extenstions */,
 				FB8D7FE62BA978AC00FF1C21 /* UIColorHex */,
 				FB8D7FE52BA978A300FF1C21 /* AlertUser */,
+				FB5B34892BCBAEF60092FDD2 /* WaveformView.swift */,
+				FBCF63F52BCC54E700C4AAEF /* AudioRecorderView.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -600,6 +612,8 @@
 			packageReferences = (
 				FB50BC8F2BA859A600E863AC /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				FB50BC942BA85A7300E863AC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				FB5B34862BCBAD6C0092FDD2 /* XCRemoteSwiftPackageReference "AudioKit" */,
+				FBCF63F22BCBB34A00C4AAEF /* XCRemoteSwiftPackageReference "AudioKitUI" */,
 			);
 			productRefGroup = FB1B33342BA823020061259F /* Products */;
 			projectDirPath = "";
@@ -616,6 +630,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB71F00B2BA9A04B00A79BE7 /* ListChatViewController.xib in Resources */,
+				FBBD14632BCBA22E003ED4F2 /* AudioMessageTableViewCell.xib in Resources */,
 				FBCE7B352BB671890059F2D5 /* Rubik-Regular.ttf in Resources */,
 				DF78D9F82BC00D19002EDD28 /* GroupDetailsController.xib in Resources */,
 				FB73D4982BAAF738001B314F /* EmailSignINViewController.xib in Resources */,
@@ -692,7 +707,9 @@
 				FB822AAE2BA85F35003805BE /* GoogleAuth.swift in Sources */,
 				FB822AAC2BA85E48003805BE /* AlerUser.swift in Sources */,
 				FB1B333B2BA823020061259F /* ViewController.swift in Sources */,
+				FBBD14622BCBA22E003ED4F2 /* AudioMessageTableViewCell.swift in Sources */,
 				FB8D7FE32BA9783D00FF1C21 /* UIColorHex.swift in Sources */,
+				FBCF63F62BCC54E700C4AAEF /* AudioRecorderView.swift in Sources */,
 				FB1B33372BA823020061259F /* AppDelegate.swift in Sources */,
 				FB84382F2BB13479006CEA58 /* GroupChatController.swift in Sources */,
 				FB71F0102BA9A43100A79BE7 /* ListChatTableViewCell.swift in Sources */,
@@ -707,6 +724,7 @@
 				FBBFF0AA2BC1E1BB008E4DED /* UserDetailController.swift in Sources */,
 				FB8438212BACA6DD006CEA58 /* ChatModel.swift in Sources */,
 				FB73D4862BAAF40E001B314F /* LoginPrefrencesViewController.swift in Sources */,
+				FB5B348A2BCBAEF60092FDD2 /* WaveformView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -945,6 +963,22 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 10.22.1;
+			};
+		};
+		FB5B34862BCBAD6C0092FDD2 /* XCRemoteSwiftPackageReference "AudioKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AudioKit/AudioKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.6.3;
+			};
+		};
+		FBCF63F22BCBB34A00C4AAEF /* XCRemoteSwiftPackageReference "AudioKitUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AudioKit/AudioKitUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.7;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
