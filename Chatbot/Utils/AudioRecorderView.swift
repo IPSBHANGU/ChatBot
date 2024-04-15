@@ -18,17 +18,20 @@
 import UIKit
 import AVFoundation
 
+protocol AudioRecorderDelegate: AnyObject {
+    func broadcastAlerts(title:String, message:String)
+    
+    func broadcastAudioURL(url: URL)
+}
+
 class AudioRecorderView: UIView {
 
     var audioRecorder: AVAudioRecorder?
     var audioURL: URL?
     var recordingProgress: ((Float) -> Void)?
-    var view: UIViewController?
     
-    // Message Details
-    var conversationID:String?
-    var sender:AuthenticatedUser?
-    var result: ((Bool, ErrorCode?) -> Void)?
+    // Delegate
+    weak var delegate: AudioRecorderDelegate?
 
     private let progressView: UIProgressView = {
         let progressView = UIProgressView(progressViewStyle: .default)
@@ -97,14 +100,12 @@ class AudioRecorderView: UIView {
             try session.setCategory(.playAndRecord, options: .defaultToSpeaker)
             try session.setActive(true)
         } catch {
-            guard let viewController = view else { return }
-            AlerUser().alertUser(viewController: viewController, title: "Error", message: "Failed to set up audio session: \(error.localizedDescription)")
+            delegate?.broadcastAlerts(title: "Error", message: "Failed to set up audio session: \(error.localizedDescription)")
         }
     }
 
     private func showMicrophonePermissionAlert() {
-        guard let viewController = view else { return }
-        AlerUser().alertUser(viewController: viewController, title: "Microphone Permission Required", message: "Please enable microphone access in Settings to use this feature.")
+        delegate?.broadcastAlerts(title: "Microphone Permission Required", message: "Please enable microphone access in Settings to use this feature.")
     }
 
     func startRecording() {
@@ -115,8 +116,7 @@ class AudioRecorderView: UIView {
         }
 
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            guard let viewController = view else { return }
-            AlerUser().alertUser(viewController: viewController, title: "Error", message: "Documents directory not found")
+            delegate?.broadcastAlerts(title: "Error", message: "Documents directory not found")
             return
         }
 
@@ -139,8 +139,7 @@ class AudioRecorderView: UIView {
             startRecordingTimer()
 
         } catch {
-            guard let viewController = view else { return }
-            AlerUser().alertUser(viewController: viewController, title: "Error", message: "Error starting recording: \(error.localizedDescription)")
+            delegate?.broadcastAlerts(title: "Error", message: "Error starting recording: \(error.localizedDescription)")
         }
     }
 
@@ -198,15 +197,9 @@ extension AudioRecorderView: AVAudioRecorderDelegate {
         if flag {
             let audioURL = recorder.url
             self.audioURL = audioURL
-            guard let viewController = view else { return }
-            ChatModel().sendAudioMessage(conversationID: conversationID ?? "", sender: sender, audioURL: audioURL) { error in
-                if let error = error{
-                    AlerUser().alertUser(viewController: viewController, title: "Error", message: error.description)
-                }
-                self.result?(true, nil)
-            }
+            delegate?.broadcastAudioURL(url: audioURL)
         } else {
-            print("Recording failed")
+            delegate?.broadcastAlerts(title: "Error", message: "Recording Failed")
         }
     }
 }

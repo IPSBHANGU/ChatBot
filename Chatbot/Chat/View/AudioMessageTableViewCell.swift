@@ -9,6 +9,10 @@ import UIKit
 import AVFoundation
 import Kingfisher
 
+protocol AudioMessageCellDelegate: AnyObject {
+    func broadcastAlert(title:String, message:String)
+}
+
 class AudioMessageTableViewCell: UITableViewCell {
     
     @IBOutlet weak var bubbleView: UIView!
@@ -18,6 +22,8 @@ class AudioMessageTableViewCell: UITableViewCell {
     @IBOutlet weak var messageSeparatorDotView: UIView!
     @IBOutlet weak var receiverAvatarView: UIImageView!
     @IBOutlet weak var senderAvatarView: UIImageView!
+    
+    weak var delegate: AudioMessageCellDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -30,11 +36,11 @@ class AudioMessageTableViewCell: UITableViewCell {
         waveformView.audioURL = nil
     }
     
-    func setCellData(audioURL: URL, messageStatus: String?, senderAvatarURL: String?, isCurrentUser: Bool, messageReadStatus: Bool = true, view:UIViewController?) {
+    func setCellData(audioURL: URL, messageStatus: String?, senderAvatarURL: String?, isCurrentUser: Bool, messageReadStatus: Bool = true) {
         configureCellUI(isCurrentUser: isCurrentUser, messageStatus: messageStatus, messageReadStatus: messageReadStatus, senderAvatarURL: senderAvatarURL)
         
         waveformView.audioURL = audioURL
-        waveformView.view = view
+        waveformView.delegate = self
     }
     
     private func configureUI() {
@@ -101,5 +107,11 @@ class AudioMessageTableViewCell: UITableViewCell {
             waveformView.progressBar.progressTintColor = .lightGray
             waveformView.durationLabel.textColor = .lightGray
         }
+    }
+}
+
+extension AudioMessageTableViewCell: WaveformDelegate {
+    func broadcastAlert(title: String, message: String) {
+        delegate?.broadcastAlert(title: title, message: message)
     }
 }

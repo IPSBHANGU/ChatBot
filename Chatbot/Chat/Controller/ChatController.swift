@@ -41,13 +41,13 @@ class ChatController: UIViewController {
         setInputTF()
         observeMessages()
         sendButton.layer.cornerRadius = sendButton.frame.height / 2
-        setupRecordView()
-        setupAudioRecord()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         setupHeaderView()
         setupTableView()
+        setupRecordView()
+        setupAudioRecord()
     }
     
     func setInputTF(){
@@ -254,9 +254,7 @@ class ChatController: UIViewController {
     
     func setupRecordView(){
         audioRecorderView = AudioRecorderView(frame: CGRect(x: 24, y: messageTableView.frame.maxY + 19, width: 270, height: 60))
-        audioRecorderView.view = self
-        audioRecorderView.conversationID = conversationID
-        audioRecorderView.sender = authUser
+        audioRecorderView.delegate = self
         audioRecorderView.layer.cornerRadius = 15
         audioRecorderView.layer.masksToBounds = true
         audioRecorderView.isHidden = true
@@ -286,16 +284,9 @@ class ChatController: UIViewController {
             // Show input text view and hide record view
             audioRecorderView.stopRecording()
             sendButton.isEnabled = false
-            audioRecorderView.result = { success, error in
-                if success {
-                    self.inputTextView.isHidden = false
-                    self.audioRecorderView.isHidden = true
-                    self.sendButton.isEnabled = true
-                }
-                if let error = error {
-                    AlerUser().alertUser(viewController: self, title: "Error", message: error.description)
-                }
-            }
+            self.inputTextView.isHidden = false
+            self.audioRecorderView.isHidden = true
+            self.sendButton.isEnabled = true
 
         default:
             break
@@ -323,10 +314,12 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
             
+            cell.delegate = self
+            
             if message.sender.senderId == authUser.uid {
-                cell.setCellData(audioURL: url, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvatarURL: authUser.photoURL, isCurrentUser: true, messageReadStatus: message.state, view: self)
+                cell.setCellData(audioURL: url, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvatarURL: authUser.photoURL, isCurrentUser: true, messageReadStatus: message.state)
             } else {
-                cell.setCellData(audioURL: url, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvatarURL: senderPhotoURL, isCurrentUser: false, view: self)
+                cell.setCellData(audioURL: url, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvatarURL: senderPhotoURL, isCurrentUser: false)
             }
             return cell
         } else {
@@ -359,5 +352,42 @@ extension ChatController : GrowingTextViewDelegate {
         } else {
             sendButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
         }
+    }
+}
+
+extension ChatController: AudioMessageCellDelegate {
+    func broadcastAlert(title: String, message: String) {
+        AlerUser().alertUser(viewController: self, title: title, message: message)
+    }
+}
+
+extension ChatController: AudioRecorderDelegate {
+    func broadcastAudioURL(url: URL) {
+        let sendAction = UIAlertAction(title: "Send", style: .default) { _ in
+            ChatModel().sendAudioMessage(conversationID: self.conversationID ?? "", sender: self.authUser, audioURL: url) { error in
+                if let error = error{
+                    AlerUser().alertUser(viewController: self, title: "Error", message: error.description)
+                }
+            }
+        }
+        
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { _ in
+            let delete = ChatModel().discardAudioRecordings(fileURL: url)
+            
+            switch delete {
+            case .success(_):
+                print("Audio Message Delete")
+            case .failure(let error):
+                AlerUser().alertUser(viewController: self, title: "Error", message: error.localizedDescription)
+            }
+        }
+        
+        var messageActions:[UIAlertAction] = [sendAction, deleteAction]
+        
+        AlerUser().alertUser(viewController: self, title: "Audio Message", message: "Do you want to send audio message", actions: messageActions)
+    }
+    
+    func broadcastAlerts(title:String, message:String) {
+        AlerUser().alertUser(viewController: self, title: title, message: message)
     }
 }

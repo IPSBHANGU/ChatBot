@@ -527,4 +527,13 @@ class ChatModel: NSObject {
             self.markMessagesRead(conversationId: conversationId, messages: messages, index: index + 1, completionHandler: completionHandler)
         }
     }
+    
+    func discardAudioRecordings(fileURL: URL) -> Result<Bool,Error> {
+        do {
+            try FileManager.default.removeItem(at: fileURL)
+            return .success(true)
+        } catch {
+            return .failure(error)
+        }
+    }
 }

@@ -29,6 +29,10 @@
  - Version: 1.0
  */
 
+protocol WaveformDelegate: AnyObject {
+    func broadcastAlert(title:String, message:String)
+}
+
 import UIKit
 import AVFoundation
 
@@ -39,7 +43,7 @@ class WaveformView: UIView {
             downloadAudioFile(from: audioURL)
         }
     }
-    var view:UIViewController?
+    weak var delegate: WaveformDelegate?
     
     var audioPlayer: AVAudioPlayer?
     var playbackProgress: ((Float) -> Void)?
@@ -162,7 +166,6 @@ class WaveformView: UIView {
     }
     
     private func loadAudioFile(from url: URL) {
-        guard let view = view else {return}
         DispatchQueue.global().async { [weak self] in
             guard let self = self else { return }
             
@@ -179,7 +182,7 @@ class WaveformView: UIView {
                 self.audioPlayer?.delegate = self
                 self.audioPlayer?.prepareToPlay()
             } catch {
-                AlerUser().alertUser(viewController: view, title: "Error", message: "Error loading audio file: \(error.localizedDescription)")
+                delegate?.broadcastAlert(title: "Error", message: "Error loading audio file: \(error.localizedDescription)")
             }
         }
     }
@@ -232,11 +235,10 @@ class WaveformView: UIView {
     }
     
     @objc private func playButtonTapped() {
-        guard let view = view else {return}
         guard let audioURL = audioURL else { return }
         if audioPlayer == nil {
             downloadAudioFile(from: audioURL)
-            AlerUser().alertUser(viewController: view, title: "Waiting for Media", message: "Downloading Audio File")
+            delegate?.broadcastAlert(title: "Waiting for Media", message: "Downloading Audio File")
         } else {
             play()
         }
@@ -288,7 +290,6 @@ class WaveformView: UIView {
 
 extension WaveformView: URLSessionDownloadDelegate {
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        guard let view = view else { return }
         
         do {
             let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
@@ -308,7 +309,7 @@ extension WaveformView: URLSessionDownloadDelegate {
                 self.progressBarView.isHidden = true
             }
         } catch {
-            AlerUser().alertUser(viewController: view, title: "Error", message: "Error moving downloaded file: \(error)")
+            delegate?.broadcastAlert(title: "Error", message: "Error moving downloaded file: \(error)")
         }
     }
     
@@ -321,9 +322,8 @@ extension WaveformView: URLSessionDownloadDelegate {
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        guard let view = view else { return }
         if let error = error {
-            AlerUser().alertUser(viewController: view, title: "Error", message: "Error downloading audio file: \(error.localizedDescription)")
+            delegate?.broadcastAlert(title: "Error", message: "Error downloading audio file: \(error.localizedDescription)")
         }
     }
 }
