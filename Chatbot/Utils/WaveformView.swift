@@ -71,6 +71,14 @@ class WaveformView: UIView {
     
     let durationLabel = UILabel()
     
+    let progressBarView: CircularProgressView = {
+        let progressView = CircularProgressView()
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        progressView.setProgressColor = UIColor(displayP3Red: 50.0/255.0, green: 168.0/255.0, blue: 82.0/255.0, alpha: 1.0)
+        progressView.setTrackColor = UIColor(displayP3Red: 205.0/255.0, green: 247.0/255.0, blue: 212.0/255.0, alpha: 1.0)
+        return progressView
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -87,6 +95,7 @@ class WaveformView: UIView {
         addSubview(progressBar)
         addSubview(playButton)
         addSubview(pauseButton)
+        addSubview(progressBarView)
         
         // Create and configure the durationLabel
         durationLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -110,7 +119,12 @@ class WaveformView: UIView {
             pauseButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
             
             durationLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
-            durationLabel.topAnchor.constraint(equalTo: progressBar.bottomAnchor, constant: 5)
+            durationLabel.topAnchor.constraint(equalTo: progressBar.bottomAnchor, constant: 5),
+            
+            progressBarView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2),
+            progressBarView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            progressBarView.widthAnchor.constraint(equalToConstant: 4),
+            progressBarView.heightAnchor.constraint(equalToConstant: 4),
         ])
     }
     
@@ -141,34 +155,10 @@ class WaveformView: UIView {
     }
     
     private func downloadAudioFile(from url: URL) {
-        guard let view = view else {return}
-        let task = URLSession.shared.downloadTask(with: url) { [weak self] (tempURL, response, error) in
-            guard let self = self else { return }
-            
-            if let tempURL = tempURL {
-                do {
-                    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-                    let destinationURL = documentsDirectory.appendingPathComponent(url.lastPathComponent)
-                    
-                    // Remove existing file at destination if it exists
-                    if FileManager.default.fileExists(atPath: destinationURL.path) {
-                        try FileManager.default.removeItem(at: destinationURL)
-                    }
-                    
-                    try FileManager.default.moveItem(at: tempURL, to: destinationURL)
-                    
-                    DispatchQueue.main.async {
-                        self.loadAudioFile(from: destinationURL)
-                    }
-                } catch {
-                    AlerUser().alertUser(viewController: view, title: "Error", message: "Error moving downloaded file: \(error)")
-                }
-            } else {
-                AlerUser().alertUser(viewController: view, title: "Error", message: "Error downloading audio file: \(error?.localizedDescription ?? "Unknown error")")
-            }
-        }
+        let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+        let downloadTask = session.downloadTask(with: url)
         
-        task.resume()
+        downloadTask.resume()
     }
     
     private func loadAudioFile(from url: URL) {
@@ -293,6 +283,48 @@ class WaveformView: UIView {
     
     private func resetProgress() {
         progressBar.setProgress(0.0, animated: false)
+    }
+}
+
+extension WaveformView: URLSessionDownloadDelegate {
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        guard let view = view else { return }
+        
+        do {
+            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+            let destinationURL = documentsDirectory.appendingPathComponent(location.lastPathComponent)
+            
+            // Remove existing file at destination if it exists
+            if FileManager.default.fileExists(atPath: destinationURL.path) {
+                try FileManager.default.removeItem(at: destinationURL)
+            }
+            
+            try FileManager.default.moveItem(at: location, to: destinationURL)
+            
+            DispatchQueue.main.async {
+                self.loadAudioFile(from: destinationURL)
+                
+                // Hide progress bar after download completion
+                self.progressBarView.isHidden = true
+            }
+        } catch {
+            AlerUser().alertUser(viewController: view, title: "Error", message: "Error moving downloaded file: \(error)")
+        }
+    }
+    
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+        let downloadProgress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+        
+        DispatchQueue.main.async {
+            self.progressBarView.setProgressWithAnimation(duration: 0.5, value: downloadProgress)
+        }
+    }
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        guard let view = view else { return }
+        if let error = error {
+            AlerUser().alertUser(viewController: view, title: "Error", message: "Error downloading audio file: \(error.localizedDescription)")
+        }
     }
 }
 

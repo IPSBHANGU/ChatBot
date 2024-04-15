@@ -63,6 +63,7 @@
 		FBCE7B352BB671890059F2D5 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FBCE7B342BB671890059F2D5 /* Rubik-Regular.ttf */; };
 		FBCE7B372BB672700059F2D5 /* Rubik-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FBCE7B362BB672700059F2D5 /* Rubik-SemiBold.ttf */; };
 		FBCF63F62BCC54E700C4AAEF /* AudioRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCF63F52BCC54E700C4AAEF /* AudioRecorderView.swift */; };
+		FBCF63F82BCCCB3900C4AAEF /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCF63F72BCCCB3900C4AAEF /* CircularProgressView.swift */; };
 		FBFF4CA62BB57EA100B35247 /* NSLayoutContraint+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBFF4CA52BB57EA100B35247 /* NSLayoutContraint+Custom.swift */; };
 /* End PBXBuildFile section */
 
@@ -115,6 +116,7 @@
 		FBCE7B342BB671890059F2D5 /* Rubik-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-Regular.ttf"; sourceTree = "<group>"; };
 		FBCE7B362BB672700059F2D5 /* Rubik-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Rubik-SemiBold.ttf"; sourceTree = "<group>"; };
 		FBCF63F52BCC54E700C4AAEF /* AudioRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorderView.swift; sourceTree = "<group>"; };
+		FBCF63F72BCCCB3900C4AAEF /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
 		FBFF4CA52BB57EA100B35247 /* NSLayoutContraint+Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutContraint+Custom.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -403,6 +405,7 @@
 				FB8D7FE52BA978A300FF1C21 /* AlertUser */,
 				FB5B34892BCBAEF60092FDD2 /* WaveformView.swift */,
 				FBCF63F52BCC54E700C4AAEF /* AudioRecorderView.swift */,
+				FBCF63F72BCCCB3900C4AAEF /* CircularProgressView.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -724,6 +727,7 @@
 				FBBFF0AA2BC1E1BB008E4DED /* UserDetailController.swift in Sources */,
 				FB8438212BACA6DD006CEA58 /* ChatModel.swift in Sources */,
 				FB73D4862BAAF40E001B314F /* LoginPrefrencesViewController.swift in Sources */,
+				FBCF63F82BCCCB3900C4AAEF /* CircularProgressView.swift in Sources */,
 				FB5B348A2BCBAEF60092FDD2 /* WaveformView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
