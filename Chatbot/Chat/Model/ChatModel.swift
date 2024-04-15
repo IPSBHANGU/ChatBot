@@ -41,13 +41,6 @@ public enum MessageKind {
         }
         return false
     }
-    
-    var getURL:String {
-        if case .audio(let url) = self {
-            return url.absoluteString
-        }
-        return "Not Audio Message"
-    }
 }
 
 public protocol MessageType {

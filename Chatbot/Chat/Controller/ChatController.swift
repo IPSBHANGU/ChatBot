@@ -35,7 +35,6 @@ class ChatController: UIViewController {
     
     // Audio Record
     var audioRecorderView: AudioRecorderView!
-    var activityIndicator: NVActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +48,6 @@ class ChatController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         setupHeaderView()
         setupTableView()
-        setupActivityIndicator()
     }
     
     func setInputTF(){
@@ -271,14 +269,6 @@ class ChatController: UIViewController {
         sendButton.addGestureRecognizer(longPressGesture)
     }
     
-    func setupActivityIndicator(){
-        activityIndicator = NVActivityIndicatorView(frame: CGRect(x: inputTextView.frame.midX, y: messageTableView.frame.maxY + 19, width: 50, height: 50), type: .ballRotateChase, color: .gray, padding: nil)
-        
-        // Center the activity indicator in the view
-        activityIndicator.center = view.center
-        view.addSubview(activityIndicator)
-    }
-    
     @objc func handleSendButtonLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
         switch gestureRecognizer.state {
         case .began:
@@ -295,16 +285,15 @@ class ChatController: UIViewController {
         case .ended, .cancelled, .failed:
             // Show input text view and hide record view
             audioRecorderView.stopRecording()
-            activityIndicator.startAnimating()
             sendButton.isEnabled = false
             audioRecorderView.result = { success, error in
                 if success {
                     self.inputTextView.isHidden = false
                     self.audioRecorderView.isHidden = true
                     self.sendButton.isEnabled = true
-                    DispatchQueue.main.async {
-                        self.activityIndicator.stopAnimating()
-                    }
+                }
+                if let error = error {
+                    AlerUser().alertUser(viewController: self, title: "Error", message: error.description)
                 }
             }
 
@@ -334,12 +323,10 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
             
-            if let audioURL = URL(string: message.kind.getURL) {
-                if message.sender.senderId == authUser.uid {
-                    cell.setCellData(audioURL: audioURL, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvatarURL: authUser.photoURL, isCurrentUser: true, messageReadStatus: message.state, view: self)
-                } else {
-                    cell.setCellData(audioURL: audioURL, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvatarURL: senderPhotoURL, isCurrentUser: false, view: self)
-                }
+            if message.sender.senderId == authUser.uid {
+                cell.setCellData(audioURL: url, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvatarURL: authUser.photoURL, isCurrentUser: true, messageReadStatus: message.state, view: self)
+            } else {
+                cell.setCellData(audioURL: url, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvatarURL: senderPhotoURL, isCurrentUser: false, view: self)
             }
             return cell
         } else {
