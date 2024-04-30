@@ -22,6 +22,7 @@
 		FB2831D12BB8116F008BFBE8 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = FB2831D02BB8116F008BFBE8 /* FirebaseStorage */; };
 		FB2F5F162BB302630077C2D8 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2F5F142BB302630077C2D8 /* MessageTableViewCell.swift */; };
 		FB2F5F172BB302630077C2D8 /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB2F5F152BB302630077C2D8 /* MessageTableViewCell.xib */; };
+		FB2FD3BE2BE0D49D004EF93B /* ImageMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2FD3BD2BE0D49D004EF93B /* ImageMessageHandler.swift */; };
 		FB50BC912BA859A600E863AC /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC902BA859A600E863AC /* GoogleSignIn */; };
 		FB50BC932BA859A600E863AC /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC922BA859A600E863AC /* GoogleSignInSwift */; };
 		FB50BC962BA85ACE00E863AC /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC952BA85ACE00E863AC /* FirebaseAnalytics */; };
@@ -88,6 +89,7 @@
 		FB1B33442BA823030061259F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB2F5F142BB302630077C2D8 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		FB2F5F152BB302630077C2D8 /* MessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
+		FB2FD3BD2BE0D49D004EF93B /* ImageMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageHandler.swift; sourceTree = "<group>"; };
 		FB5B34892BCBAEF60092FDD2 /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		FB71F00A2BA9A04B00A79BE7 /* ListChatViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListChatViewController.xib; sourceTree = "<group>"; };
 		FB71F00D2BA9A43100A79BE7 /* ListChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListChatTableViewCell.swift; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 				FB5B34892BCBAEF60092FDD2 /* WaveformView.swift */,
 				FBCF63F52BCC54E700C4AAEF /* AudioRecorderView.swift */,
 				FBCF63F72BCCCB3900C4AAEF /* CircularProgressView.swift */,
+				FB2FD3BD2BE0D49D004EF93B /* ImageMessageHandler.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -716,6 +719,7 @@
 				FB73D4972BAAF738001B314F /* EmailSignINViewController.swift in Sources */,
 				FBE1B6C12BDF8C1000AC6895 /* ImageViewTableViewCell.swift in Sources */,
 				FB822AAE2BA85F35003805BE /* GoogleAuth.swift in Sources */,
+				FB2FD3BE2BE0D49D004EF93B /* ImageMessageHandler.swift in Sources */,
 				FB822AAC2BA85E48003805BE /* AlerUser.swift in Sources */,
 				FB1B333B2BA823020061259F /* ViewController.swift in Sources */,
 				FBBD14622BCBA22E003ED4F2 /* AudioMessageTableViewCell.swift in Sources */,

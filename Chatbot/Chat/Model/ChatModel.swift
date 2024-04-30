@@ -8,6 +8,8 @@
 import FirebaseDatabaseInternal
 import FirebaseAuth
 import FirebaseStorage
+import UIKit
+import Kingfisher
 
 struct Message: MessageType {
     var sender: SenderType
@@ -25,6 +27,7 @@ struct Sender: SenderType {
 public enum MessageKind {
     case text(String)
     case audio(url: URL)
+    case photo(imageURL: URL)
     
     var decode:String {
         switch self {
@@ -32,11 +35,20 @@ public enum MessageKind {
             return text
         case .audio(_):
             return "Audio Message"
+        case .photo(_):
+            return "Media Message"
         }
     }
     
     var isAudio: Bool {
         if case .audio = self {
+            return true
+        }
+        return false
+    }
+    
+    var isPhoto:Bool {
+        if case .photo = self {
             return true
         }
         return false
@@ -212,6 +224,62 @@ class ChatModel: NSObject {
         }
     }
     
+    private func uploadImage(image: UIImage?, conversationID:String, completion: @escaping (Result<URL, Error>) -> Void) {
+        guard let imageData = image?.jpegData(compressionQuality: 0.5) else {
+            completion(.failure("Error: Unable to convert image to data" as! Error))
+            return
+        }
+
+        let storageRef = Storage.storage().reference().child("images_messages")
+        let imageRef = storageRef.child("\(conversationID)_\(Date().timeIntervalSince1970 ).jpg")
+
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpeg"
+
+        imageRef.putData(imageData, metadata: metadata) { (metadata, error) in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                imageRef.downloadURL { url, error in
+                    if let error = error {
+                        completion(.failure(error))
+                    }
+                    if let url = url {
+                        completion(.success(url))
+                    }
+                }
+            }
+        }
+    }
+    
+    func sendImageMessage(conversationID: String, sender: AuthenticatedUser?, image: UIImage, completion: @escaping (ErrorCode?) -> Void) {
+        let messageRef = messagesDatabase.child(conversationID).childByAutoId()
+        self.uploadImage(image: image, conversationID: conversationID) { result in
+            switch result {
+            case .success(let url):
+                let newMessage: [String: Any] = [
+                    "senderId": sender?.uid ?? "",
+                    "displayName": sender?.displayName ?? "",
+                    "kind": "photo", // Represent the message kind as a string
+                    "imageURL": url.absoluteString,
+                    "sentDate": Date().timeIntervalSince1970,
+                    "state": false
+                ]
+                
+                messageRef.setValue(newMessage) { error, _ in
+                    if let error = error {
+                        completion(.databaseError)
+                    } else {
+                        completion(nil)
+                    }
+                }
+                
+            case .failure(_):
+                completion(.databaseError)
+            }
+        }
+    }
+    
     /**
      Observes messages in a specific conversation identified by `conversationID`.
 
@@ -274,6 +342,16 @@ class ChatModel: NSObject {
                     messageKind = .audio(url: audioURL)
                 } else {
                     // Handle invalid audioURL
+                    completionHandler(nil, .invalidData)
+                    return
+                }
+            } else if kindString == "photo" {
+                let imageURLString = messageData["imageURL"] as? String ?? ""
+                // Convert imageURL back to URL
+                if let imageURL = URL(string: imageURLString) {
+                    messageKind = .photo(imageURL: imageURL)
+                } else {
+                    // Handle invalid imageURL
                     completionHandler(nil, .invalidData)
                     return
                 }

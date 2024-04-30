@@ -40,6 +40,10 @@ class ChatController: UIViewController {
     var lockedAudioRecorderSendButton = UIButton(type: .system)
     var lockedAudioRecorderDeleteButton = UIButton(type: .system)
     
+    // Media Share
+    var attachMedia = UIButton(type: .system)
+    var imageMessageView = ImageMessageHandler()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setInputTF()
@@ -52,6 +56,7 @@ class ChatController: UIViewController {
         setupTableView()
         setupRecordView()
         setupAudioRecord()
+        setupImageMessage()
     }
     
     func setInputTF(){
@@ -98,6 +103,7 @@ class ChatController: UIViewController {
         messageTableView.dataSource = self
         messageTableView.rowHeight = UITableView.automaticDimension
         messageTableView.estimatedRowHeight = 100
+        messageTableView.register(UINib(nibName: "ImageViewTableViewCell", bundle: nil), forCellReuseIdentifier: "imageViewTableViewCell")
         messageTableView.register(UINib(nibName: "AudioMessageTableViewCell", bundle: nil), forCellReuseIdentifier: "audioMessageTableViewCell")
         messageTableView.register(UINib(nibName: "MessageTableViewCell", bundle: nil), forCellReuseIdentifier: "messageTableViewCell")
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
@@ -197,6 +203,7 @@ class ChatController: UIViewController {
     @objc func audioSendAction(){
         audioRecorderView.stopRecording()
         commonSendButtonAction()
+        restoreDefaultView()
     }
     
     @objc func deleteAudioFile(){
@@ -306,6 +313,7 @@ class ChatController: UIViewController {
     func updateAudioRecordingView(){
         audioRecorderView.frame = CGRect(x: 10, y: inputTextView.frame.origin.y, width: view.frame.width - 20, height: 100)
         sendButton.alpha = 0
+        attachMedia.alpha = 0
         lockedAudioRecorderSendButton.alpha = 1
         lockedAudioRecorderDeleteButton.alpha = 1
         
@@ -318,6 +326,7 @@ class ChatController: UIViewController {
         inputTextView.isHidden = false
         audioRecorderView.isHidden = true
         sendButton.alpha = 1
+        attachMedia.alpha = 1
     }
     
     func setupAudioRecord(){
@@ -328,6 +337,20 @@ class ChatController: UIViewController {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handleSendButtonPanGesture(_:)))
         panGesture.delegate = self
         sendButton.addGestureRecognizer(panGesture)
+    }
+    
+    func setupImageMessage(){
+        attachMedia.setImage(UIImage(systemName: "paperclip"), for: .normal)
+        attachMedia.frame = CGRect(x: inputTextView.frame.maxX - 40, y: inputTextView.frame.origin.y + 12, width: 30, height: 30)
+        attachMedia.tintColor = .black
+        attachMedia.addTarget(self, action: #selector(mediaShareAction), for: .touchDown)
+        view.addSubview(attachMedia)
+        
+        imageMessageView.frame = CGRect(x: 20, y: 100, width: view.frame.width - 40, height: 600)
+        imageMessageView.alpha = 0
+        imageMessageView.delegate = self
+        imageMessageView.layer.cornerRadius = 15
+        view.addSubview(imageMessageView)
     }
     
     @objc func handleSendButtonLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
@@ -433,6 +456,10 @@ class ChatController: UIViewController {
             break
         }
     }
+    
+    @objc func mediaShareAction(){
+        imageMessageView.setupPickerView(from: self)
+    }
 }
 
 extension ChatController: UITableViewDelegate, UITableViewDataSource {
@@ -463,6 +490,19 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
                 cell.setCellData(audioURL: url, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvatarURL: senderPhotoURL, isCurrentUser: false)
             }
             return cell
+        } else if case .photo(let image) = message.kind {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "imageViewTableViewCell", for: indexPath) as? ImageViewTableViewCell else {
+                return UITableViewCell()
+            }
+            
+            if message.sender.senderId == authUser.uid {
+                cell.setCellData(image: image, message: "Test", messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL, isCurrentUser: true, messageReadStatus: message.state)
+            } else {
+                cell.setCellData(image: image, message: "Test", messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: senderPhotoURL, isCurrentUser: false)
+            }
+            
+            return cell
+            
         } else {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "messageTableViewCell", for: indexPath) as? MessageTableViewCell else {
                 return UITableViewCell()
@@ -490,8 +530,10 @@ extension ChatController : GrowingTextViewDelegate {
         
         if textIsEmpty {
             sendButton.setImage(UIImage(systemName: "mic.fill"), for: .normal)
+            attachMedia.alpha = 1
         } else {
             sendButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
+            attachMedia.alpha = 0
         }
     }
 }
@@ -536,5 +578,26 @@ extension ChatController: AudioRecorderDelegate {
 extension ChatController:UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
+    }
+}
+
+extension ChatController: ImageMessageDelegate {
+    func sendButtonCallBack(image: UIImage, message: String) {
+        ChatModel().sendImageMessage(conversationID: conversationID ?? "", sender: authUser, image: image) { error in
+            AlerUser().alertUser(viewController: self, title: "Error", message: error?.description ?? "")
+        }
+    }
+    
+    func callForViewDisplay(displayView: Bool) {
+        if displayView {
+            UIView.animate(withDuration: 0.8) {
+                self.imageMessageView.setupRecipientLable(recipient: self.senderUserName ?? "")
+                self.imageMessageView.alpha = 1
+            }
+        } else {
+            UIView.animate(withDuration: 0.8) {
+                self.imageMessageView.alpha = 0
+            }
+        }
     }
 }
