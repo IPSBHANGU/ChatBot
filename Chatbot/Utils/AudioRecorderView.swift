@@ -30,6 +30,10 @@ class AudioRecorderView: UIView {
     var audioURL: URL?
     var recordingProgress: ((Float) -> Void)?
     
+    // Handle LockedView Actions
+    var audioFileURL: ((URL) -> Void)?
+    var isDeleteAction:Bool = false
+    
     // Delegate
     weak var delegate: AudioRecorderDelegate?
 
@@ -197,7 +201,10 @@ extension AudioRecorderView: AVAudioRecorderDelegate {
         if flag {
             let audioURL = recorder.url
             self.audioURL = audioURL
-            delegate?.broadcastAudioURL(url: audioURL)
+            audioFileURL?(audioURL)
+            if !isDeleteAction {
+                delegate?.broadcastAudioURL(url: audioURL)
+            }
         } else {
             delegate?.broadcastAlerts(title: "Error", message: "Recording Failed")
         }

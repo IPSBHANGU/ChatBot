@@ -123,7 +123,7 @@
                 <outlet property="senderAvatarView" destination="ZhR-g6-ONg" id="bbL-uE-EgY"/>
                 <outlet property="waveformView" destination="pNs-tJ-Id2" id="nCc-e2-jDr"/>
             </connections>
-            <point key="canvasLocation" x="76" y="21"/>
+            <point key="canvasLocation" x="74.809160305343511" y="20.422535211267608"/>
         </tableViewCell>
     </objects>
     <resources>

@@ -18,7 +18,8 @@ class ChatController: UIViewController {
     
     @IBOutlet var heightConstraintTextView: NSLayoutConstraint!
     @IBOutlet var messageTableView: UITableView!
-    @IBOutlet var sendButton: UIButton!
+    @IBOutlet weak var messageTableViewBottomSpace: NSLayoutConstraint!
+    @IBOutlet weak var sendButton: UIButton!
     @IBOutlet var inputTextView: GrowingTextView!
     
     var conversationID: String?
@@ -35,6 +36,9 @@ class ChatController: UIViewController {
     
     // Audio Record
     var audioRecorderView: AudioRecorderView!
+    var initialTouchPoint: CGPoint = CGPoint.zero
+    var lockedAudioRecorderSendButton = UIButton(type: .system)
+    var lockedAudioRecorderDeleteButton = UIButton(type: .system)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -137,7 +141,7 @@ class ChatController: UIViewController {
         }
     }
     
-    @IBAction func sendButtonAction(_ sender: Any) {
+    private func commonSendButtonAction(){
         guard let messageText = inputTextView.text, !messageText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return
         }
@@ -182,6 +186,29 @@ class ChatController: UIViewController {
                     self.sendButton.setImage(UIImage(systemName: "bubble.fill"), for: .normal)
                     self.observeMessages()
                 }
+            }
+        }
+    }
+    
+    @IBAction func sendButtonAction(_ sender: Any) {
+        commonSendButtonAction()
+    }
+    
+    @objc func audioSendAction(){
+        audioRecorderView.stopRecording()
+        commonSendButtonAction()
+    }
+    
+    @objc func deleteAudioFile(){
+        audioRecorderView.stopRecording()
+        audioRecorderView.isDeleteAction = true
+        if let audioURL = audioRecorderView.audioURL {
+            let delete = ChatModel().discardAudioRecordings(fileURL: audioURL)
+            switch delete {
+            case .success(_):
+                self.restoreDefaultView()
+            case .failure(let error):
+                AlerUser().alertUser(viewController: self, title: "Error", message: error.localizedDescription)
             }
         }
     }
@@ -253,21 +280,58 @@ class ChatController: UIViewController {
     }
     
     func setupRecordView(){
-        audioRecorderView = AudioRecorderView(frame: CGRect(x: 24, y: messageTableView.frame.maxY + 19, width: 270, height: 60))
+        audioRecorderView = AudioRecorderView(frame: CGRect(x: inputTextView.frame.origin.x, y: inputTextView.frame.origin.y, width: 270, height: 60))
         audioRecorderView.delegate = self
         audioRecorderView.layer.cornerRadius = 15
         audioRecorderView.layer.masksToBounds = true
         audioRecorderView.isHidden = true
         audioRecorderView.backgroundColor = .systemGray6
         view.addSubview(audioRecorderView)
+        
+        lockedAudioRecorderSendButton.frame = CGRect(x: sendButton.frame.origin.x + 10, y: view.frame.height - 40, width: 35, height: 35)
+        lockedAudioRecorderSendButton.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
+        lockedAudioRecorderSendButton.addTarget(self, action: #selector(audioSendAction), for: .touchUpInside)
+        lockedAudioRecorderSendButton.alpha = 0
+        lockedAudioRecorderSendButton.tintColor = UIColorHex().hexStringToUIColor(hex: "#683BD8")
+        self.view.addSubview(lockedAudioRecorderSendButton)
+        
+        lockedAudioRecorderDeleteButton.frame = CGRect(x: 40, y: view.frame.height - 40, width: 35, height: 35)
+        lockedAudioRecorderDeleteButton.setImage(UIImage(systemName: "bin.xmark.fill"), for: .normal)
+        lockedAudioRecorderDeleteButton.addTarget(self, action: #selector(deleteAudioFile), for: .touchUpInside)
+        lockedAudioRecorderDeleteButton.alpha = 0
+        lockedAudioRecorderDeleteButton.tintColor = .red
+        self.view.addSubview(lockedAudioRecorderDeleteButton)
+    }
+    
+    func updateAudioRecordingView(){
+        audioRecorderView.frame = CGRect(x: 10, y: inputTextView.frame.origin.y, width: view.frame.width - 20, height: 100)
+        sendButton.alpha = 0
+        lockedAudioRecorderSendButton.alpha = 1
+        lockedAudioRecorderDeleteButton.alpha = 1
+        
+    }
+    
+    func restoreDefaultView(){
+        audioRecorderView.frame = CGRect(x: inputTextView.frame.origin.x, y: inputTextView.frame.origin.y, width: 270, height: 60)
+        lockedAudioRecorderSendButton.alpha = 0
+        lockedAudioRecorderDeleteButton.alpha = 0
+        inputTextView.isHidden = false
+        audioRecorderView.isHidden = true
+        sendButton.alpha = 1
     }
     
     func setupAudioRecord(){
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleSendButtonLongPress(_:)))
+        longPressGesture.delegate = self
         sendButton.addGestureRecognizer(longPressGesture)
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handleSendButtonPanGesture(_:)))
+        panGesture.delegate = self
+        sendButton.addGestureRecognizer(panGesture)
     }
     
     @objc func handleSendButtonLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+        let location = gestureRecognizer.location(in: self.view)
         switch gestureRecognizer.state {
         case .began:
             // Hide input text view and show record view
@@ -281,6 +345,12 @@ class ChatController: UIViewController {
             let percentage = Float(location.x / gestureRecognizer.view!.bounds.width)
 
         case .ended, .cancelled, .failed:
+            // We should not execute any cancle action if location is in audioRecorderView
+            if audioRecorderView.frame.contains(location) {
+                // If so, do nothing and return
+                return
+            }
+            
             // Show input text view and hide record view
             audioRecorderView.stopRecording()
             sendButton.isEnabled = false
@@ -288,6 +358,77 @@ class ChatController: UIViewController {
             self.audioRecorderView.isHidden = true
             self.sendButton.isEnabled = true
 
+        default:
+            break
+        }
+    }
+    
+    @objc func handleSendButtonPanGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
+        guard let button = gestureRecognizer.view as? UIButton else { return }
+        let location = gestureRecognizer.location(in: self.view)
+        
+        switch gestureRecognizer.state {
+        case .began:
+            // When the pan gesture begins, store the initial touch point
+            initialTouchPoint = location
+            
+            // Animate the button scaling and change its alpha
+            UIView.animate(withDuration: 0.2) {
+                button.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+                button.alpha = 0.7
+            }
+            
+        case .changed:
+            // When the pan gesture changes, check if the touch point is inside the audioRecorderView
+            if audioRecorderView.frame.contains(location) {
+                // Ignore further actions if the touch point is inside the audioRecorderView
+                UIView.animate(withDuration: 0.8) {
+                    self.updateAudioRecordingView()
+                }
+                return
+            }
+            
+            // Calculate the translation and limit it to the left side
+            let translationX = (location.x - initialTouchPoint.x)
+            var newCenterX = button.center.x + translationX
+            
+            // Limit the button's movement to the left side
+            let minAllowedCenterX = view.frame.width - 23 - button.frame.width - 20 // Adjusted based on button's width
+            let maxAllowedCenterX = minAllowedCenterX // Limiting movement only to the left side
+            
+            // Limit the button's movement to within the view's bounds
+            newCenterX = min(maxAllowedCenterX, max(minAllowedCenterX, newCenterX))
+            
+            UIView.animate(withDuration: 0.8) {
+                button.center = CGPoint(x: newCenterX, y: button.center.y)
+            }
+            
+        case .ended, .cancelled, .failed:
+            // Check if the touch point is inside the audioRecorderView
+            if audioRecorderView.frame.contains(location) {
+                // If so, do nothing and return
+                return
+            }
+            
+            // Show input text view and hide record view
+            audioRecorderView.stopRecording()
+            sendButton.isEnabled = false
+            self.inputTextView.isHidden = false
+            self.audioRecorderView.isHidden = true
+            self.sendButton.isEnabled = true
+            
+            // Reset button image to "lock.open" with animation
+            UIView.transition(with: self.sendButton, duration: 0.2, options: .transitionCrossDissolve, animations: {
+                self.sendButton.setImage(UIImage(named: "lock.open"), for: .normal)
+            }, completion: nil)
+            
+            // When the pan gesture ends or is canceled, reset the button's transform and alpha
+            UIView.animate(withDuration: 0.2) {
+                self.sendButton.transform = .identity
+                self.sendButton.alpha = 1.0
+                self.restoreDefaultView()
+            }
+            
         default:
             break
         }
@@ -376,18 +517,24 @@ extension ChatController: AudioRecorderDelegate {
             
             switch delete {
             case .success(_):
-                print("Audio Message Delete")
+                self.restoreDefaultView()
             case .failure(let error):
                 AlerUser().alertUser(viewController: self, title: "Error", message: error.localizedDescription)
             }
         }
         
-        var messageActions:[UIAlertAction] = [sendAction, deleteAction]
+        var audioMessageActions:[UIAlertAction] = [sendAction, deleteAction]
         
-        AlerUser().alertUser(viewController: self, title: "Audio Message", message: "Do you want to send audio message", actions: messageActions)
+        AlerUser().alertUser(viewController: self, title: "Audio Message", message: "Do you want to send audio message", actions: audioMessageActions)
     }
     
     func broadcastAlerts(title:String, message:String) {
         AlerUser().alertUser(viewController: self, title: title, message: message)
+    }
+}
+
+extension ChatController:UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

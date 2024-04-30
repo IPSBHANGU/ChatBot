@@ -12,7 +12,8 @@
             <connections>
                 <outlet property="inputTextView" destination="lxi-GO-K7Q" id="vhQ-38-vTk"/>
                 <outlet property="messageTableView" destination="Zo5-yJ-ec6" id="BDh-HB-GTx"/>
-                <outlet property="sendButton" destination="TNU-Zy-IYu" id="Qr1-61-YWf"/>
+                <outlet property="messageTableViewBottomSpace" destination="4tR-8I-23d" id="LIC-20-nJb"/>
+                <outlet property="sendButton" destination="TNU-Zy-IYu" id="CN7-sX-pKG"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -69,12 +70,12 @@
                 <constraint firstItem="Zo5-yJ-ec6" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="1hJ-Xo-HfV"/>
                 <constraint firstItem="lxi-GO-K7Q" firstAttribute="top" secondItem="Zo5-yJ-ec6" secondAttribute="bottom" constant="19" id="4tR-8I-23d"/>
                 <constraint firstItem="Zo5-yJ-ec6" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="75V-7H-6Gz"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="TNU-Zy-IYu" secondAttribute="trailing" constant="23" id="7fT-Nr-UKB"/>
                 <constraint firstItem="Zo5-yJ-ec6" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="100" id="9xQ-Ac-n2u"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="TNU-Zy-IYu" secondAttribute="bottom" constant="8" id="R1J-gQ-lxz"/>
                 <constraint firstItem="TNU-Zy-IYu" firstAttribute="leading" secondItem="lxi-GO-K7Q" secondAttribute="trailing" constant="20" id="bzr-Rj-nnG"/>
                 <constraint firstItem="lxi-GO-K7Q" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="24" id="cyl-29-wyX"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="lxi-GO-K7Q" secondAttribute="bottom" constant="8" id="eZP-j7-kkx"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="TNU-Zy-IYu" secondAttribute="trailing" constant="23" id="l3Z-mz-JuR"/>
             </constraints>
             <point key="canvasLocation" x="75.572519083969468" y="19.718309859154932"/>
         </view>
