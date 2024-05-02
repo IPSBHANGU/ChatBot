@@ -27,7 +27,7 @@ struct Sender: SenderType {
 public enum MessageKind {
     case text(String)
     case audio(url: URL)
-    case photo(imageURL: URL)
+    case photo(imageURL: URL, message:String)
     
     var decode:String {
         switch self {
@@ -35,7 +35,7 @@ public enum MessageKind {
             return text
         case .audio(_):
             return "Audio Message"
-        case .photo(_):
+        case .photo(_,_):
             return "Media Message"
         }
     }
@@ -252,12 +252,12 @@ class ChatModel: NSObject {
         }
     }
     
-    func sendImageMessage(conversationID: String, sender: AuthenticatedUser?, image: UIImage, completion: @escaping (ErrorCode?) -> Void) {
+    func sendImageMessage(conversationID: String, sender: AuthenticatedUser?, image: UIImage, message:String?, completion: @escaping (ErrorCode?) -> Void) {
         let messageRef = messagesDatabase.child(conversationID).childByAutoId()
         self.uploadImage(image: image, conversationID: conversationID) { result in
             switch result {
             case .success(let url):
-                let newMessage: [String: Any] = [
+                var newMessage: [String: Any] = [
                     "senderId": sender?.uid ?? "",
                     "displayName": sender?.displayName ?? "",
                     "kind": "photo", // Represent the message kind as a string
@@ -266,6 +266,9 @@ class ChatModel: NSObject {
                     "state": false
                 ]
                 
+                if let message = message {
+                    newMessage["imageMessage"] = message
+                }
                 messageRef.setValue(newMessage) { error, _ in
                     if let error = error {
                         completion(.databaseError)
@@ -346,10 +349,11 @@ class ChatModel: NSObject {
                     return
                 }
             } else if kindString == "photo" {
+                let imageMessage = messageData["imageMessage"] as? String ?? ""
                 let imageURLString = messageData["imageURL"] as? String ?? ""
                 // Convert imageURL back to URL
                 if let imageURL = URL(string: imageURLString) {
-                    messageKind = .photo(imageURL: imageURL)
+                    messageKind = .photo(imageURL: imageURL, message: imageMessage)
                 } else {
                     // Handle invalid imageURL
                     completionHandler(nil, .invalidData)

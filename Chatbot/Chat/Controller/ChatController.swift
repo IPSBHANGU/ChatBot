@@ -491,15 +491,15 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
                 cell.setCellData(audioURL: url, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvatarURL: senderPhotoURL, isCurrentUser: false)
             }
             return cell
-        } else if case .photo(let image) = message.kind {
+        } else if case .photo(let image, let imageMessage) = message.kind {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "imageViewTableViewCell", for: indexPath) as? ImageViewTableViewCell else {
                 return UITableViewCell()
             }
             
             if message.sender.senderId == authUser.uid {
-                cell.setCellData(image: image, message: "Test", messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL, isCurrentUser: true, messageReadStatus: message.state)
+                cell.setCellData(image: image, message: imageMessage, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: authUser.photoURL, isCurrentUser: true, messageReadStatus: message.state)
             } else {
-                cell.setCellData(image: image, message: "Test", messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: senderPhotoURL, isCurrentUser: false)
+                cell.setCellData(image: image, message: imageMessage, messageStatus: "\(dateFormatter.string(from: message.sentDate))", senderAvtar: senderPhotoURL, isCurrentUser: false)
             }
             
             return cell
@@ -522,7 +522,7 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let message = messages[indexPath.row]
         
-        if case .photo(let image) = message.kind {
+        if case .photo(let image, let imageMessage) = message.kind {
             let duration:TimeInterval = 0.4
             if let cell = tableView.cellForRow(at: indexPath) as? ImageViewTableViewCell {
                 let imageMessageViewRectInCell = cell.imageMessageView.convert(cell.imageMessageView.bounds, to: cell)
@@ -534,7 +534,7 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
                     UIView.animate(withDuration: duration) {
                         self.expandedImageView.alpha = 1
                     }
-                    expandedImageView.showMessageView(imageURL: image, message: "empty", duration: duration)
+                    expandedImageView.showMessageView(imageURL: image, message: imageMessage, duration: duration)
                     expandedImageView.delegate = self
                     expandedImageView.expandToFullScreen(from: imageMessageViewRectInMainFrame, duration: duration)
                 }
@@ -603,7 +603,7 @@ extension ChatController:UIGestureRecognizerDelegate {
 
 extension ChatController: ImageMessageDelegate {
     func sendButtonCallBack(image: UIImage, message: String) {
-        ChatModel().sendImageMessage(conversationID: conversationID ?? "", sender: authUser, image: image) { error in
+        ChatModel().sendImageMessage(conversationID: conversationID ?? "", sender: authUser, image: image, message: message) { error in
             if let error = error {
                 AlerUser().alertUser(viewController: self, title: "Error", message: error.description)
             }
