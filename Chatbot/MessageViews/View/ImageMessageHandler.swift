@@ -72,7 +72,14 @@ class ImageMessageHandler:UIView {
         self.backgroundColor = .clear
         imageView.frame = CGRect(x: 6, y: 6, width: frame.width - 12, height: 100)
         imageView.layer.masksToBounds = true
-        imageView.kf.setImage(with: imageURL)
+        let placeholderImage = UIImage(systemName: "network")
+        imageView.kf.setImage(
+            with: imageURL,
+            placeholder: placeholderImage,
+            options: nil,
+            progressBlock: nil,
+            completionHandler: nil
+        )
         imageView.contentMode = .scaleToFill
         messageLable.frame = CGRect(x: imageView.frame.origin.x, y: imageView.frame.maxY + 10, width: 100, height: 30)
         messageLable.font = UIFont(name: "Rubik-Regular", size: 14)
@@ -100,7 +107,14 @@ class ImageMessageHandler:UIView {
         addSubview(closeButton)
         imageView.frame = CGRect(x: 20, y: 120, width: frame.width - 40, height: frame.height)
         imageView.layer.masksToBounds = true
-        imageView.kf.setImage(with: imageURL)
+        let placeholderImage = UIImage(systemName: "network")
+        imageView.kf.setImage(
+            with: imageURL,
+            placeholder: placeholderImage,
+            options: nil,
+            progressBlock: nil,
+            completionHandler: nil
+        )
         UIView.animate(withDuration: 0, delay: duration) {
             self.imageView.alpha = 1
         }
@@ -149,8 +163,6 @@ class ImageMessageHandler:UIView {
         delegate?.sendButtonCallBack(image: imageView.image!, message: messageTextView.text ?? "")
     }
 }
-
-
 
 extension ImageMessageHandler: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
