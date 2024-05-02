@@ -45,6 +45,7 @@
 		FB73D49D2BAAFF89001B314F /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB73D49B2BAAFF89001B314F /* ChatController.swift */; };
 		FB73D49E2BAAFF89001B314F /* ChatController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB73D49C2BAAFF89001B314F /* ChatController.xib */; };
 		FB820B322BE24DB800E21EC0 /* GetImageFromPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB820B312BE24DB800E21EC0 /* GetImageFromPicker.swift */; };
+		FB820B352BE352F800E21EC0 /* UIViewExpandingAnim.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB820B342BE352F800E21EC0 /* UIViewExpandingAnim.swift */; };
 		FB822AAC2BA85E48003805BE /* AlerUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB822AAB2BA85E48003805BE /* AlerUser.swift */; };
 		FB822AAE2BA85F35003805BE /* GoogleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB822AAD2BA85F35003805BE /* GoogleAuth.swift */; };
 		FB84381C2BAC3A39006CEA58 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = FB84381B2BAC3A39006CEA58 /* FirebaseDatabase */; };
@@ -105,6 +106,7 @@
 		FB73D49B2BAAFF89001B314F /* ChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
 		FB73D49C2BAAFF89001B314F /* ChatController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatController.xib; sourceTree = "<group>"; };
 		FB820B312BE24DB800E21EC0 /* GetImageFromPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetImageFromPicker.swift; sourceTree = "<group>"; };
+		FB820B342BE352F800E21EC0 /* UIViewExpandingAnim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExpandingAnim.swift; sourceTree = "<group>"; };
 		FB822AAB2BA85E48003805BE /* AlerUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlerUser.swift; sourceTree = "<group>"; };
 		FB822AAD2BA85F35003805BE /* GoogleAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleAuth.swift; sourceTree = "<group>"; };
 		FB8438202BACA6DD006CEA58 /* ChatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModel.swift; sourceTree = "<group>"; };
@@ -391,6 +393,14 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		FB820B332BE352D300E21EC0 /* UIView+Extenstion */ = {
+			isa = PBXGroup;
+			children = (
+				FB820B342BE352F800E21EC0 /* UIViewExpandingAnim.swift */,
+			);
+			path = "UIView+Extenstion";
+			sourceTree = "<group>";
+		};
 		FB84381F2BACA6CE006CEA58 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -410,6 +420,7 @@
 		FB8D7FE42BA9788E00FF1C21 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				FB820B332BE352D300E21EC0 /* UIView+Extenstion */,
 				FB820B312BE24DB800E21EC0 /* GetImageFromPicker.swift */,
 				FBFF4CA72BB580F100B35247 /* NSLayoutConstraints+Extenstions */,
 				FB8D7FE62BA978AC00FF1C21 /* UIColorHex */,
@@ -744,6 +755,7 @@
 				FB8438212BACA6DD006CEA58 /* ChatModel.swift in Sources */,
 				FB73D4862BAAF40E001B314F /* LoginPrefrencesViewController.swift in Sources */,
 				FBCF63F82BCCCB3900C4AAEF /* CircularProgressView.swift in Sources */,
+				FB820B352BE352F800E21EC0 /* UIViewExpandingAnim.swift in Sources */,
 				FB5B348A2BCBAEF60092FDD2 /* WaveformView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

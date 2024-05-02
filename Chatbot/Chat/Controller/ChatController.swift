@@ -43,6 +43,7 @@ class ChatController: UIViewController {
     // Media Share
     var attachMedia = UIButton(type: .system)
     var imageMessageView = ImageMessageHandler()
+    var expandedImageView = ImageMessageHandler() // this will be shown when message cell is tapped
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -518,8 +519,27 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-        false
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let message = messages[indexPath.row]
+        
+        if case .photo(let image) = message.kind {
+            let duration:TimeInterval = 0.4
+            if let cell = tableView.cellForRow(at: indexPath) as? ImageViewTableViewCell {
+                let imageMessageViewRectInCell = cell.imageMessageView.convert(cell.imageMessageView.bounds, to: cell)
+                let imageMessageViewRectInTableView = cell.convert(imageMessageViewRectInCell, to: tableView)
+                if let superview = tableView.superview {
+                    let imageMessageViewRectInMainFrame = tableView.convert(imageMessageViewRectInTableView, to: superview)
+                    
+                    expandedImageView.frame = messageTableView.bounds
+                    UIView.animate(withDuration: duration) {
+                        self.expandedImageView.alpha = 1
+                    }
+                    expandedImageView.showMessageView(imageURL: image, message: "empty", duration: duration)
+                    expandedImageView.delegate = self
+                    expandedImageView.expandToFullScreen(from: imageMessageViewRectInMainFrame, duration: duration)
+                }
+            }
+        }
     }
 }
  
@@ -600,6 +620,7 @@ extension ChatController: ImageMessageDelegate {
         } else {
             UIView.animate(withDuration: 0.8) {
                 self.imageMessageView.alpha = 0
+                self.expandedImageView.alpha = 0
             }
         }
     }
