@@ -39,5 +39,9 @@
 	</dict>
     <key>NSMicrophoneUsageDescription</key>
     <string>This app requires use of microphone</string>
+    <key>NSCameraUsageDescription</key>
+    <string>This app requires use of camera</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>This app requires access to photos</string>
 </dict>
 </plist>

@@ -584,7 +584,10 @@ extension ChatController:UIGestureRecognizerDelegate {
 extension ChatController: ImageMessageDelegate {
     func sendButtonCallBack(image: UIImage, message: String) {
         ChatModel().sendImageMessage(conversationID: conversationID ?? "", sender: authUser, image: image) { error in
-            AlerUser().alertUser(viewController: self, title: "Error", message: error?.description ?? "")
+            if let error = error {
+                AlerUser().alertUser(viewController: self, title: "Error", message: error.description)
+            }
+            self.imageMessageView.alpha = 0
         }
     }
     

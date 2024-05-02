@@ -87,10 +87,9 @@ class ImageMessageHandler:UIView {
     }
 
     func setupPickerView(from viewController: UIViewController){
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.sourceType = .photoLibrary
-        viewController.present(imagePickerController, animated: true, completion: nil)
+        let imagePicker = GetImageFromPicker()
+        imagePicker.imagePicker?.delegate = self
+        imagePicker.setImagePicker(imagePickerType: .both, controller: viewController)
     }
     
     func setupRecipientLable(recipient: String){
@@ -118,6 +117,8 @@ class ImageMessageHandler:UIView {
         delegate?.sendButtonCallBack(image: imageView.image!, message: messageTextView.text ?? "")
     }
 }
+
+
 
 extension ImageMessageHandler: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
