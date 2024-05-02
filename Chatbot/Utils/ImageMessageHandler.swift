@@ -91,9 +91,13 @@ class ImageMessageHandler:UIView {
         sendButton.alpha = 0
         messageTextView.alpha = 0
         imageView.alpha = 0
+        self.closeButton.alpha = 0
+        lazy var closeButton = UIButton(type: .system)
         closeButton.frame = CGRect(x: 24, y: 60, width: 24, height: 24)
         closeButton.setImage(UIImage(systemName: "arrow.backward"), for: .normal)
         closeButton.tintColor = .white
+        closeButton.addTarget(self, action: #selector(closeButtonAction), for: .touchUpInside)
+        addSubview(closeButton)
         imageView.frame = CGRect(x: 20, y: 120, width: frame.width - 40, height: frame.height)
         imageView.layer.masksToBounds = true
         imageView.kf.setImage(with: imageURL)
