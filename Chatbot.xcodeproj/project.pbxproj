@@ -228,6 +228,7 @@
 				FB73D47B2BAAF275001B314F /* LoginPrefrences */,
 				FBBFF09E2BBEC1A4008E4DED /* Add Users */,
 				DFB570CA2BB69DB600632374 /* List Users */,
+				FB820B362BE4159200E21EC0 /* MessageViews */,
 				FB71F0062BA9A00500A79BE7 /* Chat */,
 				FB2F5F112BB300A50077C2D8 /* GroupChat */,
 				FB8D7FE72BA978BA00FF1C21 /* Resources */,
@@ -313,12 +314,6 @@
 			isa = PBXGroup;
 			children = (
 				FB73D49C2BAAFF89001B314F /* ChatController.xib */,
-				FB2F5F142BB302630077C2D8 /* MessageTableViewCell.swift */,
-				FB2F5F152BB302630077C2D8 /* MessageTableViewCell.xib */,
-				FBBD14602BCBA22E003ED4F2 /* AudioMessageTableViewCell.swift */,
-				FBBD14612BCBA22E003ED4F2 /* AudioMessageTableViewCell.xib */,
-				FBE1B6BE2BDF8C1000AC6895 /* ImageViewTableViewCell.swift */,
-				FBE1B6BF2BDF8C1000AC6895 /* ImageViewTableViewCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -401,6 +396,39 @@
 			path = "UIView+Extenstion";
 			sourceTree = "<group>";
 		};
+		FB820B362BE4159200E21EC0 /* MessageViews */ = {
+			isa = PBXGroup;
+			children = (
+				FB820B372BE415AD00E21EC0 /* View */,
+			);
+			path = MessageViews;
+			sourceTree = "<group>";
+		};
+		FB820B372BE415AD00E21EC0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				FB5B34892BCBAEF60092FDD2 /* WaveformView.swift */,
+				FBCF63F52BCC54E700C4AAEF /* AudioRecorderView.swift */,
+				FBCF63F72BCCCB3900C4AAEF /* CircularProgressView.swift */,
+				FB2FD3BD2BE0D49D004EF93B /* ImageMessageHandler.swift */,
+				FB2F5F142BB302630077C2D8 /* MessageTableViewCell.swift */,
+				FB2F5F152BB302630077C2D8 /* MessageTableViewCell.xib */,
+				FBBD14602BCBA22E003ED4F2 /* AudioMessageTableViewCell.swift */,
+				FBBD14612BCBA22E003ED4F2 /* AudioMessageTableViewCell.xib */,
+				FBE1B6BE2BDF8C1000AC6895 /* ImageViewTableViewCell.swift */,
+				FBE1B6BF2BDF8C1000AC6895 /* ImageViewTableViewCell.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		FB820B382BE415DD00E21EC0 /* UIImage+Extenstion */ = {
+			isa = PBXGroup;
+			children = (
+				FB820B312BE24DB800E21EC0 /* GetImageFromPicker.swift */,
+			);
+			path = "UIImage+Extenstion";
+			sourceTree = "<group>";
+		};
 		FB84381F2BACA6CE006CEA58 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -420,15 +448,11 @@
 		FB8D7FE42BA9788E00FF1C21 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				FB820B382BE415DD00E21EC0 /* UIImage+Extenstion */,
 				FB820B332BE352D300E21EC0 /* UIView+Extenstion */,
-				FB820B312BE24DB800E21EC0 /* GetImageFromPicker.swift */,
 				FBFF4CA72BB580F100B35247 /* NSLayoutConstraints+Extenstions */,
 				FB8D7FE62BA978AC00FF1C21 /* UIColorHex */,
 				FB8D7FE52BA978A300FF1C21 /* AlertUser */,
-				FB5B34892BCBAEF60092FDD2 /* WaveformView.swift */,
-				FBCF63F52BCC54E700C4AAEF /* AudioRecorderView.swift */,
-				FBCF63F72BCCCB3900C4AAEF /* CircularProgressView.swift */,
-				FB2FD3BD2BE0D49D004EF93B /* ImageMessageHandler.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
