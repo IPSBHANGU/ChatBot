@@ -49,6 +49,7 @@ class ImageMessageHandler:UIView {
         addSubview(closeButton)
         
         imageView.frame = CGRect(x: 20, y: 100, width: 300, height: 300)
+        imageView.contentMode = .scaleAspectFill
         addSubview(imageView)
         
         messageTextView.frame = CGRect(x: imageView.frame.origin.x, y: imageView.frame.maxY + 80, width: imageView.frame.width - 40, height: 50)
@@ -94,15 +95,14 @@ class ImageMessageHandler:UIView {
     }
 
     func showMessageView(imageURL: URL, message:String, duration:TimeInterval){
-        self.backgroundColor = .black
+        self.backgroundColor = .clear
         sendButton.alpha = 0
         messageTextView.alpha = 0
-        imageView.alpha = 0
         self.closeButton.alpha = 0
         lazy var closeButton = UIButton(type: .system)
         closeButton.frame = CGRect(x: 24, y: 60, width: 24, height: 24)
         closeButton.setImage(UIImage(systemName: "arrow.backward"), for: .normal)
-        closeButton.tintColor = .white
+        closeButton.tintColor = .black
         closeButton.addTarget(self, action: #selector(closeButtonAction), for: .touchUpInside)
         addSubview(closeButton)
         imageView.frame = CGRect(x: 20, y: 120, width: frame.width - 40, height: frame.height)
@@ -115,9 +115,6 @@ class ImageMessageHandler:UIView {
             progressBlock: nil,
             completionHandler: nil
         )
-        UIView.animate(withDuration: 0, delay: duration) {
-            self.imageView.alpha = 1
-        }
         messageLable.frame = CGRect(x: 0, y: imageView.frame.maxY + 50, width: 10, height: 30)
         messageLable.font = UIFont(name: "Rubik-Regular", size: 15)
         messageLable.text = message

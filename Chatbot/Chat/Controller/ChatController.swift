@@ -44,6 +44,7 @@ class ChatController: UIViewController {
     var attachMedia = UIButton(type: .system)
     var imageMessageView = ImageMessageHandler()
     var expandedImageView = ImageMessageHandler() // this will be shown when message cell is tapped
+    let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffect.Style.dark))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -536,7 +537,13 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
                     }
                     expandedImageView.showMessageView(imageURL: image, message: imageMessage, duration: duration)
                     expandedImageView.delegate = self
-                    expandedImageView.expandToFullScreen(from: imageMessageViewRectInMainFrame, duration: duration)
+                    expandedImageView.imageView.expandToFullScreen(from: imageMessageViewRectInMainFrame, duration: duration, max: expandedImageView.imageView.frame)
+                    
+                    blurEffectView.frame = self.view.bounds
+                    blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                    blurEffectView.alpha = 1
+                    self.view.addSubview(blurEffectView)
+                    self.expandedImageView.expandToFullScreen(from: imageMessageViewRectInMainFrame, duration: duration)
                 }
             }
         }
@@ -621,6 +628,8 @@ extension ChatController: ImageMessageDelegate {
             UIView.animate(withDuration: 0.8) {
                 self.imageMessageView.alpha = 0
                 self.expandedImageView.alpha = 0
+                self.blurEffectView.alpha = 0
+                self.blurEffectView.removeFromSuperview()
             }
         }
     }
