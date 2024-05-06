@@ -30,10 +30,14 @@ class ImageMessageExpandViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         backgroundView.alpha = 0
+        self.backButton.alpha = 0
+        self.messageLabel.alpha = 0
         UIView.animate(withDuration: 0.30) {
             self.imageView.transform = .identity
             UIView.animate(withDuration: 0.30) {
                 self.backgroundView.alpha = 1
+                self.backButton.alpha = 1
+                self.messageLabel.alpha = 1
             }
         }
     }

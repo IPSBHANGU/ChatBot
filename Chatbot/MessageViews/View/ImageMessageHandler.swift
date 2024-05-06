@@ -27,9 +27,6 @@ class ImageMessageHandler:UIView {
     // MARK: Pass Data to Controller
     weak var delegate: ImageMessageDelegate?
     
-    // MARK: MessageView
-    lazy var messageLable = UILabel()
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -67,11 +64,11 @@ class ImageMessageHandler:UIView {
         addSubview(sendButton)
     }
     
-    func prepareForMessageView(imageURL: URL, message:String, messageTextColor:UIColor){
+    func prepareForMessageView(imageURL: URL){
         closeButton.alpha = 0
         sendButton.alpha = 0
         self.backgroundColor = .clear
-        imageView.frame = CGRect(x: 6, y: 6, width: frame.width - 12, height: 100)
+        imageView.frame = CGRect(x: 6, y: 6, width: frame.width - 12, height: frame.height)
         imageView.layer.masksToBounds = true
         let placeholderImage = UIImage(systemName: "network")
         imageView.kf.setImage(
@@ -82,16 +79,6 @@ class ImageMessageHandler:UIView {
             completionHandler: nil
         )
         imageView.contentMode = .scaleToFill
-        messageLable.frame = CGRect(x: imageView.frame.origin.x, y: imageView.frame.maxY + 10, width: 100, height: 30)
-        messageLable.font = UIFont(name: "Rubik-Regular", size: 14)
-        messageLable.textColor = messageTextColor
-        messageLable.text = message
-        
-        // Calculate the appropriate width based on the text content
-        let labelSize = self.messageLable.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: 40))
-        self.messageLable.frame.size.width = labelSize.width
-        
-        addSubview(messageLable)
     }
     
     func setupPickerView(from viewController: UIViewController){

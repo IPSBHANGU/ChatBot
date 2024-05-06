@@ -17,7 +17,8 @@ class ImageViewTableViewCell: UITableViewCell {
     @IBOutlet weak var messageSeparatorDotView: UIView!
     @IBOutlet weak var receiverAvatarView: UIImageView!
     @IBOutlet weak var senderAvatarView: UIImageView!
-    
+    @IBOutlet weak var messageLable: UILabel!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -32,7 +33,13 @@ class ImageViewTableViewCell: UITableViewCell {
     func setCellData(image:URL, message: String?, messageStatus:String?, senderAvtar:String?, isCurrentUser: Bool, messageReadStatus:Bool = true) {
         bubbleView.layer.cornerRadius = 20
         messageTime.text = messageStatus ?? ""
+        messageLable.font = UIFont(name: "Rubik-Regular", size: 14)
+        messageLable.text = message
         
+        // Calculate the appropriate width based on the text content
+        let labelSize = self.messageLable.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: 40))
+        self.messageLable.frame.size.width = labelSize.width
+
         if isCurrentUser {
             let cornerMask:CACornerMask = [.layerMinXMinYCorner, .layerMaxXMaxYCorner , .layerMinXMaxYCorner ]
             bubbleView.layer.maskedCorners = cornerMask
@@ -40,7 +47,8 @@ class ImageViewTableViewCell: UITableViewCell {
             senderAvatarView?.isHidden = false
             receiverAvatarView?.isHidden = true
             bubbleView.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#3780C2")
-            imageMessageView.prepareForMessageView(imageURL: image, message: message ?? "", messageTextColor: .white)
+            imageMessageView.prepareForMessageView(imageURL: image)
+            messageLable.textColor = .white
             messageTime.textColor = UIColorHex().hexStringToUIColor(hex: "#9BBFE0")
             messageSeparatorDotView.isHidden = false
             if messageReadStatus == true {
@@ -63,7 +71,8 @@ class ImageViewTableViewCell: UITableViewCell {
             receiverAvatarView?.isHidden = false
             senderAvatarView?.isHidden = true
             bubbleView.backgroundColor = UIColorHex().hexStringToUIColor(hex: "#F4F4F4")
-            imageMessageView.prepareForMessageView(imageURL: image, message: message ?? "", messageTextColor: .black)
+            imageMessageView.prepareForMessageView(imageURL: image)
+            messageLable.textColor = .black
             messageTime.textColor = UIColorHex().hexStringToUIColor(hex: "#A2A2A2")
             
             // messageStatus should not be visible for recieved meassages
