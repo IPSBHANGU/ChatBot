@@ -534,7 +534,6 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
                     expandVC.imageURL = image
                     expandVC.message = imageMessage
                     expandVC.startFrame = imageMessageViewRectInMainFrame
-                    expandVC.endFrame = CGRect(x: 100, y: 100, width: 200, height: 200)
                     present(expandVC, animated: false, completion: nil)
                 }
             }
@@ -621,19 +620,5 @@ extension ChatController: ImageMessageDelegate {
                 self.imageMessageView.alpha = 0
             }
         }
-    }
-}
-
-extension ChatController: UIViewControllerTransitioningDelegate {
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        let transition = CustomTransition()
-        transition.presenting = true
-        return transition
-    }
-
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        let transition = CustomTransition()
-        transition.presenting = false
-        return transition
     }
 }

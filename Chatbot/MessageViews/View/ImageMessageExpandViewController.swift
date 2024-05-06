@@ -14,13 +14,13 @@ class ImageMessageExpandViewController: UIViewController {
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var messageLabel: UILabel!
+    @IBOutlet weak var backgroundView: UIView!
     
     // MARK: UIData
     var imageURL:URL?
     var message:String?
     
     var startFrame: CGRect?
-    var endFrame: CGRect?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,9 +29,13 @@ class ImageMessageExpandViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        UIView.animate(withDuration: 0.30, animations: {
+        backgroundView.alpha = 0
+        UIView.animate(withDuration: 0.30) {
             self.imageView.transform = .identity
-        })
+            UIView.animate(withDuration: 0.30) {
+                self.backgroundView.alpha = 1
+            }
+        }
     }
 
     func setupView(){
@@ -40,11 +44,23 @@ class ImageMessageExpandViewController: UIViewController {
         messageLabel.text = message
         messageLabel.textColor = .white
         messageLabel.textAlignment = .center
-        imageView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        
+        guard let startFrame = startFrame else {return}
+        imageView.transform = CGAffineTransform(from: imageView.frame, to: startFrame)
     }
 
     @IBAction func backButtonAction(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+        guard let startFrame = startFrame else {return}
+        UIView.animate(withDuration: 0.30) {
+            self.imageView.transform = CGAffineTransform(from: self.imageView.frame, to: startFrame)
+            self.backgroundView.alpha = 0
+            self.backButton.alpha = 0
+            self.imageView.alpha = 0
+            self.messageLabel.alpha = 0
+        } completion: { _ in
+            self.dismiss(animated: false, completion: nil)
+        }
     }
     
 }
+

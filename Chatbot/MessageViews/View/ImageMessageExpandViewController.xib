@@ -10,6 +10,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ImageMessageExpandViewController" customModule="Chatbot" customModuleProvider="target">
             <connections>
                 <outlet property="backButton" destination="Ryf-Xt-Ib6" id="ysH-AS-sVX"/>
+                <outlet property="backgroundView" destination="031-GT-Zky" id="QMA-AB-922"/>
                 <outlet property="imageView" destination="sME-rn-qQH" id="iyR-qO-afc"/>
                 <outlet property="messageLabel" destination="wkr-Wr-QZU" id="B5t-j0-Lv7"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -20,6 +21,12 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" id="031-GT-Zky">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <viewLayoutGuide key="safeArea" id="Ttc-Bi-W2b"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sct-oX-RXf">
                     <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                     <subviews>
