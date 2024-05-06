@@ -93,6 +93,41 @@ class ImageMessageHandler:UIView {
         
         addSubview(messageLable)
     }
+
+    func showMessageView(imageURL: URL, message:String, duration:TimeInterval){
+        self.backgroundColor = .clear
+        sendButton.alpha = 0
+        messageTextView.alpha = 0
+        self.closeButton.alpha = 0
+        lazy var closeButton = UIButton(type: .system)
+        closeButton.frame = CGRect(x: 24, y: 60, width: 24, height: 24)
+        closeButton.setImage(UIImage(systemName: "arrow.backward"), for: .normal)
+        closeButton.tintColor = .black
+        closeButton.addTarget(self, action: #selector(closeButtonAction), for: .touchUpInside)
+        addSubview(closeButton)
+        imageView.frame = CGRect(x: 20, y: 120, width: frame.width - 40, height: frame.height)
+        imageView.layer.masksToBounds = true
+        let placeholderImage = UIImage(systemName: "network")
+        imageView.kf.setImage(
+            with: imageURL,
+            placeholder: placeholderImage,
+            options: nil,
+            progressBlock: nil,
+            completionHandler: nil
+        )
+        messageLable.frame = CGRect(x: 0, y: imageView.frame.maxY + 50, width: 10, height: 30)
+        messageLable.font = UIFont(name: "Rubik-Regular", size: 15)
+        messageLable.text = message
+        messageLable.textColor = .white
+        messageLable.textAlignment = .center
+        
+        // Calculate the appropriate width based on the text content
+        let labelSize = self.messageLable.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: 40))
+        self.messageLable.frame.size.width = labelSize.width
+        self.messageLable.center.x = frame.maxX / 2
+        
+        addSubview(messageLable)
+    }
     
     func setupPickerView(from viewController: UIViewController){
         let imagePicker = GetImageFromPicker()

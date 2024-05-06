@@ -32,8 +32,6 @@
 		FB50BC9E2BA85ACE00E863AC /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = FB50BC9D2BA85ACE00E863AC /* FirebaseAppCheck */; };
 		FB5B348A2BCBAEF60092FDD2 /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5B34892BCBAEF60092FDD2 /* WaveformView.swift */; };
 		FB6DF78A2BE4D12C00491E99 /* UIViewExpandingAnim.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6DF7882BE4D12C00491E99 /* UIViewExpandingAnim.swift */; };
-		FB6DF78D2BE506A700491E99 /* ImageMessageExpandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6DF78B2BE506A700491E99 /* ImageMessageExpandViewController.swift */; };
-		FB6DF78E2BE506A700491E99 /* ImageMessageExpandViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB6DF78C2BE506A700491E99 /* ImageMessageExpandViewController.xib */; };
 		FB71F0052BA9855100A79BE7 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FB71F0042BA9855100A79BE7 /* FirebaseAuth */; };
 		FB71F00B2BA9A04B00A79BE7 /* ListChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB71F00A2BA9A04B00A79BE7 /* ListChatViewController.xib */; };
 		FB71F00F2BA9A43100A79BE7 /* ListChatTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB71F00E2BA9A43100A79BE7 /* ListChatTableViewCell.xib */; };
@@ -97,8 +95,6 @@
 		FB2FD3BD2BE0D49D004EF93B /* ImageMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageHandler.swift; sourceTree = "<group>"; };
 		FB5B34892BCBAEF60092FDD2 /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
 		FB6DF7882BE4D12C00491E99 /* UIViewExpandingAnim.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExpandingAnim.swift; sourceTree = "<group>"; };
-		FB6DF78B2BE506A700491E99 /* ImageMessageExpandViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageExpandViewController.swift; sourceTree = "<group>"; };
-		FB6DF78C2BE506A700491E99 /* ImageMessageExpandViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageMessageExpandViewController.xib; sourceTree = "<group>"; };
 		FB71F00A2BA9A04B00A79BE7 /* ListChatViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListChatViewController.xib; sourceTree = "<group>"; };
 		FB71F00D2BA9A43100A79BE7 /* ListChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListChatTableViewCell.swift; sourceTree = "<group>"; };
 		FB71F00E2BA9A43100A79BE7 /* ListChatTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListChatTableViewCell.xib; sourceTree = "<group>"; };
@@ -423,8 +419,6 @@
 				FBBD14612BCBA22E003ED4F2 /* AudioMessageTableViewCell.xib */,
 				FBE1B6BE2BDF8C1000AC6895 /* ImageViewTableViewCell.swift */,
 				FBE1B6BF2BDF8C1000AC6895 /* ImageViewTableViewCell.xib */,
-				FB6DF78B2BE506A700491E99 /* ImageMessageExpandViewController.swift */,
-				FB6DF78C2BE506A700491E99 /* ImageMessageExpandViewController.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -691,7 +685,6 @@
 				FB71F00B2BA9A04B00A79BE7 /* ListChatViewController.xib in Resources */,
 				FBBD14632BCBA22E003ED4F2 /* AudioMessageTableViewCell.xib in Resources */,
 				FBCE7B352BB671890059F2D5 /* Rubik-Regular.ttf in Resources */,
-				FB6DF78E2BE506A700491E99 /* ImageMessageExpandViewController.xib in Resources */,
 				DF78D9F82BC00D19002EDD28 /* GroupDetailsController.xib in Resources */,
 				FB73D4982BAAF738001B314F /* EmailSignINViewController.xib in Resources */,
 				FB2F5F172BB302630077C2D8 /* MessageTableViewCell.xib in Resources */,
@@ -769,7 +762,6 @@
 				FB822AAE2BA85F35003805BE /* GoogleAuth.swift in Sources */,
 				FB2FD3BE2BE0D49D004EF93B /* ImageMessageHandler.swift in Sources */,
 				FB822AAC2BA85E48003805BE /* AlerUser.swift in Sources */,
-				FB6DF78D2BE506A700491E99 /* ImageMessageExpandViewController.swift in Sources */,
 				FB1B333B2BA823020061259F /* ViewController.swift in Sources */,
 				FBBD14622BCBA22E003ED4F2 /* AudioMessageTableViewCell.swift in Sources */,
 				FB8D7FE32BA9783D00FF1C21 /* UIColorHex.swift in Sources */,
