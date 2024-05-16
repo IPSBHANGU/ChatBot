@@ -1,5 +1,6 @@
 ${PODS_ROOT}/Target Support Files/Pods-Chatbot/Pods-Chatbot-frameworks.sh
 ${BUILT_PRODUCTS_DIR}/GrowingTextView/GrowingTextView.framework
+${BUILT_PRODUCTS_DIR}/JPSThumbnailAnnotation/JPSThumbnailAnnotation.framework
 ${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework
 ${BUILT_PRODUCTS_DIR}/MASegmentedControl/MASegmentedControl.framework
 ${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework

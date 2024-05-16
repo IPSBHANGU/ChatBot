@@ -13,4 +13,5 @@ pod 'NVActivityIndicatorView'
 #pod 'MessageKit'
 pod 'SwiftyContextMenu'
 pod 'GrowingTextView','0.7.2'
+pod 'JPSThumbnailAnnotation'
 end

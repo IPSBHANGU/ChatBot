@@ -10,6 +10,7 @@ import FirebaseAuth
 import FirebaseDatabase
 import UIKit
 import FirebaseStorage
+import CoreLocation
 
 struct AuthenticatedUser: Codable {
     var displayName: String?
@@ -24,15 +25,19 @@ struct AuthenticatedUser: Codable {
  */
 
 enum ErrorCode: Int {
+    case unKnownError = 1000
     case missingUserId = 1001
     case userAlreadyExists = 1002
     case databaseError = 1003
     case noMessage = 1004
     case noConversation = 1005
     case invalidData = 1006
+    case locationServi = 1007
     
     var description: String {
         switch self {
+        case .unKnownError:
+            return "Unknown Error, Ask @IPSBHANGU why he is dumb"
         case .missingUserId:
             return "User ID is missing"
         case .userAlreadyExists:
@@ -45,6 +50,8 @@ enum ErrorCode: Int {
             return "No Message Found"
         case .invalidData:
             return "Invalid Data Format from Database"
+        case .locationServi:
+            return "Location Services are Turned off"
         }
     }
 }
@@ -294,6 +301,48 @@ class LoginModel: NSObject {
             }
             
             completionHandler(true, url?.absoluteString)
+        }
+    }
+    
+    /**
+     Updates the location of the authenticated user.
+
+     - Parameters:
+        - authUserUID: The UID of the authenticated user whose location will be updated.
+        - locationCoordinate: The coordinate of the user's location represented as CLLocationCoordinate2D.
+        - completionHandler: A closure to be called upon completion of the location update. This closure takes two parameters:
+            - isSucceeded: A boolean indicating whether the location update was successful.
+            - error: An optional ErrorCode describing an error encountered during the update, if any.
+
+     - Important:
+        This function updates the location of the authenticated user in the database.
+     */
+    func updateUserLocation(authUserUID: String?, locationCoordinate: CLLocationCoordinate2D, completionHandler: @escaping (_ isSucceeded: Bool, _ error: ErrorCode?) -> ()) {
+        guard let authUserUID = authUserUID else {
+            completionHandler(false, .missingUserId)
+            return
+        }
+        
+        let usersRef = Database.database().reference().child("users")
+        
+        // Update authUser's location
+        usersRef.child(authUserUID).observeSingleEvent(of: .value) { authUserSnapshot  in
+            guard var authUserData = authUserSnapshot.value as? [String: Any] else {
+                completionHandler(false, .invalidData)
+                return
+            }
+            
+            // Update location data
+            authUserData["lastLocation"] = ["latitude": locationCoordinate.latitude, "longitude": locationCoordinate.longitude]
+            
+            // Set updated user data
+            usersRef.child(authUserUID).setValue(authUserData) { (error, _) in
+                if let error = error {
+                    completionHandler(false, .databaseError)
+                } else {
+                    completionHandler(true, nil)
+                }
+            }
         }
     }
 }

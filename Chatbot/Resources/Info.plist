@@ -43,5 +43,9 @@
     <string>This app requires use of camera</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>This app requires access to photos</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>The app will use the location data</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>The app will use the location data</string>
 </dict>
 </plist>

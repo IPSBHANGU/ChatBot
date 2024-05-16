@@ -11,6 +11,7 @@ import MASegmentedControl
 import Kingfisher
 import NVActivityIndicatorView
 import SwiftyContextMenu
+import MapKit
 
 class ListChatViewController: UIViewController {
     
@@ -41,6 +42,10 @@ class ListChatViewController: UIViewController {
     
     // Bool to switch to Group
     var is_Group:Bool = false    // Keep false as default is Chats
+    
+    
+    // MAP View
+    var mapWithUsersView: MapWithUsersView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,6 +78,7 @@ class ListChatViewController: UIViewController {
         setupUI()
         setupActivityIndicator()
         fetchData()
+        setupMapWithUsersView()
     }
     
     func fetchData(){
@@ -135,6 +141,21 @@ class ListChatViewController: UIViewController {
         }
     }
     
+    func setupMapWithUsersView() {
+        let mapViewFrame = CGRect(x: 0, y: 180, width: view.frame.width, height: view.frame.maxY)
+        mapWithUsersView = MapWithUsersView(frame: mapViewFrame)
+        
+        let otherUserLocations: [CLLocationCoordinate2D] = [
+            CLLocationCoordinate2D(latitude: 30.7333, longitude: 76.7794),
+            CLLocationCoordinate2D(latitude: 34.0522, longitude: -118.2437)
+        ]
+        mapWithUsersView.authUser = authUser
+        mapWithUsersView.delegate = self
+        mapWithUsersView.addOtherUserLocations(locations: otherUserLocations)
+        mapWithUsersView.alpha = 0
+        view.addSubview(mapWithUsersView)
+    }
+    
     func setupUI(){
         // UI Elements
         userAvatar.contentMode = .scaleAspectFit
@@ -177,12 +198,12 @@ class ListChatViewController: UIViewController {
         editButton.menu = menu
         view.addSubview(editButton)
 
-        chatType.frame = CGRect(x: 24, y: 112, width: 184, height: 32)
+        chatType.frame = CGRect(x: 24, y: 112, width: 200, height: 32)
         chatType.addTarget(self, action: #selector(chatSelectorType(_:)), for: .valueChanged)
         chatType.itemsWithText = true
         chatType.fillEqually = true
         chatType.bottomLineThumbView = true
-        chatType.setSegmentedWith(items: ["Chats", "Groups"])
+        chatType.setSegmentedWith(items: ["Chats", "Groups", "Map"])
         chatType.padding = -4
         chatType.textColor = .gray
         chatType.titlesFont = UIFont(name: "Rubik-Regular", size: 20)
@@ -276,6 +297,12 @@ class ListChatViewController: UIViewController {
         {
         case 0:
             chatType.selectedSegmentIndex = 0
+            UIView.animate(withDuration: 0.30) {
+                self.chatTable.alpha = 1
+                self.searchButton.alpha = 1
+                self.addButton.alpha = 1
+                self.mapWithUsersView.alpha = 0
+            }
             is_Group = false
             chatUserArray?.removeAll()
             filteredChatUserArray?.removeAll()
@@ -288,6 +315,12 @@ class ListChatViewController: UIViewController {
             
         case 1:
             chatType.selectedSegmentIndex = 1
+            UIView.animate(withDuration: 0.30) {
+                self.chatTable.alpha = 1
+                self.searchButton.alpha = 1
+                self.addButton.alpha = 1
+                self.mapWithUsersView.alpha = 0
+            }
             is_Group = true
             showActivityIndicatorView()
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
@@ -298,6 +331,14 @@ class ListChatViewController: UIViewController {
             fetchGroups()
             chatTable.reloadData()
             
+        case 2:
+            chatType.selectedSegmentIndex = 2
+            UIView.animate(withDuration: 0.30) {
+                self.chatTable.alpha = 0
+                self.searchButton.alpha = 0
+                self.addButton.alpha = 0
+                self.mapWithUsersView.alpha = 1
+            }
         default:
             break;
         }
@@ -308,6 +349,7 @@ class ListChatViewController: UIViewController {
         userDetailController.userUID = authUser?.uid
         navigationController?.pushViewController(userDetailController, animated: true)
     }
+    
 }
 
 extension ListChatViewController:UITableViewDelegate,UITableViewDataSource {
@@ -427,4 +469,19 @@ extension ListChatViewController: AddUsersDelegate {
         chatController.conversationID = conversationID
         navigationController?.pushViewController(chatController, animated: true)
     }
+}
+
+extension ListChatViewController: MapWithUsersDelegate {
+    func triggerButtonAction(lastLocation location: CLLocationCoordinate2D) {
+        LoginModel().updateUserLocation(authUserUID: authUser?.uid ?? "", locationCoordinate: location) { isSucceeded, error in
+            if isSucceeded != true {
+                AlerUser().alertUser(viewController: self, title: "Error", message: error?.description ?? ErrorCode.unKnownError.description)
+            }
+        }
+    }
+    
+    func broadcastAlert(title: String, message: String) {
+        AlerUser().alertUser(viewController: self, title: title, message: message)
+    }
+    
 }

@@ -72,6 +72,7 @@
 		FBCF63F82BCCCB3900C4AAEF /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCF63F72BCCCB3900C4AAEF /* CircularProgressView.swift */; };
 		FBE1B6C02BDF8C1000AC6895 /* ImageViewTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBE1B6BF2BDF8C1000AC6895 /* ImageViewTableViewCell.xib */; };
 		FBE1B6C12BDF8C1000AC6895 /* ImageViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE1B6BE2BDF8C1000AC6895 /* ImageViewTableViewCell.swift */; };
+		FBE677672BF5C5EF00DB65D8 /* MapWithUsersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE677662BF5C5EF00DB65D8 /* MapWithUsersView.swift */; };
 		FBFF4CA62BB57EA100B35247 /* NSLayoutContraint+Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBFF4CA52BB57EA100B35247 /* NSLayoutContraint+Custom.swift */; };
 /* End PBXBuildFile section */
 
@@ -133,6 +134,7 @@
 		FBCF63F72BCCCB3900C4AAEF /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
 		FBE1B6BE2BDF8C1000AC6895 /* ImageViewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewTableViewCell.swift; sourceTree = "<group>"; };
 		FBE1B6BF2BDF8C1000AC6895 /* ImageViewTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageViewTableViewCell.xib; sourceTree = "<group>"; };
+		FBE677662BF5C5EF00DB65D8 /* MapWithUsersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapWithUsersView.swift; sourceTree = "<group>"; };
 		FBFF4CA52BB57EA100B35247 /* NSLayoutContraint+Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutContraint+Custom.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -192,6 +194,7 @@
 				FB71F00E2BA9A43100A79BE7 /* ListChatTableViewCell.xib */,
 				FB71F00D2BA9A43100A79BE7 /* ListChatTableViewCell.swift */,
 				FB71F00A2BA9A04B00A79BE7 /* ListChatViewController.xib */,
+				FBE677662BF5C5EF00DB65D8 /* MapWithUsersView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -768,6 +771,7 @@
 				FBE1B6C12BDF8C1000AC6895 /* ImageViewTableViewCell.swift in Sources */,
 				FB822AAE2BA85F35003805BE /* GoogleAuth.swift in Sources */,
 				FB2FD3BE2BE0D49D004EF93B /* ImageMessageHandler.swift in Sources */,
+				FBE677672BF5C5EF00DB65D8 /* MapWithUsersView.swift in Sources */,
 				FB822AAC2BA85E48003805BE /* AlerUser.swift in Sources */,
 				FB6DF78D2BE506A700491E99 /* ImageMessageExpandViewController.swift in Sources */,
 				FB1B333B2BA823020061259F /* ViewController.swift in Sources */,
