@@ -43,15 +43,16 @@ class ListChatViewController: UIViewController {
     // Bool to switch to Group
     var is_Group:Bool = false    // Keep false as default is Chats
     
-    
     // MAP View
     var mapWithUsersView: MapWithUsersView!
+    var userLastLocation:AuthenticatedUserLocation?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         if let result = result {
-            authUser = AuthenticatedUser(displayName: result.user.displayName, email: result.user.email, photoURL: result.user.photoURL?.absoluteString, uid: result.user.uid)
+            let currentUserLocation = mapWithUsersView.fetchCurrentLocation()
+            authUser = AuthenticatedUser(displayName: result.user.displayName, email: result.user.email, photoURL: result.user.photoURL?.absoluteString, uid: result.user.uid, lastLocation: AuthenticatedUserLocation(latitude: currentUserLocation?.latitude, longitude: currentUserLocation?.longitude))
         }
         setupRefreshControl()
         setupTableView()
@@ -145,15 +146,43 @@ class ListChatViewController: UIViewController {
         let mapViewFrame = CGRect(x: 0, y: 180, width: view.frame.width, height: view.frame.maxY)
         mapWithUsersView = MapWithUsersView(frame: mapViewFrame)
         
-        let otherUserLocations: [CLLocationCoordinate2D] = [
-            CLLocationCoordinate2D(latitude: 30.7333, longitude: 76.7794),
-            CLLocationCoordinate2D(latitude: 34.0522, longitude: -118.2437)
-        ]
-        mapWithUsersView.authUser = authUser
-        mapWithUsersView.delegate = self
-        mapWithUsersView.addOtherUserLocations(locations: otherUserLocations)
-        mapWithUsersView.alpha = 0
-        view.addSubview(mapWithUsersView)
+        var otherUserLocations: [CLLocationCoordinate2D] = []
+        LoginModel().fetchUserLocations(currentUserUID: authUser?.uid ?? "") { users, error in
+            if let error = error {
+                AlerUser().alertUser(viewController: self, title: "Error", message: error)
+                return
+            }
+            
+            if let users = users {
+                for user in users {
+                    let lastLocation = user.lastLocation
+                    if let latitudeString = lastLocation.latitude,
+                       let longitudeString = lastLocation.longitude,
+                       let latitude = Double(latitudeString),
+                       let longitude = Double(longitudeString) {
+                        let location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                        otherUserLocations.append(location)
+                    }
+                }
+            }
+        }
+            self.mapWithUsersView.authUser = self.authUser
+            self.mapWithUsersView.delegate = self
+            self.mapWithUsersView.addOtherUserLocations(locations: otherUserLocations)
+            self.mapWithUsersView.alpha = 0
+            self.view.addSubview(self.mapWithUsersView)
+    }
+
+    
+    // Function to parse coordinates from a string
+    func parseCoordinates(from string: String) -> (latitude: CLLocationDegrees, longitude: CLLocationDegrees)? {
+        let components = string.components(separatedBy: ",")
+        if components.count == 2,
+           let latitude = Double(components[0]),
+           let longitude = Double(components[1]) {
+            return (latitude, longitude)
+        }
+        return nil
     }
     
     func setupUI(){

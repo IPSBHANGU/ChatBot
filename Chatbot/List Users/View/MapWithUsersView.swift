@@ -93,6 +93,12 @@ class MapWithUsersView: UIView {
             mapView.addAnnotation(annotation)
         }
     }
+    
+    func fetchCurrentLocation() -> AuthenticatedUserLocation? {
+        locationManager.requestLocation()
+        let location = AuthenticatedUserLocation(latitude: "\(authUserLocation?.latitude)", longitude: "\(authUserLocation?.longitude)")
+        return location
+    }
 }
 
 extension MapWithUsersView: MKMapViewDelegate, CLLocationManagerDelegate {

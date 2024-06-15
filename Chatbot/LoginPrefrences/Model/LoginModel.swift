@@ -18,6 +18,12 @@ struct AuthenticatedUser: Codable {
     var photoURL: String?
     var registeredDate: Date?
     var uid: String?
+    var lastLocation: AuthenticatedUserLocation
+}
+
+struct AuthenticatedUserLocation: Codable {
+    var latitude: String?
+    var longitude: String?
 }
 
 /**
@@ -64,7 +70,7 @@ class LoginModel: NSObject {
     func fetchUserDetails(userID: String, completion: @escaping (AuthenticatedUser?, Error?) -> Void) {
         let userRef = usersDatabase.child(userID)
         
-        userRef.observeSingleEvent(of: .value) { snapshot in
+        userRef.observeSingleEvent(of: .value) { snapshot   in
             guard let userData = snapshot.value as? [String: Any] else {
                 completion(nil, "User data not found" as? Error)
                 return
@@ -83,7 +89,14 @@ class LoginModel: NSObject {
                 registeredDate = Date(timeIntervalSince1970: timestamp)
             }
             
-            let user = AuthenticatedUser(displayName: displayName, email: email, photoURL: photoURL, registeredDate: registeredDate, uid: uid)
+            var latitude:String?
+            var longitude:String?
+            if let lastLocation = userData["lastLocation"] as? [String: Any] {
+                latitude = lastLocation["latitude"] as? String
+                longitude = lastLocation["longitude"] as? String
+            }
+            
+            let user = AuthenticatedUser(displayName: displayName, email: email, photoURL: photoURL, registeredDate: registeredDate, uid: uid, lastLocation: AuthenticatedUserLocation(latitude: latitude, longitude: longitude))
             completion(user, nil)
         }
     }
@@ -343,6 +356,49 @@ class LoginModel: NSObject {
                     completionHandler(true, nil)
                 }
             }
+        }
+    }
+    
+    func fetchUserLocations(currentUserUID uid: String, completionHandler: @escaping ([AuthenticatedUser]?, String?) -> Void) {
+        fetchUsersFromDb(currentUserUID: uid) { uIDs, error in
+            if let error = error {
+                completionHandler(nil, error)
+                return
+            }
+            
+            guard let uIDs = uIDs else {
+                completionHandler(nil, "No user IDs found")
+                return
+            }
+            
+            var usersArr: [AuthenticatedUser] = [] // Initialize an empty array here
+            
+            // Use a recursive function to fetch user details
+            func fetchNextUser(index: Int) {
+                guard index < uIDs.count else {
+                    // When all user details are fetched, call the completion handler
+                    completionHandler(usersArr, nil)
+                    return
+                }
+                
+                let userID = uIDs[index]["uid"] as! String
+                self.fetchUserDetails(userID: userID) { user, error in
+                    if let error = error {
+                        completionHandler(nil, error.localizedDescription)
+                        return
+                    }
+                    
+                    if let user = user {
+                        usersArr.append(user) // Append the user to the array
+                    }
+                    
+                    // Fetch details for the next user
+                    fetchNextUser(index: index + 1)
+                }
+            }
+            
+            // Start fetching details for the first user
+            fetchNextUser(index: 0)
         }
     }
 }
